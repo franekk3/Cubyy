@@ -410,7 +410,12 @@
             switch(state) {
                 case 'idle':
                     stateText = '🔄 Idle - Place hands on timer';
-                    break;
+                    if (ganTimerLastState !== GAN_STATE.IDLE) {
+        resetTimer(); 
+        updateGanTimerInfo('idle', 0);
+        console.log('GAN State: IDLE - Timer resetowany');
+    }
+    break;
                 case 'hands_on':
                     stateText = '👆 Hands On - Hold and wait...';
                     break;
