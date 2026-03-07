@@ -1,0 +1,11 @@
+.nav-bar {
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0px;
+    background-color: #f3edf7;
+    left: 0px;
+    right: 0px;
+    justify-content: space-between;
+    z-index: 9999;
+}

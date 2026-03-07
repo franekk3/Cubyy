@@ -1,0 +1,45 @@
+.timer-display {
+    font-size: 60px;
+    height: 200px;
+    font-weight: bold;
+    font-family: 'Google Sans', sans-serif;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    padding: 0px;
+    width: 100%;
+}
+.nav-bar-image {
+    display: block;
+    width: 30px;
+    height: 30px;
+    padding: 2px;
+    margin: 2px;
+    padding-inline: 15px;
+    border-radius: 16px;
+}
+.nav-bar-element {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 0px;
+    line-height: 1;
+    margin-inline: 20px;
+}
+.nav-bar-label {
+    margin: 5px;
+    padding: 0px;
+    color: #48454e;
+    font-family: 'Google Sans', sans-serif;
+    font-size: 14px;
+}
+.nav-bar-image-choosed{
+    background-color: #e8def7 !important; 
+}
+.nav-bar-image:hover {
+    background-color: #e8def7
+}

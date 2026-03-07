@@ -1,0 +1,20 @@
+.timer-display {
+    font-size: 80px !important;
+    font-weight: bold;
+    font-family: 'Google Sans', sans-serif;
+    
+}
+
+.nav-bar {
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 0px;
+    background-color: #f3edf7;
+    left: 0px;
+    top: 0px;
+    width: 90px;
+    z-index: 9999;
+    text-align: center;
+}
