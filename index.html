@@ -36,7 +36,6 @@
 
     
     
-    <button onclick="deleteAllTimes()" style="margin-left: 10px; background-color: #ff6b6b; color: white; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer;">Delete All Times</button>
     
     <div id="gantimerInfo" style="display: none; margin-top: 10px; padding: 10px; background: #e3f2fd; border: 1px solid #2196F3; border-radius: 16px;">
         <strong>GanTimer Info:</strong><br>
@@ -45,10 +44,13 @@
     
         <div class="spinner-container"> 
             <div class="spiner-part1"> Your times: </div>
+            
             <div onclick='timesListClick()' class="spiner-part2"> <img id="timesListIcon" height="30px" width="30px" style="rotate: 180deg;" src="./media/icons/arrow_down.png"> </div>
         </div>
+        
     <div id="timesList2"class="m3-card2" style=" padding: 10px; max-height: 200px; overflow-y: auto;">
-
+        <button onclick="deleteAllTimes()" class="m3-FilledTonalButtonWithAnimatedShapeSample" style="scale: 1; margin: 0 auto; margin-bottom: 10px;"> Delete All Times</button>
+    
         <div id="timesList"></div>
     </div>
     <p style="margin: 50px"> </p>
