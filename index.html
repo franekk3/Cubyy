@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubik's Cube Timer</title>
+</head>
+<body>
+    <h1>Rubik's Cube Timer</h1>
+    
+    <div id="timerDisplay">0.000</div>
+    
+    <button onclick="resetTimer()">Reset</button>
+    <button onclick="connectBluetooth()">Connect GanTimer</button>
+    
+    <div id="bluetoothStatus">Bluetooth: Not Connected</div>
+    <div id="status"></div>
+    <div id="gantimerInfo" style="display: none; margin-top: 10px; padding: 10px; background: #e3f2fd; border: 1px solid #2196F3;">
+        <strong>GanTimer Info:</strong><br>
+        <div id="gantimerState">-</div>
+    </div>
+    
+    <h3>Times</h3>
+    <div id="timesList"></div>
+
+    <script>
+        let timerInterval = null;
+        let startTime = 0;
+        let elapsedTime = 0;
+        let isRunning = false;
+        let isReady = false;
+        let times = [];
+        let bluetoothDevice = null;
+        let bluetoothCharacteristic = null;
+        
+        let spacePressed = false;
+        let spacePressStartTime = 0;
+        const SPACE_HOLD_TIME = 500; // 500ms
+        let readyCheckInterval = null;
+        let pollInterval = null;
+        
+        // GAN Timer UUIDs
+        const GAN_SERVICE_UUID = '0000fff0-0000-1000-8000-00805f9b34fb';
+        const GAN_STATE_CHAR_UUID = '0000fff5-0000-1000-8000-00805f9b34fb';  // Subscribe to this for state
+        const GAN_TIME_CHAR_UUID = '0000fff2-0000-1000-8000-00805f9b34fb';
+        
+        // GAN Timer state constants (official from library)
+        const GAN_STATE = {
+            DISCONNECT: 0,
+            GET_SET: 1,      // Ready to start
+            HANDS_OFF: 2,
+            RUNNING: 3,
+            STOPPED: 4,
+            IDLE: 5,
+            HANDS_ON: 6,
+            FINISHED: 7
+        };
+        
+        let ganTimerLastState = null;
+        let ganTimerRecordedTime = 0;
+
+        // Timer functions
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                isReady = false;
+                startTime = Date.now() - elapsedTime;
+                document.getElementById('timerDisplay').style.fontWeight = 'normal';
+                document.getElementById('status').textContent = 'Running...';
+                
+                timerInterval = setInterval(updateDisplay, 10);
+            }
+        }
+
+        function stopTimer() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(timerInterval);
+                
+                // Record the time
+                times.unshift({
+                    time: elapsedTime,
+                    date: new Date().toLocaleTimeString()
+                });
+                
+                updateTimesList();
+                document.getElementById('status').textContent = 'Time saved!';
+                if (ganTimerState !== 'disconnected') {
+                    updateGanTimerInfo('stopped', elapsedTime);
+                }
+            }
+        }
+
+        function resetTimer() {
+            isRunning = false;
+            isReady = false;
+            clearInterval(timerInterval);
+            elapsedTime = 0;
+            spacePressed = false;
+            document.getElementById('timerDisplay').textContent = '0.000';
+            document.getElementById('timerDisplay').style.fontWeight = 'normal';
+            document.getElementById('status').textContent = '';
+            if (ganTimerState !== 'disconnected') {
+                updateGanTimerInfo('idle', 0);
+            }
+        }
+
+        function updateDisplay() {
+            elapsedTime = Date.now() - startTime;
+            const seconds = (elapsedTime / 1000).toFixed(3);
+            document.getElementById('timerDisplay').textContent = seconds;
+        }
+
+        function updateTimesList() {
+            const listHTML = times.map((t, index) => {
+                const seconds = (t.time / 1000).toFixed(3);
+                return `<div>#${index + 1}: ${seconds}s @ ${t.date}</div>`;
+            }).join('');
+            document.getElementById('timesList').innerHTML = listHTML || '(No times yet)';
+        }
+
+        // Bluetooth GanTimer functions
+        async function connectBluetooth() {
+            try {
+                document.getElementById('status').textContent = 'Searching for GanTimer...';
+                
+                const device = await navigator.bluetooth.requestDevice({
+                    filters: [
+                        { services: [GAN_SERVICE_UUID] }
+                    ]
+                }).catch(() => {
+                    // Fallback if filtered request doesn't work
+                    return navigator.bluetooth.requestDevice({
+                        acceptAllDevices: true
+                    });
+                });
+
+                bluetoothDevice = device;
+                console.log('Connected to device:', device.name);
+                
+                const server = await device.gatt.connect();
+                console.log('GATT server connected');
+                
+                // Get the GAN service
+                let service;
+                try {
+                    service = await server.getPrimaryService(GAN_SERVICE_UUID);
+                    console.log('Found GAN service');
+                } catch (e) {
+                    console.log('GAN service not found');
+                    throw new Error('GAN service not found');
+                }
+                
+                // Get the STATE characteristic (this is what we subscribe to)
+                let stateCharacteristic;
+                try {
+                    stateCharacteristic = await service.getCharacteristic(GAN_STATE_CHAR_UUID);
+                    console.log('Found GAN state characteristic - subscribing to this!');
+                } catch (e) {
+                    console.log('State characteristic not found, trying alternatives');
+                    throw new Error('State characteristic not found');
+                }
+                
+                bluetoothCharacteristic = stateCharacteristic;
+                
+                // Enable notifications/subscriptions on the state characteristic
+                try {
+                    await bluetoothCharacteristic.startNotifications();
+                    console.log('Notifications ENABLED - waiting for automatic updates from device');
+                } catch (e) {
+                    console.error('Failed to start notifications:', e);
+                    throw e;
+                }
+                
+                // Listen for state updates from the device
+                bluetoothCharacteristic.addEventListener('characteristicvaluechanged', handleGanTimerData);
+                
+                ganTimerLastState = null;
+                updateGanTimerInfo('idle', 0);
+                document.getElementById('bluetoothStatus').textContent = `✓ Connected: ${device.name || 'GanTimer Device'}`;
+                document.getElementById('status').textContent = 'GanTimer subscribed! Place hands on timer to begin.';
+                console.log('GanTimer subscriptions active - ready for events');
+                
+            } catch (error) {
+                console.error('Bluetooth connection error:', error);
+                document.getElementById('status').textContent = 'Failed: ' + error.message;
+                updateGanTimerInfo('disconnected', 0);
+            }
+        }
+
+        function updateGanTimerInfo(state, value) {
+            ganTimerState = state;
+            const infoDiv = document.getElementById('gantimerInfo');
+            const stateDiv = document.getElementById('gantimerState');
+            
+            let stateText = '';
+            switch(state) {
+                case 'idle':
+                    stateText = '🔄 Idle - Place hands on timer';
+                    break;
+                case 'hands_on':
+                    stateText = '👆 Hands On - Hold and wait...';
+                    break;
+                case 'hands_off':
+                    stateText = '⚡ Hands Off - Waiting during grace period';
+                    break;
+                case 'get_set':
+                    stateText = '⏳ Get Set! - Timer ready, remove hands to start';
+                    break;
+                case 'running':
+                    stateText = `⏱️ Running - ${(value / 1000).toFixed(3)}s`;
+                    break;
+                case 'stopped':
+                    stateText = `⏹️ Stopped - Final: ${(value / 1000).toFixed(3)}s`;
+                    break;
+                case 'finished':
+                    stateText = `✅ Finished - ${(value / 1000).toFixed(3)}s saved`;
+                    break;
+                case 'disconnected':
+                    stateText = '❌ Not Connected';
+                    infoDiv.style.display = 'none';
+                    return;
+                default:
+                    stateText = `⚙️ ${state}`;
+            }
+            
+            stateDiv.textContent = stateText;
+            infoDiv.style.display = 'block';
+        }
+
+        function handleGanTimerData(event) {
+            try {
+                const value = event.target.value;
+                const dataBytes = new Uint8Array(value.buffer);
+                
+                // GAN timer protocol: Byte 0 is magic 0xFE, Byte 3 is state
+                if (dataBytes[0] !== 0xFE) {
+                    console.log('Invalid magic byte, received:', Array.from(dataBytes).map(b => '0x' + b.toString(16).padStart(2, '0')).join(' '));
+                    return;
+                }
+                
+                const stateCode = dataBytes[3];
+                console.log('GAN State:', stateCode, 'Raw:', Array.from(dataBytes).map(b => '0x' + b.toString(16).padStart(2, '0')).join(' '));
+                
+                // Parse time if state is STOPPED
+                let timerValue = 0;
+                if (stateCode === GAN_STATE.STOPPED && dataBytes.length >= 8) {
+                    // Bytes 4-5: minutes, seconds
+                    // Bytes 6-7: milliseconds (little-endian)
+                    const minutes = dataBytes[4];
+                    const seconds = dataBytes[5];
+                    const millis = dataBytes[6] | (dataBytes[7] << 8);
+                    timerValue = (minutes * 60000) + (seconds * 1000) + millis;
+                    ganTimerRecordedTime = timerValue;
+                }
+                
+                // Handle state transitions
+                switch(stateCode) {
+                    case GAN_STATE.DISCONNECT:
+                        console.log('GAN State: DISCONNECT');
+                        updateGanTimerInfo('disconnected', 0);
+                        break;
+                        
+                    case GAN_STATE.IDLE:
+                        if (ganTimerLastState !== GAN_STATE.IDLE) {
+                            updateGanTimerInfo('idle', 0);
+                            console.log('GAN State: IDLE');
+                        }
+                        break;
+                        
+                    case GAN_STATE.HANDS_ON:
+                        if (ganTimerLastState !== GAN_STATE.HANDS_ON) {
+                            updateGanTimerInfo('hands_on', 0);
+                            console.log('GAN State: HANDS_ON');
+                        }
+                        break;
+                        
+                    case GAN_STATE.HANDS_OFF:
+                        if (ganTimerLastState !== GAN_STATE.HANDS_OFF) {
+                            updateGanTimerInfo('hands_off', 0);
+                            console.log('GAN State: HANDS_OFF');
+                        }
+                        break;
+                        
+                    case GAN_STATE.GET_SET:
+                        if (ganTimerLastState !== GAN_STATE.GET_SET) {
+                            updateGanTimerInfo('get_set', 0);
+                            isReady = true;
+                            console.log('GAN State: GET_SET - Ready!');
+                        }
+                        break;
+                        
+                    case GAN_STATE.RUNNING:
+                        if (ganTimerLastState !== GAN_STATE.RUNNING) {
+                            console.log('GAN State: RUNNING - Starting!');
+                            if (!isRunning) {
+                                startTimer();
+                            }
+                        }
+                        // Update display with current running time
+                        updateGanTimerInfo('running', elapsedTime);
+                        break;
+                        
+                    case GAN_STATE.STOPPED:
+                        updateGanTimerInfo('stopped', timerValue);
+                        if (isRunning) {
+                            elapsedTime = timerValue;
+                            updateDisplay();
+                            stopTimer();
+                        }
+                        console.log('GAN State: STOPPED - Time:', (timerValue / 1000).toFixed(3));
+                        break;
+                        
+                    case GAN_STATE.FINISHED:
+                        updateGanTimerInfo('finished', ganTimerRecordedTime);
+                        console.log('GAN State: FINISHED');
+                        break;
+                        
+                    default:
+                        console.log('Unknown state:', stateCode);
+                }
+                
+                ganTimerLastState = stateCode;
+            } catch (error) {
+                console.error('Error parsing timer data:', error);
+            }
+        }
+
+        function pollGanTimerData() {
+            // No longer needed - subscription handles everything
+        }
+
+        // Keyboard shortcuts - Space hold for 1.5s to get ready, release to start, press to stop
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                
+                if (isRunning) {
+                    // Stop timer on space press while running
+                    stopTimer();
+                    return;
+                }
+                
+                if (!spacePressed && !isReady) {
+                    spacePressed = true;
+                    spacePressStartTime = Date.now();
+                    document.getElementById('status').textContent = 'Holding space...';
+                    
+                    // Check if space is held for 1.5 seconds
+                    readyCheckInterval = setInterval(() => {
+                        if (spacePressed && (Date.now() - spacePressStartTime) >= SPACE_HOLD_TIME) {
+                            isReady = true;
+                            document.getElementById('timerDisplay').style.fontWeight = 'bold';
+                            document.getElementById('status').textContent = 'Ready! Release to start...';
+                            clearInterval(readyCheckInterval);
+                        }
+                    }, 10);
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                
+                if (spacePressed) {
+                    clearInterval(readyCheckInterval);
+                    const holdTime = Date.now() - spacePressStartTime;
+                    spacePressed = false;
+                    
+                    if (isReady) {
+                        // Was ready, now releasing - start timer
+                        startTimer();
+                        isReady = false;
+                    } else if (holdTime < SPACE_HOLD_TIME) {
+                        document.getElementById('status').textContent = 'Hold for 1.5 seconds to get ready';
+                    }
+                }
+            }
+        });
+
+        // Check for Bluetooth support
+        if (!navigator.bluetooth) {
+            document.getElementById('bluetoothStatus').textContent = '⚠ Bluetooth API not available';
+        } else if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+            document.getElementById('bluetoothStatus').textContent = '⚠ Web Bluetooth requires HTTPS (or localhost). Use HTTPS to enable on Android!';
+        }
+
+        updateTimesList();
+    </script>
+</body>
+</html>
