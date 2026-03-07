@@ -18,26 +18,43 @@
 </head>
 <body>
     <div class="m3-card2">
-        <p id="scramble"> oke </p>
+        <p id="scramble"> scramble </p>
     </div>
-    <div class="m3-card">
+    <div class="m3-card" style="height: 60%;">
+        <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" height="30px" width="30px" src="./media/icons/bluetooth.png" alt="Connect Bluetooth timer"></button>
+        <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)" style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">0.000
+        </div>
         
-        <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)" style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">0.000</div>
+        <div class="spinner-container" style="    left: 50%;    position: absolute;     top: 0px;
+
+    transform: translateX(-50%);"> 
+            <div class="spiner-part1"> 3x3 </div>
+            <div class="spiner-part2"> <img height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
+        </div>
+
     </div>
 
     
-    <button class="m3-ButtonWithIconWithAnimatedShapeSample" style="padding: 3px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" onclick="connectBluetooth()"><img height="30px" width="30px" src="./media/icons/bluetooth.png" alt="Connect Bluetooth timer"></button>
-    <button onclick="deleteAllTimes()" style="margin-left: 10px; background-color: #ff6b6b; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Delete All Times</button>
     
-    <div id="bluetoothStatus">Bluetooth: Not Connected</div>
-    <div id="status"></div>
-    <div id="gantimerInfo" style="display: none; margin-top: 10px; padding: 10px; background: #e3f2fd; border: 1px solid #2196F3;">
+    <button onclick="deleteAllTimes()" style="margin-left: 10px; background-color: #ff6b6b; color: white; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer;">Delete All Times</button>
+    
+    <div id="gantimerInfo" style="display: none; margin-top: 10px; padding: 10px; background: #e3f2fd; border: 1px solid #2196F3; border-radius: 16px;">
         <strong>GanTimer Info:</strong><br>
         <div id="gantimerState">-</div>
     </div>
     
-    <h3>Times</h3>
-    <div id="timesList"></div>
+        <div class="spinner-container"> 
+            <div class="spiner-part1"> Your times: </div>
+            <div onclick='timesListClick()' class="spiner-part2"> <img id="timesListIcon" height="30px" width="30px" style="rotate: 180deg;" src="./media/icons/arrow_down.png"> </div>
+        </div>
+    <div id="timesList2"class="m3-card2" style=" padding: 10px; max-height: 200px; overflow-y: auto;">
+
+        <div id="timesList"></div>
+    </div>
+    <p style="margin: 50px"> </p>
+    <div id="notificationsBox" class="notification">
+            <p>  </p>
+    </div>
     <div  class="nav-bar">
         <div onclick="homeButtonClick()" class="nav-bar-element"> 
             <img id="home-button" class="nav-bar-image nav-bar-image-choosed" src="./media/icons/home_filled.png">
@@ -64,6 +81,18 @@
             .catch(err => console.log('Error reghistering SW:', err));
     });
 }
+
+        const timesList = document.getElementById('timesList2');
+        const timesListIcon = document.getElementById('timesListIcon');
+        function timesListClick() {
+            if (timesList.style.display === 'block' || timesList.style.display === '') {
+                timesList.style.display = 'none';
+                timesListIcon.style.transform = 'rotate(180deg)';
+            } else {
+                timesList.style.display = 'block';
+                timesListIcon.style.transform = 'rotate(0deg)';
+            }
+        }
 
         let timerInterval = null;
         let startTime = 0;
@@ -103,6 +132,51 @@
         
         let ganTimerLastState = null;
         let ganTimerRecordedTime = 0;
+        
+        let notificationTimeout = null;
+        let wakeLock = null;
+
+        // Request wake lock to keep screen on during timer
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Screen wake lock acquired');
+                    wakeLock.addEventListener('release', () => {
+                        console.log('Screen wake lock released');
+                    });
+                }
+            } catch (err) {
+                console.log('Wake lock not available:', err);
+            }
+        }
+
+        // Release wake lock
+        function releaseWakeLock() {
+            if (wakeLock) {
+                wakeLock.release();
+                wakeLock = null;
+            }
+        }
+
+        // Show notification for 3 seconds
+        function showNotification(message, type = 'info') {
+            const notifBox = document.getElementById('notificationsBox');
+            const notifText = notifBox.querySelector('p');
+            
+            notifText.textContent = message;
+            notifBox.style.display = 'block';
+            
+            // Clear any existing timeout
+            if (notificationTimeout) {
+                clearTimeout(notificationTimeout);
+            }
+            
+            // Hide after 3 seconds
+            notificationTimeout = setTimeout(() => {
+                notifBox.style.display = 'none';
+            }, 3000);
+        }
 
         // Load times from localStorage on page load
         function loadTimes() {
@@ -171,7 +245,8 @@
                 isReady = false;
                 startTime = Date.now() - elapsedTime;
                 document.getElementById('timerDisplay').style.fontWeight = 'bold';
-                document.getElementById('status').textContent = 'Running...';
+                requestWakeLock();
+                showNotification('⏱️ Timer running...', 'info');
                 
                 timerInterval = setInterval(updateDisplay, 10);
             }
@@ -194,7 +269,13 @@
                 
                 saveTimes(); // Save to localStorage
                 updateTimesList();
-                document.getElementById('status').textContent = 'Time saved!';
+                releaseWakeLock();
+                showNotification('✓ Time saved!', 'success');
+                
+                // Update last solve time display
+                const seconds = (elapsedTime / 1000).toFixed(3);
+                document.getElementById('last-solve').textContent = `last solve: ${seconds}`;
+                
                 if (ganTimerState !== 'disconnected') {
                     updateGanTimerInfo('stopped', elapsedTime);
                 }
@@ -215,7 +296,7 @@
             spacePressed = false;
             document.getElementById('timerDisplay').textContent = '0.000';
             document.getElementById('timerDisplay').style.fontWeight = 'bold';
-            document.getElementById('status').textContent = '';
+            releaseWakeLock();
             if (ganTimerState !== 'disconnected') {
                 updateGanTimerInfo('idle', 0);
             }
@@ -239,7 +320,13 @@
         // Bluetooth GanTimer functions
         async function connectBluetooth() {
             try {
-                document.getElementById('status').textContent = 'Searching for GanTimer...';
+                // Check if Bluetooth API is available
+                if (!navigator.bluetooth) {
+                    showNotification('⚠ Bluetooth API not supported in this browser', 'error');
+                    return;
+                }
+                
+                showNotification('🔍 Searching for GanTimer...', 'info');
                 
                 const device = await navigator.bluetooth.requestDevice({
                     filters: [
@@ -294,21 +381,30 @@
                 
                 ganTimerLastState = null;
                 updateGanTimerInfo('idle', 0);
-                document.getElementById('bluetoothStatus').textContent = `✓ Connected: ${device.name || 'GanTimer Device'}`;
-                document.getElementById('status').textContent = 'GanTimer subscribed! Place hands on timer to begin.';
+                updateBluetoothIcon(true);
+                requestWakeLock();
+                showNotification(`✓ Connected: ${device.name || 'GanTimer Device'} - Ready to begin!`, 'success');
                 console.log('GanTimer subscriptions active - ready for events');
                 
             } catch (error) {
                 console.error('Bluetooth connection error:', error);
-                document.getElementById('status').textContent = 'Failed: ' + error.message;
                 updateGanTimerInfo('disconnected', 0);
+                updateBluetoothIcon(false);
+                showNotification(`✗ Connection Failed: ${error.message}`, 'error');
+            }
+        }
+
+        function updateBluetoothIcon(connected) {
+            const icon = document.getElementById('bluetoothIcon');
+            if (connected) {
+                icon.src = './media/icons/bluetooth_connected.png';
+            } else {
+                icon.src = './media/icons/bluetooth.png';
             }
         }
 
         function updateGanTimerInfo(state, value) {
             ganTimerState = state;
-            const infoDiv = document.getElementById('gantimerInfo');
-            const stateDiv = document.getElementById('gantimerState');
             
             let stateText = '';
             switch(state) {
@@ -335,14 +431,13 @@
                     break;
                 case 'disconnected':
                     stateText = '❌ Not Connected';
-                    infoDiv.style.display = 'none';
                     return;
                 default:
                     stateText = `⚙️ ${state}`;
             }
             
-            stateDiv.textContent = stateText;
-            infoDiv.style.display = 'block';
+            // Show status in notifications box instead of gantimerInfo div
+            showNotification(stateText, 'info');
         }
 
         function handleGanTimerData(event) {
@@ -376,8 +471,7 @@
                     case GAN_STATE.DISCONNECT:
                         console.log('GAN State: DISCONNECT');
                         updateGanTimerInfo('disconnected', 0);
-                        break;
-                        
+                    updateBluetoothIcon(false);
                     case GAN_STATE.IDLE:
                         if (ganTimerLastState !== GAN_STATE.IDLE) {
                             updateGanTimerInfo('idle', 0);
@@ -451,9 +545,8 @@
         function handleTouchStart(event) {
             // If timer is not running but was previously running, reset and start fresh
             if (!isRunning && elapsedTime > 0) {
-                elapsedTime = 0;
-                document.getElementById('timerDisplay').textContent = '0.000';
-                document.getElementById('status').textContent = '';
+                resetTimer();
+                return;
             }
 
             if (isRunning) {
@@ -464,14 +557,14 @@
             if (!spacePressed && !isReady) {
                 spacePressed = true;
                 touchStartTime = Date.now();
-                document.getElementById('status').textContent = 'Holding screen...';
+                showNotification('👆 Holding screen...', 'info');
                 
                 // Check if touch is held for 0.5 seconds
                 touchHoldInterval = setInterval(() => {
                     if (spacePressed && (Date.now() - touchStartTime) >= SPACE_HOLD_TIME) {
                         isReady = true;
                         document.getElementById('timerDisplay').style.fontWeight = 'bold';
-                        document.getElementById('status').textContent = 'Ready! Release to start...';
+                        showNotification('🚀 Ready! Release to start...', 'info');
                         clearInterval(touchHoldInterval);
                     }
                 }, 10);
@@ -490,7 +583,7 @@
                     startTimer();
                     isReady = false;
                 } else if (holdTime < SPACE_HOLD_TIME) {
-                    document.getElementById('status').textContent = 'Hold for 0.5 seconds to get ready';
+                    showNotification('👆 Hold for 0.5 seconds to get ready', 'info');
                 }
             }
         }
@@ -502,9 +595,8 @@
                 
                 // If timer is not running but was previously running, reset and start fresh
                 if (!isRunning && elapsedTime > 0) {
-                    elapsedTime = 0;
-                    document.getElementById('timerDisplay').textContent = '0.000';
-                    document.getElementById('status').textContent = '';
+                    resetTimer();
+                    return;
                 }
                 
                 if (isRunning) {
@@ -516,14 +608,14 @@
                 if (!spacePressed && !isReady) {
                     spacePressed = true;
                     spacePressStartTime = Date.now();
-                    document.getElementById('status').textContent = 'Holding space...';
+                    showNotification('⏸️ Holding space...', 'info');
                     
                     // Check if space is held for 0.5 seconds
                     readyCheckInterval = setInterval(() => {
                         if (spacePressed && (Date.now() - spacePressStartTime) >= SPACE_HOLD_TIME) {
                             isReady = true;
                             document.getElementById('timerDisplay').style.fontWeight = 'bold';
-                            document.getElementById('status').textContent = 'Ready! Release to start...';
+                            showNotification('🚀 Ready! Release to start...', 'info');
                             clearInterval(readyCheckInterval);
                         }
                     }, 10);
@@ -546,7 +638,7 @@
                         startTimer();
                         isReady = false;
                     } else if (holdTime < SPACE_HOLD_TIME) {
-                        document.getElementById('status').textContent = 'Hold for 0.5 seconds to get ready';
+                        showNotification('⏸️ Hold for 0.5 seconds to get ready', 'info');
                     }
                 }
             }
@@ -554,9 +646,9 @@
 
         // Check for Bluetooth support
         if (!navigator.bluetooth) {
-            document.getElementById('bluetoothStatus').textContent = '⚠ Bluetooth API not available';
+            showNotification('⚠ Bluetooth API not supported in this browser', 'error');
         } else if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-            document.getElementById('bluetoothStatus').textContent = '⚠ Web Bluetooth requires HTTPS (or localhost). Use HTTPS to enable on Android!';
+            showNotification('⚠ Web Bluetooth requires HTTPS or localhost', 'error');
         }
 
         // Load times and scramble on page load

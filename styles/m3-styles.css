@@ -5,6 +5,8 @@
                 height: 100vh;
                 align-items: center;
                 flex-direction: column;
+                justify-content: center;
+                text-align: center;
             }
             .m3-ButtonSample {
                 gap: 10px;
@@ -401,10 +403,8 @@
                 background-color: rgba(255, 255, 255, 0.1);
             }
             .m3-card {
-                background-color: #e7e0ec;
                 padding: 20px;
                 border-radius: 12px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 margin: 20px;
                 text-align: center;
                 color: #262035;
@@ -412,11 +412,14 @@
                 align-items: center;
                 width: 90%;
                 max-width: 600px;
+                position: relative;
+                padding-top: 40px;
             }
             .m3-card2 {
                 background-color: #e7e0ec;
                 padding: 5px;
                 margin: 20px;
+                margin-bottom: 0px;
                 border-radius: 16px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 font-family: 'Google Sans', sans-serif;
@@ -428,4 +431,5 @@
                 justify-content: center;
                 align-items: center;
                 font-weight: 500;
+                display: block;
             }
