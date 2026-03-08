@@ -22,7 +22,8 @@
     </div>
     <div class="m3-card" style="height: 60%;">
         <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" height="30px" width="30px" src="./media/icons/bluetooth.png" alt="Connect Bluetooth timer"></button>
-        <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)" style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">0.000
+        <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)" style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;"><span id="timerNumbers">0.000</span>
+            <p id="last-solve" style="display: none; text-align: center; font-family: 'Google Sans'; color: #49454F; margin-top: 10px; font-size: 14px;"></p>
         </div>
         
         <div class="spinner-container" style="    left: 50%;    position: absolute;     top: 0px;
@@ -31,12 +32,11 @@
             <div class="spiner-part1"> 3x3 </div>
             <div class="spiner-part2"> <img height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
         </div>
-
     </div>
 
     
-    
-    
+
+
     <div id="gantimerInfo" style="display: none; margin-top: 10px; padding: 10px; background: #e3f2fd; border: 1px solid #2196F3; border-radius: 16px;">
         <strong>GanTimer Info:</strong><br>
         <div id="gantimerState">-</div>
@@ -45,10 +45,10 @@
         <div class="spinner-container"> 
             <div class="spiner-part1"> Your times: </div>
             
-            <div onclick='timesListClick()' class="spiner-part2"> <img id="timesListIcon" height="30px" width="30px" style="rotate: 180deg;" src="./media/icons/arrow_down.png"> </div>
+            <div onclick='timesListClick()' class="spiner-part2"> <img id="timesListIcon" height="30px" width="30px" style="rotate: 0deg;" src="./media/icons/arrow_down.png"> </div>
         </div>
         
-    <div id="timesList2"class="m3-card2" style=" padding: 10px; max-height: 200px; overflow-y: auto;">
+    <div id="timesList2"class="m3-card2" style=" padding: 10px; max-height: 200px; overflow-y: auto; display: none;">
         <button onclick="deleteAllTimes()" class="m3-FilledTonalButtonWithAnimatedShapeSample" style="scale: 1; margin: 0 auto; margin-bottom: 10px;"> Delete All Times</button>
     
         <div id="timesList"></div>
@@ -89,10 +89,10 @@
         function timesListClick() {
             if (timesList.style.display === 'block' || timesList.style.display === '') {
                 timesList.style.display = 'none';
-                timesListIcon.style.transform = 'rotate(180deg)';
+                timesListIcon.style.transform = 'rotate(0deg)';
             } else {
                 timesList.style.display = 'block';
-                timesListIcon.style.transform = 'rotate(0deg)';
+                timesListIcon.style.transform = 'rotate(180deg)';
             }
         }
 
@@ -152,7 +152,22 @@
                 console.log('Wake lock not available:', err);
             }
         }
+        function formatTime(ms) {
+            const minutes = Math.floor(ms / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            const milliseconds = Math.floor(ms % 1000);
 
+            const msStr = milliseconds.toString().padStart(3, '0');
+            
+            if (minutes > 0) {
+                // Format M:SS.mmm (sekundy muszą mieć zero wiodące, np. 1:05.000)
+                const secStr = seconds.toString().padStart(2, '0');
+                return `${minutes}:${secStr}.${msStr}`;
+            } else {
+                // Format S.mmm (bez zera wiodącego, np. 5.000)
+                return `${seconds}.${msStr}`;
+            }
+        }
         // Release wake lock
         function releaseWakeLock() {
             if (wakeLock) {
@@ -198,6 +213,7 @@
         function deleteAllTimes() {
             if (confirm('Are you sure you want to delete all saved times?')) {
                 times = [];
+                updateLastSolveDisplay();
                 updateTimesList();
                 saveTimes();
             }
@@ -259,34 +275,41 @@
                 isRunning = false;
                 clearInterval(timerInterval);
                 
-                // Get current scramble
+                // Pobieramy aktualny scramble, który był wyświetlany podczas ułożenia
                 const currentScramble = getCurrentScramble();
                 
-                // Record the time with scramble
+                // Dodajemy nowy czas na początek tablicy
                 times.unshift({
                     time: elapsedTime,
                     date: new Date().toLocaleTimeString(),
                     scramble: currentScramble
                 });
                 
-                saveTimes(); // Save to localStorage
+                // Zapisujemy nową listę w pamięci przeglądarki
+                saveTimes(); 
+                
+                // Aktualizujemy listę na dole strony
                 updateTimesList();
+                
+                // Aktualizujemy napis "last solve" pod timerem korzystając z formatowania
+                const formatted = formatTime(elapsedTime);
+                document.getElementById('last-solve').textContent = `last solve: ${formatted}`;
+                document.getElementById('last-solve').style.display = 'block';
+
                 releaseWakeLock();
                 showNotification('✓ Time saved!', 'success');
                 
-                // Update last solve time display
-                const seconds = (elapsedTime / 1000).toFixed(3);
-                document.getElementById('last-solve').textContent = `last solve: ${seconds}`;
-                
-                if (ganTimerState !== 'disconnected') {
+                // Obsługa Bluetooth GanTimer jeśli jest połączony
+                if (typeof ganTimerState !== 'undefined' && ganTimerState !== 'disconnected') {
                     updateGanTimerInfo('stopped', elapsedTime);
                 }
                 
-                // Generate new scramble when timer stops
+                // Generujemy i ustawiamy nowy scramble do kolejnego ułożenia
                 const newScramble = generateScramble();
                 localStorage.setItem('cubeTimerScramble', newScramble);
                 document.getElementById('scramble').textContent = newScramble;
-                console.log('New scramble generated:', newScramble);
+                
+                console.log('Solve saved and new scramble generated');
             }
         }
 
@@ -296,25 +319,23 @@
             clearInterval(timerInterval);
             elapsedTime = 0;
             spacePressed = false;
-            document.getElementById('timerDisplay').textContent = '0.000';
+            document.getElementById('timerNumbers').textContent = '0.000';
             document.getElementById('timerDisplay').style.fontWeight = 'bold';
             releaseWakeLock();
             if (ganTimerState !== 'disconnected') {
                 updateGanTimerInfo('idle', 0);
             }
         }
-
         function updateDisplay() {
             elapsedTime = Date.now() - startTime;
-            const seconds = (elapsedTime / 1000).toFixed(3);
-            document.getElementById('timerDisplay').textContent = seconds;
+            document.getElementById('timerNumbers').textContent = formatTime(elapsedTime);
         }
 
         function updateTimesList() {
             const listHTML = times.map((t, index) => {
-                const seconds = (t.time / 1000).toFixed(3);
+                const formatted = formatTime(t.time);
                 const scrambleText = t.scramble ? ` | ${t.scramble}` : '';
-                return `<div>#${index + 1}: ${seconds}s @ ${t.date}${scrambleText}</div>`;
+                return `<div>#${times.length - index}: ${formatted}${scrambleText}</div>`;
             }).join('');
             document.getElementById('timesList').innerHTML = listHTML || '(No times yet)';
         }
@@ -415,23 +436,27 @@
                     if (ganTimerLastState !== GAN_STATE.IDLE) {
         resetTimer(); 
         updateGanTimerInfo('idle', 0);
-        console.log('GAN State: IDLE - Timer resetowany');
+        console.log('GAN State: IDLE - Timer Reseted');
     }
     break;
                 case 'hands_on':
                     stateText = '👆 Hands On - Hold and wait...';
+                    timerDisplay.style.color = '#B3261E'; // M3 Red
                     break;
                 case 'hands_off':
                     stateText = '⚡ Hands Off - Waiting during grace period';
                     break;
                 case 'get_set':
                     stateText = '⏳ Get Set! - Timer ready, remove hands to start';
+                    timerDisplay.style.color = '#2E7D32'; // M3 Green
                     break;
                 case 'running':
                     stateText = `⏱️ Running - ${(value / 1000).toFixed(3)}s`;
+                    timerDisplay.style.color = '';
                     break;
                 case 'stopped':
                     stateText = `⏹️ Stopped - Final: ${(value / 1000).toFixed(3)}s`;
+                    timerDisplay.style.color = '';
                     break;
                 case 'finished':
                     stateText = `✅ Finished - ${(value / 1000).toFixed(3)}s saved`;
@@ -549,78 +574,103 @@
         }
 
         // Touch support for mobile - hold 0.5s to ready, release to start
-        function handleTouchStart(event) {
-            // If timer is not running but was previously running, reset and start fresh
-            if (!isRunning && elapsedTime > 0) {
-                resetTimer();
-                return;
-            }
+function handleTouchStart(event) {
+    // Zapobiega domyślnym akcjom przeglądarki (zoom, scroll)
+    if (event.cancelable) event.preventDefault();
 
-            if (isRunning) {
-                stopTimer();
-                return;
-            }
+    // 1. Jeśli timer działa - ZATRZYMAJ GO i wyjdź
+    if (isRunning) {
+        stopTimer();
+        return; 
+    }
 
-            if (!spacePressed && !isReady) {
-                spacePressed = true;
-                touchStartTime = Date.now();
-                showNotification('👆 Holding screen...', 'info');
-                
-                // Check if touch is held for 0.5 seconds
-                touchHoldInterval = setInterval(() => {
-                    if (spacePressed && (Date.now() - touchStartTime) >= SPACE_HOLD_TIME) {
-                        isReady = true;
-                        document.getElementById('timerDisplay').style.fontWeight = 'bold';
-                        showNotification('🚀 Ready! Release to start...', 'info');
-                        clearInterval(touchHoldInterval);
-                    }
-                }, 10);
-            }
+    // 2. Jeśli timer nie działa (jest zatrzymany)
+    if (!spacePressed && !isReady) {
+        // RESETUJEMY WIZUALNIE: Jeśli na ekranie jest stary czas, 
+        // zerujemy go, ale NIE przerywamy funkcji, idziemy dalej do "hold"
+        if (elapsedTime > 0) {
+            elapsedTime = 0;
+            document.getElementById('timerNumbers').textContent = '0.000';
         }
 
-        function handleTouchEnd(event) {
-            if (spacePressed) {
+        // STARTUJEMY PROCEDURĘ TRZYMANIA (HOLD)
+        spacePressed = true;
+        touchStartTime = Date.now();
+        
+        // Zmieniamy kolor na czerwony (czekaj)
+        document.getElementById('timerDisplay').style.color = '#B3261E'; 
+
+        if (touchHoldInterval) clearInterval(touchHoldInterval);
+
+        touchHoldInterval = setInterval(() => {
+            if (spacePressed && (Date.now() - touchStartTime) >= SPACE_HOLD_TIME) {
+                isReady = true;
+                // Zmieniamy kolor na zielony (gotowy!)
+                document.getElementById('timerDisplay').style.color = '#2E7D32'; 
+                showNotification('🚀 Ready! Release to start...', 'info');
                 clearInterval(touchHoldInterval);
-                const holdTime = Date.now() - touchStartTime;
-                spacePressed = false;
-                
-                if (isReady) {
-                    // Was ready, now releasing - start timer
-                    document.getElementById('timerDisplay').style.fontWeight = 'bold';
-                    startTimer();
-                    isReady = false;
-                } else if (holdTime < SPACE_HOLD_TIME) {
-                    showNotification('👆 Hold for 0.5 seconds to get ready', 'info');
-                }
+            }
+        }, 10);
+    }
+}
+
+function handleTouchEnd(event) {
+    if (event.cancelable) event.preventDefault();
+    
+    if (spacePressed) {
+        clearInterval(touchHoldInterval);
+        const holdTime = Date.now() - touchStartTime;
+        spacePressed = false;
+
+        if (isReady) {
+            // Startujemy nowy pomiar
+            document.getElementById('timerDisplay').style.color = ''; // Powrót do domyślnego
+            startTimer();
+            isReady = false;
+        } else {
+            // Puściłeś za wcześnie - zresetuj kolor i stan
+            document.getElementById('timerDisplay').style.color = '';
+            isReady = false;
+            if (holdTime < SPACE_HOLD_TIME) {
+                showNotification('👆 Hold for 0.5 seconds', 'info');
             }
         }
+    }
+}
 
-        // Keyboard shortcuts - Space hold for 0.5s to get ready, release to start, press to stop
+// Keyboard shortcuts - Space hold for 0.5s to get ready, release to start, press to stop
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
                 e.preventDefault();
                 
-                // If timer is not running but was previously running, reset and start fresh
-                if (!isRunning && elapsedTime > 0) {
-                    resetTimer();
-                    return;
-                }
-                
+                // 1. Jeśli timer działa, zatrzymaj go i wyjdź
                 if (isRunning) {
-                    // Stop timer on space press while running
                     stopTimer();
                     return;
                 }
-                
+
+                // 2. Logika "uzbrajania" (hold)
                 if (!spacePressed && !isReady) {
+                    // Resetujemy wynik wizualnie, jeśli jakiś był, ale NIE przerywamy funkcji
+                    if (elapsedTime > 0) {
+                        resetTimer();
+                    }
+
                     spacePressed = true;
                     spacePressStartTime = Date.now();
+
+                    // Ustawiamy kolor CZERWONY od razu po naciśnięciu
+                    document.getElementById('timerNumbers').style.color = '#B3261E';
                     showNotification('⏸️ Holding space...', 'info');
                     
-                    // Check if space is held for 0.5 seconds
+                    // Czyścimy stary interwał na wszelki wypadek
+                    if (readyCheckInterval) clearInterval(readyCheckInterval);
+
                     readyCheckInterval = setInterval(() => {
                         if (spacePressed && (Date.now() - spacePressStartTime) >= SPACE_HOLD_TIME) {
                             isReady = true;
+                            // Zmieniamy na ZIELONY po 0.5s
+                            document.getElementById('timerNumbers').style.color = '#2E7D32';
                             document.getElementById('timerDisplay').style.fontWeight = 'bold';
                             showNotification('🚀 Ready! Release to start...', 'info');
                             clearInterval(readyCheckInterval);
@@ -633,19 +683,19 @@
         document.addEventListener('keyup', (e) => {
             if (e.code === 'Space') {
                 e.preventDefault();
-                
                 if (spacePressed) {
                     clearInterval(readyCheckInterval);
                     const holdTime = Date.now() - spacePressStartTime;
                     spacePressed = false;
                     
+                    // Powrót do domyślnego koloru cyfr
+                    document.getElementById('timerNumbers').style.color = '#262035';
+
                     if (isReady) {
-                        // Was ready, now releasing - start timer
-                        document.getElementById('timerDisplay').style.fontWeight = 'bold';
                         startTimer();
                         isReady = false;
                     } else if (holdTime < SPACE_HOLD_TIME) {
-                        showNotification('⏸️ Hold for 0.5 seconds to get ready', 'info');
+                        showNotification('⏸️ Hold for 0.5 seconds', 'info');
                     }
                 }
             }
@@ -657,9 +707,42 @@
         } else if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
             showNotification('⚠ Web Bluetooth requires HTTPS or localhost', 'error');
         }
+        function updateLastSolveDisplay() {
+            const lastSolveElement = document.getElementById('last-solve');
+            
+            // Sprawdzamy czy element w ogóle istnieje w HTML
+            if (!lastSolveElement) return;
 
+            // Sprawdzamy czy mamy jakieś czasy w tablicy 'times'
+            if (times && times.length > 0) {
+                const lastTime = times[0]; // Pobieramy najnowszy czas
+                
+                // Formatuje milisekundy na M:SS.mmm lub S.mmm
+                const formatted = formatTime(lastTime.time);
+                
+                lastSolveElement.textContent = `last solve: ${formatted}`;
+                lastSolveElement.style.display = 'block'; // Pokazuje element
+            } else {
+                // Jeśli lista jest pusta, czyścimy i ukrywamy
+                lastSolveElement.textContent = '';
+                lastSolveElement.style.display = 'none';
+            }
+        }
+
+// Wywołujemy funkcję od razu przy ładowaniu strony
+
+// Musimy też pamiętać, aby wywołać tę funkcję po każdym nowym ułożeniu
+// oraz po usunięciu wszystkich czasów.
+// DOPISZ te wywołania w swoich istniejących funkcjach:
+
+// 1. W funkcji stopTimer() dopisz na końcu:
+// updateLastSolveDisplay();
+
+// 2. W funkcji deleteAllTimes() dopisz po saveTimes():
+// updateLastSolveDisplay();
         // Load times and scramble on page load
         loadTimes();
+        updateLastSolveDisplay();
         loadOrGenerateScramble();
         updateTimesList();
     </script>
