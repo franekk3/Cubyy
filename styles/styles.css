@@ -66,10 +66,10 @@
 .notification {
     display: none;
     position: fixed;
-    bottom: 100px;
+    bottom: 60px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #e7def7c3;
+    background-color: #e7def795;
     color: #65558f;
     font-weight: bold;
     text-align: center;
@@ -120,4 +120,44 @@
     color: #65558f;
     margin: 0px;
     padding: 0px;
+}
+.options-bar {
+    display: flex; /* Zawsze flex, ale kontrolujemy widoczność inaczej */
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin: 10px auto 0 auto; /* Wycentrowanie */
+    background-color: #e8def7;
+    border-radius: 16px;
+    padding: 5px;
+    width: fit-content;
+
+    /* Logika animacji */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px); /* Startuje 10px niżej */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.options-bar.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); /* Wsuwa się na miejsce */
+}
+
+.options-bar-icon {
+    height: 28px;
+    width: 28px;
+    padding: 5px; /* Trochę więcej miejsca na kliknięcie */
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    background-color: #e0d3f3;
+    cursor: pointer;
+}
+
+/* Styl dla aktywnej ikony (+2 lub DNF) */
+.options-bar-icon.active {
+    transform: scale(1.1);
+    background-color: #d0bcff; /* Nieco ciemniejszy fiolet dla zaznaczenia */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

@@ -24,6 +24,11 @@
         <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" height="30px" width="30px" src="./media/icons/bluetooth.png" alt="Connect Bluetooth timer"></button>
         <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)" style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;"><span id="timerNumbers">0.000</span>
             <p id="last-solve" style="display: none; text-align: center; font-family: 'Google Sans'; color: #49454F; margin-top: 10px; font-size: 14px;"></p>
+            <div id="options-bar"  class="options-bar" ontouchstart="event.stopPropagation()">
+                <img id="add2tosolve" class="options-bar-icon" src="./media/icons/+2.png">
+                <img id="addDnfToSolve" class="options-bar-icon" src="./media/icons/block.png">
+                <img id="deleteSolve" class="options-bar-icon" src="./media/icons/delete.png">
+            </div>
         </div>
         
         <div class="spinner-container" style="    left: 50%;    position: absolute;     top: 0px;
@@ -42,7 +47,7 @@
         <div id="gantimerState">-</div>
     </div>
     
-        <div class="spinner-container"> 
+        <div class="spinner-container" style="margin-top: 0px;"> 
             <div class="spiner-part1"> Your times: </div>
             
             <div onclick='timesListClick()' class="spiner-part2"> <img id="timesListIcon" height="30px" width="30px" style="rotate: 0deg;" src="./media/icons/arrow_down.png"> </div>
@@ -84,6 +89,21 @@
     });
 }
 
+
+function toggleOptionsBar(show) {
+    const bar = document.getElementById('options-bar');
+
+    if (show) {
+        bar.classList.add('show');
+    } else {
+        bar.classList.remove('show');
+        // Resetujemy wizualnie ikony przy znikaniu
+        document.getElementById('add2tosolve').classList.remove('active');
+        document.getElementById('addDnfToSolve').classList.remove('active');
+    }
+}
+
+
         const timesList = document.getElementById('timesList2');
         const timesListIcon = document.getElementById('timesListIcon');
         function timesListClick() {
@@ -95,6 +115,75 @@
                 timesListIcon.style.transform = 'rotate(180deg)';
             }
         }
+
+
+
+function handleIconAction(event, actionFn) {
+    if (event.cancelable) event.preventDefault();
+    event.stopPropagation(); // Kluczowe dla mobile: zatrzymuje timer
+    actionFn();
+}
+
+// Obsługa +2
+const btnPlusTwo = document.getElementById('add2tosolve');
+const plusTwoAction = () => {
+    if (times.length === 0) return;
+    const lastSolve = times[0];
+    if (lastSolve.isDnf) {
+        lastSolve.isDnf = false;
+        document.getElementById('addDnfToSolve').classList.remove('active');
+    }
+    lastSolve.isPlusTwo = !lastSolve.isPlusTwo;
+    lastSolve.time += lastSolve.isPlusTwo ? 2000 : -2000;
+    btnPlusTwo.classList.toggle('active', lastSolve.isPlusTwo);
+    finalizeUpdate();
+};
+btnPlusTwo.onclick = (e) => handleIconAction(e, plusTwoAction);
+btnPlusTwo.ontouchend = (e) => handleIconAction(e, plusTwoAction);
+
+// Obsługa DNF
+const btnDnf = document.getElementById('addDnfToSolve');
+const dnfAction = () => {
+    if (times.length === 0) return;
+    const lastSolve = times[0];
+    if (lastSolve.isPlusTwo) {
+        lastSolve.time -= 2000;
+        lastSolve.isPlusTwo = false;
+        document.getElementById('add2tosolve').classList.remove('active');
+    }
+    lastSolve.isDnf = !lastSolve.isDnf;
+    btnDnf.classList.toggle('active', lastSolve.isDnf);
+    finalizeUpdate();
+};
+btnDnf.onclick = (e) => handleIconAction(e, dnfAction);
+btnDnf.ontouchend = (e) => handleIconAction(e, dnfAction);
+
+// Obsługa Usuwania
+const btnDelete = document.getElementById('deleteSolve');
+const deleteAction = () => {
+    if (times.length === 0) return;
+    if (confirm("Are you sure you want to delete the last solve?")) {
+        times.shift();
+        saveTimes();
+        updateTimesList();
+        updateLastSolveDisplay();
+        elapsedTime = 0;
+        document.getElementById('timerNumbers').textContent = '0.000';
+        toggleOptionsBar(false);
+        showNotification("Solve deleted", "info");
+    }
+};
+btnDelete.onclick = (e) => handleIconAction(e, deleteAction);
+btnDelete.ontouchend = (e) => handleIconAction(e, deleteAction);
+
+/* --- TĘ FUNKCJĘ TEŻ ZOSTAWIAMY --- */
+function finalizeUpdate() {
+    saveTimes();
+    updateTimesList();
+    updateLastSolveDisplay();
+    const lastSolve = times[0];
+    document.getElementById('timerNumbers').textContent = lastSolve.isDnf ? "DNF" : formatTime(lastSolve.time);
+}
 
         let timerInterval = null;
         let startTime = 0;
@@ -213,6 +302,8 @@
         function deleteAllTimes() {
             if (confirm('Are you sure you want to delete all saved times?')) {
                 times = [];
+                resetTimer()
+                toggleOptionsBar(false);
                 updateLastSolveDisplay();
                 updateTimesList();
                 saveTimes();
@@ -259,6 +350,7 @@
         // Timer functions
         function startTimer() {
             if (!isRunning) {
+                toggleOptionsBar(false);
                 isRunning = true;
                 isReady = false;
                 startTime = Date.now() - elapsedTime;
@@ -272,6 +364,7 @@
 
         function stopTimer() {
             if (isRunning) {
+                toggleOptionsBar(true);
                 isRunning = false;
                 clearInterval(timerInterval);
                 
@@ -331,14 +424,22 @@
             document.getElementById('timerNumbers').textContent = formatTime(elapsedTime);
         }
 
-        function updateTimesList() {
-            const listHTML = times.map((t, index) => {
-                const formatted = formatTime(t.time);
-                const scrambleText = t.scramble ? ` | ${t.scramble}` : '';
-                return `<div>#${times.length - index}: ${formatted}${scrambleText}</div>`;
-            }).join('');
-            document.getElementById('timesList').innerHTML = listHTML || '(No times yet)';
-        }
+function updateTimesList() {
+    const listHTML = times.map((t, index) => {
+        // Logika wyświetlania kary:
+        // 1. Jeśli jest DNF -> wyświetl "DNF"
+        // 2. Jeśli nie -> wyświetl sformatowany czas
+        // 3. Jeśli do tego jest +2 -> dodaj znak "+" na końcu
+        const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
+        
+        const scrambleText = t.scramble ? ` | ${t.scramble}` : '';
+        
+        // Obliczamy numer ułożenia (od najstarszego do najnowszego)
+        return `<div>#${times.length - index}: ${formatted}${scrambleText}</div>`;
+    }).join('');
+    
+    document.getElementById('timesList').innerHTML = listHTML || '(No times yet)';
+}
 
         // Bluetooth GanTimer functions
         async function connectBluetooth() {
@@ -707,27 +808,23 @@ function handleTouchEnd(event) {
         } else if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
             showNotification('⚠ Web Bluetooth requires HTTPS or localhost', 'error');
         }
-        function updateLastSolveDisplay() {
-            const lastSolveElement = document.getElementById('last-solve');
-            
-            // Sprawdzamy czy element w ogóle istnieje w HTML
-            if (!lastSolveElement) return;
+function updateLastSolveDisplay() {
+    const lastSolveElement = document.getElementById('last-solve');
+    if (!lastSolveElement) return;
 
-            // Sprawdzamy czy mamy jakieś czasy w tablicy 'times'
-            if (times && times.length > 0) {
-                const lastTime = times[0]; // Pobieramy najnowszy czas
-                
-                // Formatuje milisekundy na M:SS.mmm lub S.mmm
-                const formatted = formatTime(lastTime.time);
-                
-                lastSolveElement.textContent = `last solve: ${formatted}`;
-                lastSolveElement.style.display = 'block'; // Pokazuje element
-            } else {
-                // Jeśli lista jest pusta, czyścimy i ukrywamy
-                lastSolveElement.textContent = '';
-                lastSolveElement.style.display = 'none';
-            }
-        }
+    if (times && times.length > 0) {
+        const lastTime = times[0]; 
+        
+        // Ta sama logika co powyżej - sprawdzamy flagi obiektu lastTime
+        const formatted = lastTime.isDnf ? "DNF" : (formatTime(lastTime.time) + (lastTime.isPlusTwo ? "+" : ""));
+        
+        lastSolveElement.textContent = `last solve: ${formatted}`;
+        lastSolveElement.style.display = 'block'; 
+    } else {
+        lastSolveElement.textContent = '';
+        lastSolveElement.style.display = 'none';
+    }
+}
 
 // Wywołujemy funkcję od razu przy ładowaniu strony
 
