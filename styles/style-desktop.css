@@ -18,3 +18,13 @@
     z-index: 9999;
     text-align: center;
 }
+.nav-bar-element {
+    padding-top: 10px;
+}
+.nav-bar-image{
+    width: 35px;
+    height: 35px;
+}
+.nav-bar-label {
+    font-size: 16px;
+}

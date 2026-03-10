@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Cubyy - Settings </title>
+    <link rel="icon" type="image/png" href="./media/icons/icon.png">
+    <link rel="stylesheet" href="./styles/m3-styles.css">
+    <link rel="stylesheet" href="./styles/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+	<meta name="apple-mobile-web-app-title" content="Cubyy">
+	<link rel="apple-touch-icon" href="./media/icons/icon.png">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="m3-card2"> 
+        <p style="font-family: sans-serif, 'Google Sans'; font-weight: bold; font-size: 30px; color: #312252;"> Settings </p>
+        <p> For now there are no settings to change! 😔 </p>
+        <div style='background-color: #F3EDF7;'>
+            <hr style="margin: 20px 0; color: #CAC4D0;">
+            <p style="color: #1D1B20;"> Cubyy version: 1.0  </p>
+            <hr style="margin: 20px 0; color: #CAC4D0;">
+            <p onclick="window.location.href='https://github.com/franekk3'" style="color: #1D1B20; cursor: pointer;"> Cubyy by <b> Franekk3 </b></a>  </p>
+            <hr style="margin: 20px 0; color: #CAC4D0;">
+        </div>
+    </div>
+
+    <div  class="nav-bar">
+        <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+            <img id="home-button" class="nav-bar-image " src="./media/icons/home.png">
+            <p class="nav-bar-label" > Home </p>
+        </div>
+        <div onclick="window.location.href='./times.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+            <img id="add-button" class="nav-bar-image" src="./media/icons/list.png">
+            <p class="nav-bar-label"> Times </p>
+        </div>
+        <div onclick="window.location.href='./settings.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+            <img id="account-button" class="nav-bar-image nav-bar-image-choosed" src="./media/icons/settings_filled.png">
+            <p class="nav-bar-label"> Settings </p>
+        </div>
+    </div>
+
+
+    <script src="./script.js"></script>
+</body>
+</html>
