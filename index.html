@@ -47,17 +47,10 @@
         <div id="gantimerState">-</div>
     </div>
     
-        <div class="spinner-container" style="margin-top: 0px; position: absolute; bottom: 22%;"> 
-            <div class="spiner-part1"> Your times: </div>
-            
-            <div onclick='timesListClick()' class="spiner-part2"> <img id="timesListIcon" height="30px" width="30px" style="rotate: 0deg;" src="./media/icons/arrow_down.png"> </div>
-        </div>
-        
-    <div id="timesList2"class="m3-card2" style=" padding: 10px; max-height: 200px; overflow-y: auto; display: none;">
-        <button onclick="deleteAllTimes()" class="m3-FilledTonalButtonWithAnimatedShapeSample" style="scale: 1; margin: 0 auto; margin-bottom: 10px;"> Delete All Times</button>
-    
-        <div id="timesList"></div>
-    </div>
+
+        <button onclick="showTimesListPupUp()" class="m3-ButtonWithAnimatedShapeSample" style="background-color: #e8def7; margin-top: 0px; position: absolute; bottom: 22%; z-index: 99;"> Your Times </button>
+
+
     <p style="margin: 50px"> </p>
     <div id="notificationsBox" class="notification">
             <p>  </p>
@@ -76,8 +69,103 @@
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
+<div onclick='hideTimesListPupUp()' class="hidden2" style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;" id="overlay"></div>
 
+</div>
+ <div class="hidden2 anim-open" id="main-container" style="z-index: 1000 ; box-shadow: 0 4px 10px #fefbfea7; display: flex; flex-direction: column; position: fixed; bottom: 0px; width: 95%; max-width: 640px; margin: 0px auto; height: 80%; max-height: 700px; background-color: #f7f2f9; border-radius: 28px 28px 0px 0px; overflow: hidden;">
+    <div id="iframe-shield" style="display: none; position: absolute; top: 40px; left: 0; width: 100%; height: 100%; z-index: 10; background: transparent;"></div>
+    <div onclick='hideTimesListPupUp()' id="drag-handle" style="width: 100%; height: 40px; cursor: grab; display: flex; justify-content: center; align-items: center; z-index: 20;">
+        <hr  style="width: 40px; height: 4px; border: none; border-radius: 2px; background-color: #424141;">
+    </div>
+        <div id="timesList2"class="m3-card2" style=" padding: 10px; max-height: 90%; overflow-y: auto;">
+        <button onclick="deleteAllTimes()" class="m3-FilledTonalButtonWithAnimatedShapeSample" style="scale: 1; margin: 0 auto; margin-bottom: 10px;"> Delete All Times</button>
+    
+        <div id="timesList"></div>
+    </div>
+    </div>
+    
+</div> 
 
     <script src="./script.js"></script>
+
+    <script>
+        const OverLay = document.getElementById('overlay');
+        const TimesListPupUp = document.getElementById('main-container');
+        const handle = document.getElementById('drag-handle');
+const shield = document.getElementById('iframe-shield');
+let startY = 0;
+let isDragging = false;
+
+// --- FUNKCJE POMOCNICZE ---
+function enableShield(on) {
+    shield.style.display = on ? 'block' : 'none';
+}
+
+// --- OBSŁUGA DOTYKU (Mobile) ---
+handle.addEventListener('touchstart', e => {
+    startY = e.touches[0].clientY;
+    isDragging = true;
+    enableShield(true); // Nakładamy tarczę, by ruch palca nie uciekł do iframe
+}, { passive: true });
+
+window.addEventListener('touchend', e => {
+    if (!isDragging) return;
+    
+    const endY = e.changedTouches[0].clientY;
+    handleGesture(startY, endY);
+    
+    isDragging = false;
+    enableShield(false); // Zdejmujemy tarczę - iframe znów jest w pełni interaktywny
+}, { passive: true });
+
+// --- OBSŁUGA MYSZY (PC) ---
+handle.addEventListener('mousedown', e => {
+    startY = e.clientY;
+    isDragging = true;
+    enableShield(true);
+
+    const onMouseUp = (upEvent) => {
+        handleGesture(startY, upEvent.clientY);
+        isDragging = false;
+        enableShield(false);
+        window.removeEventListener('mouseup', onMouseUp);
+    };
+    
+    window.addEventListener('mouseup', onMouseUp);
+});
+
+function handleGesture(start, end) {
+    const threshold = 50;
+    const diff = end - start;
+    if (Math.abs(diff) > threshold) {
+        if (diff > 0) hideTimesListPupUp();
+        else funkcjaDlaGory();
+    }
+}
+
+function hideTimesListPupUp() { 
+    enableScroll()
+    OverLay.classList.add('hidden2');
+    TimesListPupUp.classList.add('anim-close');
+        setTimeout(() => {
+        TimesListPupUp.classList.add('hidden2');
+}, 300);
+}
+function showTimesListPupUp() { 
+    disableScroll()
+    TimesListPupUp.classList.remove('hidden2');
+    TimesListPupUp.classList.remove('anim-close');
+    OverLay.classList.remove('hidden2');
+    
+}
+function disableScroll() {
+  document.body.classList.add('no-scroll');
+}
+
+function enableScroll() {
+  document.body.classList.remove('no-scroll');
+}
+
+    </script>
 </body>
 </html>

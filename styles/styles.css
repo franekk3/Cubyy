@@ -161,3 +161,39 @@
     background-color: #d0bcff; /* Nieco ciemniejszy fiolet dla zaznaczenia */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+@keyframes slideUp {
+    from {
+        transform: translateX(0%) translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0%) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animacja zjazdu w dół */
+@keyframes slideDown {
+    from {
+        transform: translateX(0%) translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(0%) translateY(100%);
+        opacity: 0;
+    }
+}
+.anim-open {
+    animation: slideUp 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.anim-close {
+    animation: slideDown 0.3s ease-in forwards;
+}
+.hidden2 {
+    display: none !important;
+}
+body.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+}

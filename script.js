@@ -223,7 +223,7 @@ function finalizeUpdate() {
         function deleteAllTimes() {
             if (confirm('Are you sure you want to delete all saved times?')) {
                 times = [];
-                resetTimer()
+                resetTimer();
                 toggleOptionsBar(false);
                 updateLastSolveDisplay();
                 updateTimesList();
@@ -316,19 +316,32 @@ function stopTimer(externalTime = null) {
         setNewScramble();
     }
 }
-        function resetTimer() {
-            isRunning = false;
-            isReady = false;
-            clearInterval(timerInterval);
-            elapsedTime = 0;
-            spacePressed = false;
-            document.getElementById('timerNumbers').textContent = '0.000';
-            document.getElementById('timerDisplay').style.fontWeight = 'bold';
-            releaseWakeLock();
-            if (ganTimerState !== 'disconnected') {
-                updateGanTimerInfo('idle', 0);
-            }
+function resetTimer() {
+    isRunning = false;
+    isReady = false;
+    if (timerInterval) clearInterval(timerInterval); // Czyścimy tylko jeśli istnieje
+    elapsedTime = 0;
+    spacePressed = false;
+    
+    // Aktualizacja wyglądu
+    const timerNumbers = document.getElementById('timerNumbers');
+    const timerDisplay = document.getElementById('timerDisplay');
+    
+    if (timerNumbers) timerNumbers.textContent = '0.000';
+    if (timerDisplay) {
+        timerDisplay.style.fontWeight = 'bold';
+        timerDisplay.style.color = ''; 
+    }
+    
+    releaseWakeLock();
+
+    // Sprawdzamy czy funkcja i zmienna istnieją
+    if (typeof ganTimerState !== 'undefined' && ganTimerState !== 'disconnected') {
+        if (typeof updateGanTimerInfo === 'function') {
+            updateGanTimerInfo('idle', 0);
         }
+    }
+}
         function updateDisplay() {
             elapsedTime = Date.now() - startTime;
             document.getElementById('timerNumbers').textContent = formatTime(elapsedTime);
