@@ -190,7 +190,6 @@ function finalizeUpdate() {
         function showNotification(message, type = 'info') {
             const notifBox = document.getElementById('notificationsBox');
             const notifText = notifBox.querySelector('p');
-            
             notifText.textContent = message;
             notifBox.style.display = 'block';
             
@@ -277,7 +276,7 @@ function finalizeUpdate() {
                 startTime = Date.now() - elapsedTime;
                 document.getElementById('timerDisplay').style.fontWeight = 'bold';
                 requestWakeLock();
-                showNotification('⏱️ Timer running...', 'info');
+                //showNotification('⏱️ Timer running...', 'info');
                 
                 timerInterval = setInterval(updateDisplay, 10);
             }
@@ -311,7 +310,7 @@ function stopTimer(externalTime = null) {
         updateLastSolveDisplay();
 
         releaseWakeLock();
-        showNotification(`✓ Time saved: ${formatTime(elapsedTime)}`, 'success');
+        //showNotification(`✓ Time saved: ${formatTime(elapsedTime)}`, 'success');
         
         setNewScramble();
     }
@@ -493,7 +492,7 @@ function updateTimesList() {
             }
             
             // Show status in notifications box instead of gantimerInfo div
-            showNotification(stateText, 'info');
+            //showNotification(stateText, 'info');
         }
 
         function handleGanTimerData(event) {
@@ -634,7 +633,7 @@ function handleTouchStart(event) {
                 isReady = true;
                 // Zmieniamy kolor na zielony (gotowy!)
                 document.getElementById('timerDisplay').style.color = '#2E7D32'; 
-                showNotification('🚀 Ready! Release to start...', 'info');
+                //showNotification('🚀 Ready! Release to start...', 'info');
                 clearInterval(touchHoldInterval);
             }
         }, 10);
@@ -688,7 +687,7 @@ function handleTouchEnd(event) {
 
                     // Ustawiamy kolor CZERWONY od razu po naciśnięciu
                     document.getElementById('timerNumbers').style.color = '#B3261E';
-                    showNotification('⏸️ Holding space...', 'info');
+                    //showNotification('⏸️ Holding space...', 'info');
                     
                     // Czyścimy stary interwał na wszelki wypadek
                     if (readyCheckInterval) clearInterval(readyCheckInterval);
@@ -699,7 +698,7 @@ function handleTouchEnd(event) {
                             // Zmieniamy na ZIELONY po 0.5s
                             document.getElementById('timerNumbers').style.color = '#2E7D32';
                             document.getElementById('timerDisplay').style.fontWeight = 'bold';
-                            showNotification('🚀 Ready! Release to start...', 'info');
+                            //showNotification('🚀 Ready! Release to start...', 'info');
                             clearInterval(readyCheckInterval);
                         }
                     }, 10);

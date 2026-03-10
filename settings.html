@@ -15,8 +15,13 @@
 	<meta name="apple-mobile-web-app-title" content="Cubyy">
 	<link rel="apple-touch-icon" href="./media/icons/icon.png">
     <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            justify-content: flex-start;
+        }
+    </style>
 </head>
-<body>
+<body ontouchstart="">
     <div class="m3-card2"> 
         <p style="font-family: sans-serif, 'Google Sans'; font-weight: bold; font-size: 30px; color: #312252;"> Settings </p>
         <p> For now there are no settings to change! 😔 </p>
@@ -27,6 +32,11 @@
             <p onclick="window.location.href='https://github.com/franekk3'" style="color: #1D1B20; cursor: pointer;"> Cubyy by <b> Franekk3 </b></a>  </p>
             <hr style="margin: 20px 0; color: #CAC4D0;">
         </div>
+        <div style="display: flex; justify-content: center; margin: 10px; flex-direction: row; gap: 25px;">
+            <button class="m3-ButtonWithIconWithAnimatedShapeSample"> Credits <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/heart.png"> </button>
+            <button class="m3-ButtonWithIconWithAnimatedShapeSample"> Terms & Policy <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/heart.png"> </button>
+        </div>
+
     </div>
 
     <div  class="nav-bar">
