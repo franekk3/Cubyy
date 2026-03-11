@@ -1,3 +1,131 @@
+ // Ta funkcja uruchamia się automatycznie przy każdym załadowaniu strony
+window.onload = function() {
+    loadTimes();            // Wczytaj czasy z pamięci
+    updateTimesList();      // Wyświetl listę (jeśli element istnieje)
+    updateLastSolveDisplay(); // Zaktualizuj podgląd ostatniego ułożenia
+    updateStats();
+    if (typeof loadOrGenerateScramble === 'function') {
+        loadOrGenerateScramble(); // Wczytaj scramble tylko jeśli funkcja istnieje
+    }
+};
+
+
+function calculateAoX(size) {
+    // Jeśli nie ma wystarczającej liczby ułożeń, zwróć kreski
+    if (times.length < size) return "—";
+
+    const recentTimes = times.slice(0, size);
+    
+    // Zliczamy ile jest DNF w danej grupie
+    const dnfCount = recentTimes.filter(t => t.isDnf).length;
+    
+    // Według zasad WCA: w Ao5 dopuszczalny jest 1 DNF (staje się najgorszym czasem), 
+    // ale 2 DNF to już DNF całej średniej. Dla uproszczenia tutaj: 
+    // jeśli więcej niż 1 DNF -> DNF
+    if (dnfCount > 1) return "DNF";
+
+    // Wyciągamy wartości milisekund
+    let msValues = recentTimes.map(t => {
+        if (t.isDnf) return Infinity; // DNF traktujemy jako nieskończoność
+        return t.time;
+    });
+    
+    // Sortujemy rosnąco
+    msValues.sort((a, b) => a - b);
+    
+    // Usuwamy najgorszy (ostatni) i najlepszy (pierwszy)
+    const trimmedTimes = msValues.slice(1, -1);
+    
+    // Jeśli po ucięciu został jakiś Infinity, to znaczy że średnia to DNF
+    if (trimmedTimes.includes(Infinity)) return "DNF";
+    
+    const sum = trimmedTimes.reduce((acc, val) => acc + val, 0);
+    return formatTime(sum / trimmedTimes.length);
+}
+
+function updateStats() {
+    // 1. Solves Count - to zawsze pokazujemy, nawet 0
+    const countEl = document.getElementById('solvesCount');
+    if (countEl) countEl.textContent = times.length;
+
+    // Pobieramy elementy
+    const pbEl = document.getElementById('PersonalBest');
+    const pwEl = document.getElementById('PersonalWorst');
+    const avgAllEl = document.getElementById('currentAllAvg');
+    const ao5El = document.getElementById('currentAo5');
+    const ao12El = document.getElementById('currentAo12');
+    const ao100El = document.getElementById('currentAo100');
+    const bestAo5El = document.getElementById('bestAo5');
+
+    // Jeśli nie ma czasów, ustaw wszystko na "--"
+    if (times.length === 0) {
+        if (pbEl) pbEl.textContent = "—";
+        if (pwEl) pwEl.textContent = "—";
+        if (avgAllEl) avgAllEl.textContent = "—";
+        if (ao5El) ao5El.textContent = "—";
+        if (ao12El) ao12El.textContent = "—";
+        if (ao100El) ao100El.textContent = "—";
+        if (bestAo5El) bestAo5El.textContent = "—";
+        return;
+    }
+
+    // Filtrujemy tylko poprawne ułożenia (bez DNF) dla statystyk ogólnych
+    const validTimes = times.filter(t => !t.isDnf);
+
+    // 2. Personal Best
+    if (pbEl) {
+        pbEl.textContent = validTimes.length > 0 
+            ? formatTime(Math.min(...validTimes.map(t => t.time))) 
+            : "—";
+    }
+
+    // 3. Personal Worst
+    if (pwEl) {
+        pwEl.textContent = validTimes.length > 0 
+            ? formatTime(Math.max(...validTimes.map(t => t.time))) 
+            : "—";
+    }
+
+    // 4. All times Average
+    if (avgAllEl) {
+        if (validTimes.length > 0) {
+            const sumAll = validTimes.reduce((acc, t) => acc + t.time, 0);
+            avgAllEl.textContent = formatTime(sumAll / validTimes.length);
+        } else {
+            avgAllEl.textContent = "DNF";
+        }
+    }
+
+    // 5. Current Averages
+    if (ao5El) ao5El.textContent = calculateAoX(5);
+    if (ao12El) ao12El.textContent = calculateAoX(12);
+    if (ao100El) ao100El.textContent = calculateAoX(100);
+
+    // 6. Best Ao5
+    if (bestAo5El) {
+        if (times.length < 5) {
+            bestAo5El.textContent = "—";
+        } else {
+            let bestAo5Value = Infinity;
+            for (let i = 0; i <= times.length - 5; i++) {
+                const res = calculateAoX_Internal(times.slice(i, i + 5));
+                if (res !== "DNF" && res < bestAo5Value) bestAo5Value = res;
+            }
+            bestAo5El.textContent = bestAo5Value === Infinity ? "DNF" : formatTime(bestAo5Value);
+        }
+    }
+}
+
+// Pomocnicza funkcja wewnętrzna do szukania Best Ao5
+function calculateAoX_Internal(subset) {
+    const dnfCount = subset.filter(t => t.isDnf).length;
+    if (dnfCount > 1) return "DNF";
+    let ms = subset.map(t => t.isDnf ? Infinity : t.time).sort((a,b) => a-b).slice(1, -1);
+    if (ms.includes(Infinity)) return "DNF";
+    return ms.reduce((a,b) => a+b, 0) / ms.length;
+}
+
+
  function isMobileDevice() { return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia("(max-width: 768px)").matches; } 
  function loadCSS(file) { const link = document.createElement("link"); link.rel = "stylesheet"; link.href = file; document.head.appendChild(link); } 
  if (isMobileDevice()) { loadCSS("./styles/style-mobile.css"); } else { loadCSS("./styles/style-desktop.css"); }
@@ -102,6 +230,7 @@ function finalizeUpdate() {
     saveTimes();
     updateTimesList();
     updateLastSolveDisplay();
+    updateStats();
     const lastSolve = times[0];
     document.getElementById('timerNumbers').textContent = lastSolve.isDnf ? "DNF" : formatTime(lastSolve.time);
 }
@@ -226,6 +355,7 @@ function finalizeUpdate() {
                 toggleOptionsBar(false);
                 updateLastSolveDisplay();
                 updateTimesList();
+                updateStats();
                 saveTimes();
             }
         }
@@ -308,7 +438,7 @@ function stopTimer(externalTime = null) {
         saveTimes(); 
         updateTimesList();
         updateLastSolveDisplay();
-
+        updateStats();
         releaseWakeLock();
         //showNotification(`✓ Time saved: ${formatTime(elapsedTime)}`, 'success');
         
@@ -316,6 +446,7 @@ function stopTimer(externalTime = null) {
     }
 }
 function resetTimer() {
+    toggleOptionsBar(false);
     isRunning = false;
     isReady = false;
     if (timerInterval) clearInterval(timerInterval); // Czyścimy tylko jeśli istnieje
@@ -347,20 +478,17 @@ function resetTimer() {
         }
 
 function updateTimesList() {
+    const listContainer = document.getElementById('timesList');
+    
+    // TA LINIA JEST KLUCZOWA:
+    if (!listContainer) return; // Jeśli nie ma listy na tej stronie, zakończ funkcję bezpiecznie
+
     const listHTML = times.map((t, index) => {
-        // Logika wyświetlania kary:
-        // 1. Jeśli jest DNF -> wyświetl "DNF"
-        // 2. Jeśli nie -> wyświetl sformatowany czas
-        // 3. Jeśli do tego jest +2 -> dodaj znak "+" na końcu
         const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
-        
-        const scrambleText = t.scramble ? ` | ${t.scramble}` : '';
-        
-        // Obliczamy numer ułożenia (od najstarszego do najnowszego)
-        return `<div>#${times.length - index}: ${formatted}${scrambleText}</div>`;
+        return `<div>#${times.length - index}: ${formatted}</div>`;
     }).join('');
     
-    document.getElementById('timesList').innerHTML = listHTML || '(No times yet)';
+    listContainer.innerHTML = listHTML || '(No times yet)';
 }
 
         // Bluetooth GanTimer functions

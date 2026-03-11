@@ -48,7 +48,7 @@
     </div>
     
 
-        <button onclick="showTimesListPupUp()" class="m3-ButtonWithAnimatedShapeSample" style="background-color: #e8def7; margin-top: 0px; position: absolute; bottom: 16%; z-index: 99;"> Your Times </button>
+        <button onclick="showTimesListPupUp()" class="m3-ButtonWithAnimatedShapeSample" style="background-color: #e8def7; margin-top: 0px; position: absolute; bottom: 16%; z-index: 99;"> Stats </button>
 
 
     <p style="margin: 50px"> </p>
@@ -72,18 +72,58 @@
 <div onclick='hideTimesListPupUp()' class="hidden2" style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;" id="overlay"></div>
 
 </div>
- <div class="hidden2 anim-open" id="main-container" style="z-index: 1000 ; box-shadow: 0 4px 10px #fefbfea7; display: flex; flex-direction: column; position: fixed; bottom: 0px; width: 95%; max-width: 640px; margin: 0px auto; height: 80%; max-height: 700px; background-color: #f7f2f9; border-radius: 28px 28px 0px 0px; overflow: hidden; justify-content: flex-start; align-items: center;">
+ <div class="anim-open  hidden2" id="main-container" style="z-index: 1000 ; box-shadow: 0 4px 10px #fefbfea7; display: flex; flex-direction: column; position: fixed; bottom: 0px; width: 95%; max-width: 640px; margin: 0px auto; height: 65%; max-height: 550px; background-color: #f7f2f9; border-radius: 28px 28px 0px 0px; overflow: hidden; justify-content: flex-start; align-items: center;">
     <div id="iframe-shield" style="display: none; position: absolute; top: 40px; left: 0; width: 100%; height: 100%; z-index: 10; background: transparent;"></div>
     <div onclick='hideTimesListPupUp()' id="drag-handle" style="width: 100%; height: 40px; cursor: grab; display: flex; justify-content: center; align-items: center; z-index: 20;">
-        <hr  style="width: 40px; height: 4px; border: none; border-radius: 2px; background-color: #424141;">
+        <hr  style="width: 30px; height: 4px; border: none; border-radius: 2px; background-color: #515052; margin: 10px;">
     </div>
-        <div id="timesList2"class="m3-card2" style=" margin: 10px; max-height: 90%; overflow-y: auto; width: 90%; max-width: 576px;">
-        <button onclick="deleteAllTimes()" class="m3-FilledTonalButtonWithAnimatedShapeSample" style="scale: 1; margin: 0 auto; margin-bottom: 10px;"> Delete All Times</button>
-    
-        <div id="timesList"></div>
+    <div class="m3-card2" style=" margin: 10px; height: 100%; overflow-y: auto; width: 90%; max-width: 576px; justify-content: flex-start; align-items: center; margin: 10px; margin-top: 0px;">
+        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
+            <div class="m3-card-small1"> 
+                <p id='currentAo5' class="time-label1"> 0 </p>
+                <p class="description-label1"> Current Ao5 </p>    
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; margin-right: 10px;">
+                <div class="m3-card-small2" > 
+                    <p id='currentAo12' class="time-label2" > 0 </p>
+                    <p class="description-label2" > Current Ao12 </p>    
+                </div>
+                <div class="m3-card-small2" > 
+                    <p id='currentAo100' class="time-label2" > 0 </p>
+                    <p class="description-label2" > Current Ao100 </p>    
+                </div>
+            </div>    
+ 
+        </div>
+        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
+            <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; margin-right: 10px;">
+                <div class="m3-card-small2" > 
+                    <p id='currentAllAvg' class="time-label2" > 0 </p>
+                    <p class="description-label2" > All times Average </p>    
+                </div>
+                <div class="m3-card-small2" > 
+                    <p id='PersonalWorst' class="time-label2" > 0 </p>
+                    <p class="description-label2" > Personal Worst </p>    
+                </div>
+            </div>    
+            <div class="m3-card-small1"> 
+                <p id='PersonalBest' class="time-label1"> 0 </p>
+                <p class="description-label1"> Personal Best </p>    
+            </div>
+        </div>   
+        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
+            <div class="m3-card-small1"> 
+                <p id='bestAo5' class="time-label1"> 0 </p>
+                <p class="description-label1"> Best Ao5 </p>
+            </div>
+            <div class="m3-card-small1"> 
+                <p id="solvesCout" class="time-label1"> 0 </p>
+                <p class="description-label1"> Solves Count </p>
+            </div>
+        </div>
 
     </div>
-            <p style="margin: 50px;"> </p>
+            <p style="margin: 40px;"> </p>
     </div>
     
 </div> 
@@ -91,6 +131,7 @@
     <script src="./script.js"></script>
 
     <script>
+        
         const OverLay = document.getElementById('overlay');
         const TimesListPupUp = document.getElementById('main-container');
         const handle = document.getElementById('drag-handle');

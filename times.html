@@ -15,8 +15,13 @@
 	<meta name="apple-mobile-web-app-title" content="Cubyy">
 	<link rel="apple-touch-icon" href="./media/icons/icon.png">
     <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            justify-content: flex-start;
+        }
+    </style>
 </head>
-<body>
+<body ontouchstart="">
     <div  class="nav-bar">
         <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element"> 
             <img id="home-button" class="nav-bar-image " src="./media/icons/home.png">
@@ -31,8 +36,220 @@
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
+    <div class="m3-card2" style=" margin: 10px; margin-top: 20px; max-height: 90%; overflow-y: auto; width: 95%; max-width: 576px;">
+        <p style="font-size: 30px;"> Your Times </p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
+            <div class="spinner-container"> 
+                <div class="spiner-part1" style="background-color: #d0bcff;"> 3x3 </div>
+                <div class="spiner-part2" style="background-color: #d0bcff;"> <img height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
+            </div>
+            <div class="spinner-container"> 
+                <div class="spiner-part1" style="background-color: #d0bcff;"> Session1 </div>
+                <div class="spiner-part2" style="background-color: #d0bcff;"> <img height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
+            </div>
+        </div>
+        <div class="options-bar.show">
+            <img onclick="deleteAllTimes()" class="options-bar-icon" src="./media/icons/delete.png">
+            
+            <img onclick="exportToCsTimer()" class="options-bar-icon" src="./media/icons/download.png">
+            
+            <label for="file-upload" style="cursor: pointer;">
+                <img class="options-bar-icon" src="./media/icons/upload.png">
+            </label>
+            <input id="file-upload" type="file" style="display:none" onchange="importFromCsTimer(event)">
+        </div>
+        <div id="timesList2" class="newtimelist">     
+    
+        </div>
+    </div>
+    </div>
 
 
-    <script src="./script.js"></script>
+    <div id="timesList2"class="m3-card2 hidden2" style=" margin: 10px; max-height: 90%; overflow-y: auto; width: 90%; max-width: 576px;">
+        <button onclick="deleteAllTimes()" class="m3-FilledTonalButtonWithAnimatedShapeSample" style="scale: 1; margin: 0 auto; margin-bottom: 10px;"> Delete All Times</button>
+    
+        <div id="timesList"></div>
+    </div>
+            <p style="margin: 50px;"> </p>
+    <script>
+
+// --- EKSPORT DANYCH (Format csTimer) ---
+function exportToCsTimer() {
+    const csTimerFormat = {
+        "session1": times.map(t => [
+            [0, t.time], // csTimer przechowuje czas w milisekundach w tym miejscu
+            t.scramble,
+            "", // komentarz
+            Math.floor(new Date(t.date).getTime() / 1000) // Timestamp w sekundach
+        ]),
+        "properties": { "sessionName": "Cubyy Export" }
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(csTimerFormat));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "cubyy_export_" + new Date().toLocaleDateString() + ".json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    showNotification("Export started!", "success");
+}
+
+// --- IMPORT DANYCH (Z weryfikacją duplikatów) ---
+function importFromCsTimer(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            let importedCount = 0;
+            let skipCount = 0;
+
+            // csTimer przechowuje sesje w kluczach session1, session2 itd.
+            Object.keys(importedData).forEach(key => {
+                if (key.startsWith('session') && Array.isArray(importedData[key])) {
+                    importedData[key].forEach(item => {
+                        // Mapowanie formatu csTimer:
+                        // item[0][1] to czas, item[1] to scramble
+                        const importedTime = item[0][1];
+                        const importedScramble = item[1];
+
+                        // SPRAWDZANIE: Czy mamy już taki sam CZAS na takim samym SCRAMBLU?
+                        const isDuplicate = times.some(existing => 
+                            existing.time === importedTime && 
+                            existing.scramble === importedScramble
+                        );
+
+                        if (!isDuplicate) {
+                            times.push({
+                                time: importedTime,
+                                scramble: importedScramble,
+                                date: new Date(item[3] * 1000).toISOString(), // Używamy daty z pliku
+                                isPlusTwo: false,
+                                isDnf: item[0][0] === -1
+                            });
+                            importedCount++;
+                        } else {
+                            skipCount++;
+                        }
+                    });
+                }
+            });
+
+            if (importedCount > 0) {
+                // Sortujemy po dacie, aby najnowsze były na górze
+                times.sort((a, b) => new Date(b.date) - new Date(a.date));
+                saveTimes();
+                updateTimesList();
+                // Jeśli masz funkcję updateStats, też ją wywołaj
+                if (typeof updateStats === 'function') updateStats();
+                
+                alert(`Imported ${importedCount} new solves! (Skipped ${skipCount} duplicates)`);
+            } else {
+                alert(`No new solves. Skipped ${skipCount} duplicates.`);
+            }
+
+        } catch (err) {
+            console.error("Import Error:", err);
+            alert("Error: This file is not a valid csTimer export.");
+        }
+    };
+    reader.readAsText(file);
+    // Resetujemy input, żeby można było wybrać ten sam plik dwa razy
+    event.target.value = ''; 
+}
+// --- FUNKCJE POMOCNICZE ---
+function formatTime(ms) {
+    if (ms === null || ms === undefined) return "0.000";
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    const milliseconds = Math.floor(ms % 1000);
+    const msStr = milliseconds.toString().padStart(3, '0');
+    
+    if (minutes > 0) {
+        const secStr = seconds.toString().padStart(2, '0');
+        return `${minutes}:${secStr}.${msStr}`;
+    }
+    return `${seconds}.${msStr}`;
+}
+
+function isMobileDevice() { 
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia("(max-width: 768px)").matches; 
+} 
+
+function loadCSS(file) { 
+    const link = document.createElement("link"); 
+    link.rel = "stylesheet"; 
+    link.href = file; 
+    document.head.appendChild(link); 
+} 
+
+// --- LOGIKA CZASÓW ---
+let times = [];
+
+function saveTimes() {
+    localStorage.setItem('cubeTimerTimes', JSON.stringify(times));
+}
+
+function loadTimes() {
+    const saved = localStorage.getItem('cubeTimerTimes');
+    if (saved) {
+        times = JSON.parse(saved);
+    }
+    updateTimesList();
+}
+
+function deleteAllTimes() {
+    if (confirm('Are you sure you want to delete all saved times?')) {
+        times = [];
+        saveTimes();
+        updateTimesList();
+    }
+}
+
+function updateTimesList() {
+    const newContainer = document.querySelector('.newtimelist');
+    const oldContainer = document.getElementById('timesList');
+
+    const contentExists = times.length > 0;
+
+    // 1. NOWA LISTA - Kafelki jeden obok drugiego
+    if (newContainer) {
+        // Dodajemy style do kontenera, żeby układał kafelki w rzędzie
+        newContainer.style.display = 'flex';
+        newContainer.style.flexWrap = 'wrap';
+        newContainer.style.gap = '8px';
+        newContainer.style.justifyContent = 'center';
+
+        newContainer.innerHTML = contentExists ? times.map((t) => {
+            const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
+            // Zwracamy sam kafelek bez numeru #
+            return `<p class="time-box" style="margin: 0;">${formatted}</p>`;
+        }).join('') : '<p style="text-align:center; opacity:0.5; width: 100%;">No times yet</p>';
+    }
+
+    // 2. STARA LISTA - Ignoruje, jeśli nie ma, lub wyświetla po staremu
+    if (oldContainer) {
+        oldContainer.innerHTML = contentExists ? times.map((t, index) => {
+            const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
+            return `<div>#${times.length - index}: ${formatted}</div>`;
+        }).join('') : '(No times yet)';
+    }
+}
+
+// --- START ---
+if (isMobileDevice()) { loadCSS("./styles/style-mobile.css"); } else { loadCSS("./styles/style-desktop.css"); }
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
+    });
+}
+
+// Uruchomienie ładowania danych
+loadTimes();
+    </script>
 </body>
 </html>
