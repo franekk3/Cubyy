@@ -10,12 +10,10 @@
 	3. Google's Material 3 Design inspired UI (built from scrach).
 	4. Clean and intuitive Times List .
 	5. Some SpeedCubing Timer's basics like Scramble generator or timer it self.
+	6. Option to import/export Times (cstimer.net format)
+	7.  Fully Mobile & Desktop Support 
+
 ---
-
-###### &#x09;6. Option to import/export Times (cstimer.net format)
-
-###### &#x09;7.  Fully Mobile \& Desktop Support 
-
 
 
 ##### **Project is avible on:**
