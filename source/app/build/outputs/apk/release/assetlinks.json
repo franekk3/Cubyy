@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.franekk3.Cubyy",
+        "sha256_cert_fingerprints": ["8A:CA:B3:45:A5:96:E7:85:76:CB:74:8B:8A:59:0F:A6:91:F7:70:AA:95:3F:C3:FE:46:58:3B:0D:7E:47:CB:48"]
+      }
+    }]

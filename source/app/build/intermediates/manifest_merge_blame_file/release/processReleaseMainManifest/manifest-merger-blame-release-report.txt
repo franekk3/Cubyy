@@ -1,0 +1,360 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<!--
+3    Copyright 2019 Google Inc. All Rights Reserved.
+4
+5     Licensed under the Apache License, Version 2.0 (the "License");
+6     you may not use this file except in compliance with the License.
+7     You may obtain a copy of the License at
+8
+9         http://www.apache.org/licenses/LICENSE-2.0
+10
+11     Unless required by applicable law or agreed to in writing, software
+12     distributed under the License is distributed on an "AS IS" BASIS,
+13     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+14     See the License for the specific language governing permissions and
+15     limitations under the License.
+16-->
+17<!--
+18 The "package" attribute is rewritten by the Gradle build with the value of applicationId.
+19     It is still required here, as it is used to derive paths, for instance when referring
+20     to an Activity by ".MyActivity" instead of the full name. If more Activities are added to the
+21     application, the package attribute will need to reflect the correct path in order to use
+22     the abbreviated format.
+23-->
+24<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+25    package="io.github.franekk3.Cubyy"
+26    android:versionCode="1"
+27    android:versionName="1.0" >
+28
+29    <uses-sdk
+30        android:minSdkVersion="23"
+31        android:targetSdkVersion="35" />
+32
+33    <uses-permission android:name="android.permission.INTERNET" />
+33-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:26:9-70
+33-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:26:26-68
+34    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+34-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:28:9-80
+34-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:28:26-78
+35
+36    <queries>
+36-->[com.google.androidbrowserhelper:androidbrowserhelper:2.6.2] /root/.gradle/caches/8.11.1/transforms/5053e02be90783e54992393be394bb70/transformed/androidbrowserhelper-2.6.2/AndroidManifest.xml:22:5-30:15
+37        <intent>
+37-->[com.google.androidbrowserhelper:androidbrowserhelper:2.6.2] /root/.gradle/caches/8.11.1/transforms/5053e02be90783e54992393be394bb70/transformed/androidbrowserhelper-2.6.2/AndroidManifest.xml:23:9-29:18
+38            <action android:name="android.intent.action.VIEW" />
+38-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:135:17-68
+38-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:135:25-66
+39
+40            <category android:name="android.intent.category.BROWSABLE" />
+40-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:137:17-77
+40-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:137:27-75
+41
+42            <data android:scheme="https" />
+42-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:138:17-143:19
+42-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:138:23-45
+43        </intent>
+44    </queries>
+45
+46    <permission
+46-->[androidx.core:core:1.13.0] /root/.gradle/caches/8.11.1/transforms/a5429f7b20c607b890f08b5283ad4ec0/transformed/core-1.13.0/AndroidManifest.xml:22:5-24:47
+47        android:name="io.github.franekk3.Cubyy.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+47-->[androidx.core:core:1.13.0] /root/.gradle/caches/8.11.1/transforms/a5429f7b20c607b890f08b5283ad4ec0/transformed/core-1.13.0/AndroidManifest.xml:23:9-81
+48        android:protectionLevel="signature" />
+48-->[androidx.core:core:1.13.0] /root/.gradle/caches/8.11.1/transforms/a5429f7b20c607b890f08b5283ad4ec0/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
+49
+50    <uses-permission android:name="io.github.franekk3.Cubyy.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+50-->[androidx.core:core:1.13.0] /root/.gradle/caches/8.11.1/transforms/a5429f7b20c607b890f08b5283ad4ec0/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
+50-->[androidx.core:core:1.13.0] /root/.gradle/caches/8.11.1/transforms/a5429f7b20c607b890f08b5283ad4ec0/transformed/core-1.13.0/AndroidManifest.xml:26:22-94
+51
+52    <application
+52-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:37:5-188:19
+53        android:name="io.github.franekk3.Cubyy.Application"
+53-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:38:9-35
+54        android:allowBackup="true"
+54-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:39:9-35
+55        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+55-->[androidx.core:core:1.13.0] /root/.gradle/caches/8.11.1/transforms/a5429f7b20c607b890f08b5283ad4ec0/transformed/core-1.13.0/AndroidManifest.xml:28:18-86
+56        android:extractNativeLibs="false"
+57        android:icon="@mipmap/ic_launcher"
+57-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:40:9-43
+58        android:label="@string/appName"
+58-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:41:9-40
+59        android:supportsRtl="true"
+59-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:43:9-35
+60        android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+60-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:44:9-68
+61        <meta-data
+61-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:46:9-48:58
+62            android:name="asset_statements"
+62-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:47:13-44
+63            android:resource="@string/assetStatements" />
+63-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:48:13-55
+64        <meta-data
+64-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:51:13-53:58
+65            android:name="web_manifest_url"
+65-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:52:17-48
+66            android:value="@string/webManifestUrl" />
+66-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:53:17-55
+67        <meta-data
+67-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:56:9-58:52
+68            android:name="twa_generator"
+68-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:57:13-41
+69            android:value="@string/generatorApp" />
+69-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:58:13-49
+70
+71        <activity
+71-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:66:9-149:20
+72            android:name="io.github.franekk3.Cubyy.LauncherActivity"
+72-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:66:19-50
+73            android:alwaysRetainTaskState="true"
+73-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:67:13-49
+74            android:exported="true"
+74-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:69:13-36
+75            android:label="@string/launcherName" >
+75-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:68:13-49
+76            <meta-data
+76-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:70:13-71:53
+77                android:name="android.support.customtabs.trusted.DEFAULT_URL"
+77-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:70:24-85
+78                android:value="@string/launchUrl" />
+78-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:71:17-50
+79            <meta-data
+79-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:73:13-75:58
+80                android:name="android.support.customtabs.trusted.STATUS_BAR_COLOR"
+80-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:74:17-83
+81                android:resource="@color/colorPrimary" />
+81-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:75:17-55
+82            <meta-data
+82-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:79:13-81:62
+83                android:name="android.support.customtabs.trusted.STATUS_BAR_COLOR_DARK"
+83-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:80:17-88
+84                android:resource="@color/colorPrimaryDark" />
+84-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:81:17-59
+85            <meta-data
+85-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:83:13-85:61
+86                android:name="android.support.customtabs.trusted.NAVIGATION_BAR_COLOR"
+86-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:84:17-87
+87                android:resource="@color/navigationColor" />
+87-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:85:17-58
+88            <meta-data
+88-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:87:13-89:65
+89                android:name="android.support.customtabs.trusted.NAVIGATION_BAR_COLOR_DARK"
+89-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:88:17-92
+90                android:resource="@color/navigationColorDark" />
+90-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:89:17-62
+91            <meta-data
+91-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:91:13-93:68
+92                android:name="androix.browser.trusted.NAVIGATION_BAR_DIVIDER_COLOR"
+92-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:92:17-84
+93                android:resource="@color/navigationDividerColor" />
+93-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:93:17-65
+94            <meta-data
+94-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:95:13-97:72
+95                android:name="androix.browser.trusted.NAVIGATION_BAR_DIVIDER_COLOR_DARK"
+95-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:96:17-89
+96                android:resource="@color/navigationDividerColorDark" />
+96-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:97:17-69
+97            <meta-data
+97-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:99:13-100:54
+98                android:name="android.support.customtabs.trusted.SPLASH_IMAGE_DRAWABLE"
+98-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:99:24-95
+99                android:resource="@drawable/splash" />
+99-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:100:17-52
+100            <meta-data
+100-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:102:13-103:60
+101                android:name="android.support.customtabs.trusted.SPLASH_SCREEN_BACKGROUND_COLOR"
+101-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:102:24-104
+102                android:resource="@color/backgroundColor" />
+102-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:103:17-58
+103            <meta-data
+103-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:105:13-106:71
+104                android:name="android.support.customtabs.trusted.SPLASH_SCREEN_FADE_OUT_DURATION"
+104-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:105:24-105
+105                android:value="@integer/splashScreenFadeOutDuration" />
+105-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:106:17-69
+106            <meta-data
+106-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:108:13-109:60
+107                android:name="android.support.customtabs.trusted.FILE_PROVIDER_AUTHORITY"
+107-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:108:24-97
+108                android:value="@string/providerAuthority" />
+108-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:109:17-58
+109            <meta-data
+109-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:111:13-97
+110                android:name="android.app.shortcuts"
+110-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:111:24-60
+111                android:resource="@xml/shortcuts" />
+111-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:111:61-94
+112            <meta-data
+112-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:113:13-114:56
+113                android:name="android.support.customtabs.trusted.FALLBACK_STRATEGY"
+113-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:113:24-91
+114                android:value="@string/fallbackType" />
+114-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:114:17-53
+115            <meta-data
+115-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:120:13-121:54
+116                android:name="android.support.customtabs.trusted.SCREEN_ORIENTATION"
+116-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:120:24-92
+117                android:value="@string/orientation" />
+117-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:121:17-52
+118
+119            <intent-filter>
+119-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:129:13-132:29
+120                <action android:name="android.intent.action.MAIN" />
+120-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:130:17-69
+120-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:130:25-66
+121
+122                <category android:name="android.intent.category.LAUNCHER" />
+122-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:131:17-77
+122-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:131:27-74
+123            </intent-filter>
+124            <intent-filter android:autoVerify="true" >
+124-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:134:13-144:29
+124-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:134:28-53
+125                <action android:name="android.intent.action.VIEW" />
+125-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:135:17-68
+125-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:135:25-66
+126
+127                <category android:name="android.intent.category.DEFAULT" />
+127-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:136:17-76
+127-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:136:27-73
+128                <category android:name="android.intent.category.BROWSABLE" />
+128-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:137:17-77
+128-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:137:27-75
+129
+130                <data
+130-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:138:17-143:19
+131                    android:host="@string/hostName"
+131-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:139:21-52
+132                    android:pathPrefix="/Cubyy/"
+132-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:141:21-49
+133                    android:scheme="https" />
+133-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:138:23-45
+134            </intent-filter>
+135        </activity>
+136        <activity android:name="com.google.androidbrowserhelper.trusted.FocusActivity" />
+136-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:151:9-90
+136-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:151:19-87
+137        <activity
+137-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:153:9-154:62
+138            android:name="com.google.androidbrowserhelper.trusted.WebViewFallbackActivity"
+138-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:153:19-97
+139            android:configChanges="orientation|screenSize" />
+139-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:154:13-59
+140
+141        <provider
+141-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:156:9-164:20
+142            android:name="androidx.core.content.FileProvider"
+142-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:157:13-62
+143            android:authorities="@string/providerAuthority"
+143-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:158:13-60
+144            android:exported="false"
+144-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:160:13-37
+145            android:grantUriPermissions="true" >
+145-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:159:13-47
+146            <meta-data
+146-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:161:13-163:53
+147                android:name="android.support.FILE_PROVIDER_PATHS"
+147-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:162:17-67
+148                android:resource="@xml/filepaths" />
+148-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:163:17-50
+149        </provider>
+150
+151        <service
+151-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:166:9-181:19
+152            android:name="io.github.franekk3.Cubyy.DelegationService"
+152-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:167:13-46
+153            android:enabled="@bool/enableNotification"
+153-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:168:13-55
+154            android:exported="@bool/enableNotification" >
+154-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:169:13-56
+155            <meta-data
+155-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:172:17-174:73
+156                android:name="android.support.customtabs.trusted.SMALL_ICON"
+156-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:173:21-81
+157                android:resource="@drawable/ic_notification_icon" />
+157-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:174:21-70
+158
+159            <intent-filter>
+159-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:177:13-180:29
+160                <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE" />
+160-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:178:17-105
+160-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:178:25-103
+161
+162                <category android:name="android.intent.category.DEFAULT" />
+162-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:136:17-76
+162-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:136:27-73
+163            </intent-filter>
+164        </service>
+165
+166        <activity android:name="com.google.androidbrowserhelper.trusted.NotificationPermissionRequestActivity" />
+166-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:184:13-118
+166-->/tmp/pwabuilder-cloudapk--19-rkYgoFp7lfkK/app/src/main/AndroidManifest.xml:184:23-115
+167
+168        <provider
+168-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.11.1/transforms/5cb7738f5242d8c4e38c8ffa2b265b31/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+169            android:name="androidx.startup.InitializationProvider"
+169-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.11.1/transforms/5cb7738f5242d8c4e38c8ffa2b265b31/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+170            android:authorities="io.github.franekk3.Cubyy.androidx-startup"
+170-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.11.1/transforms/5cb7738f5242d8c4e38c8ffa2b265b31/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+171            android:exported="false" >
+171-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.11.1/transforms/5cb7738f5242d8c4e38c8ffa2b265b31/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+172            <meta-data
+172-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.11.1/transforms/5cb7738f5242d8c4e38c8ffa2b265b31/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+173                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+173-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.11.1/transforms/5cb7738f5242d8c4e38c8ffa2b265b31/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+174                android:value="androidx.startup" />
+174-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.11.1/transforms/5cb7738f5242d8c4e38c8ffa2b265b31/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+175            <meta-data
+175-->[androidx.lifecycle:lifecycle-process:2.6.2] /root/.gradle/caches/8.11.1/transforms/4bc52031417e9743197e36b704fe409f/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+176                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+176-->[androidx.lifecycle:lifecycle-process:2.6.2] /root/.gradle/caches/8.11.1/transforms/4bc52031417e9743197e36b704fe409f/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+177                android:value="androidx.startup" />
+177-->[androidx.lifecycle:lifecycle-process:2.6.2] /root/.gradle/caches/8.11.1/transforms/4bc52031417e9743197e36b704fe409f/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+178            <meta-data
+178-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+179                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+179-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+180                android:value="androidx.startup" />
+180-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+181        </provider>
+182
+183        <receiver
+183-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+184            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+184-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+185            android:directBootAware="false"
+185-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+186            android:enabled="true"
+186-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+187            android:exported="true"
+187-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+188            android:permission="android.permission.DUMP" >
+188-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+189            <intent-filter>
+189-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+190                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+190-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+190-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+191            </intent-filter>
+192            <intent-filter>
+192-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+193                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+193-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+193-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+194            </intent-filter>
+195            <intent-filter>
+195-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+196                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+196-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+196-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+197            </intent-filter>
+198            <intent-filter>
+198-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+199                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+199-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+199-->[androidx.profileinstaller:profileinstaller:1.3.1] /root/.gradle/caches/8.11.1/transforms/bb4a0d32d1b17a1dcea0cf71d2bde5e0/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+200            </intent-filter>
+201        </receiver>
+202    </application>
+203
+204</manifest>
