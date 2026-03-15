@@ -64,12 +64,12 @@
             </div>
         </div>
         <div class="options-bar.show">
-            <img onclick="deleteAllTimes()" class="options-bar-icon" src="./media/icons/delete.png">
+            <img id='delete-icon' onclick="deleteAllTimes()" class="options-bar-icon" src="./media/icons/delete.png">
             
-            <img onclick="exportToCsTimer()" class="options-bar-icon" src="./media/icons/download.png">
+            <img id='export-icon' onclick="exportToCsTimer()" class="options-bar-icon" src="./media/icons/download.png">
             
             <label for="file-upload" style="cursor: pointer;">
-                <img class="options-bar-icon" src="./media/icons/upload.png">
+                <img id='import-icon' class="options-bar-icon" src="./media/icons/upload.png">
             </label>
             <input id="file-upload" type="file" style="display:none" onchange="importFromCsTimer(event)">
         </div>
@@ -93,6 +93,9 @@
             document.getElementById('account-button').src = './media/dm/settings.png';
             document.getElementById('arrowDownIcon1').src = './media/dm/arrow_down.png';
             document.getElementById('arrowDownIcon2').src = './media/dm/arrow_down.png';
+            document.getElementById('import-icon').src = './media/dm/upload.png';
+            document.getElementById('export-icon').src = './media/dm/download.png';
+            document.getElementById('delete-icon').src = './media/dm/delete.png';
         } else {
             document.getElementById('home-button').src = './media/icons/home.png';
             document.getElementById('add-button').src = './media/icons/list_filled.png';

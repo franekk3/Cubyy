@@ -341,7 +341,7 @@ body.no-scroll {
     background-color: #65558f;
 }
 .options-bar-icon.active {
-    background-color: #c9c3cf; /* Jaśniejszy fiolet dla zaznaczenia */
+    background-color: #87749b; /* Jaśniejszy fiolet dla zaznaczenia */
 }
 .stats-trigger {
     background-color: #494257;
@@ -353,6 +353,7 @@ body.no-scroll {
 }
 .last-time {
     color: #c9c3cf;
+    
 }
 .drawer-box{
     background-color: #1e1b24;
