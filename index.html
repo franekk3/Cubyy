@@ -23,7 +23,7 @@
     <div class="m3-card" style="height: 60%;">
         <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" height="30px" width="30px" src="./media/icons/bluetooth.png" alt="Connect Bluetooth timer"></button>
         <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)" style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;"><span id="timerNumbers">0.000</span>
-            <p id="last-solve" style="display: none; text-align: center; font-family: 'Google Sans'; color: #49454F; margin-top: 10px; font-size: 14px;"></p>
+            <p id="last-solve"  class="last-time"></p>
             <div id="options-bar"  class="options-bar" ontouchstart="event.stopPropagation()">
                 <img id="add2tosolve" class="options-bar-icon" src="./media/icons/+2.png">
                 <img id="addDnfToSolve" class="options-bar-icon" src="./media/icons/block.png">
@@ -35,7 +35,7 @@
 
     transform: translateX(-50%);"> 
             <div class="spiner-part1"> 3x3 </div>
-            <div class="spiner-part2"> <img height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
+            <div class="spiner-part2"> <img id="arrowDownIcon" height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
         </div>
     </div>
 
@@ -48,7 +48,7 @@
     </div>
     
 
-        <button onclick="showTimesListPupUp()" class="m3-ButtonWithAnimatedShapeSample" style="background-color: #e8def7; margin-top: 0px; position: absolute; bottom: 16%; z-index: 99;"> Stats </button>
+        <button onclick="showTimesListPupUp()" class="stats-trigger m3-ButtonWithAnimatedShapeSample"> Stats </button>
 
 
     <p style="margin: 50px"> </p>
@@ -72,7 +72,7 @@
 <div onclick='hideTimesListPupUp()' class="hidden2" style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;" id="overlay"></div>
 
 </div>
- <div class="anim-open  hidden2" id="main-container" style="z-index: 1000 ; box-shadow: 0 4px 10px #fefbfea7; display: flex; flex-direction: column; position: fixed; bottom: 0px; width: 95%; max-width: 640px; margin: 0px auto; height: 65%; max-height: 550px; background-color: #f7f2f9; border-radius: 28px 28px 0px 0px; overflow: hidden; justify-content: flex-start; align-items: center;">
+ <div class="anim-open  hidden2 drawer-box" id="main-container">
     <div id="iframe-shield" style="display: none; position: absolute; top: 40px; left: 0; width: 100%; height: 100%; z-index: 10; background: transparent;"></div>
     <div onclick='hideTimesListPupUp()' id="drag-handle" style="width: 100%; height: 40px; cursor: grab; display: flex; justify-content: center; align-items: center; z-index: 20;">
         <hr  style="width: 30px; height: 4px; border: none; border-radius: 2px; background-color: #515052; margin: 10px;">
@@ -131,7 +131,22 @@
     <script src="./script.js"></script>
 
     <script>
-        
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.getElementById('home-button').src = './media/dm/home_filled.png';
+            document.getElementById('add-button').src = './media/dm/list.png';
+            document.getElementById('account-button').src = './media/dm/settings.png';
+            document.getElementById('arrowDownIcon').src = './media/dm/arrow_down.png';
+            document.getElementById('bluetoothIcon').src = './media/dm/bluetooth.png';
+        } else {
+            document.getElementById('home-button').src = './media/icons/home_filled.png';
+            document.getElementById('add-button').src = './media/icons/list.png';
+            document.getElementById('account-button').src = './media/icons/settings.png';
+            document.getElementById('bluetoothIcon').src = './media/icons/bluetooth.png';
+            document.getElementById('arrowDownIcon').src = './media/icons/arrow_down.png';
+        }
+
+
+
         const OverLay = document.getElementById('overlay');
         const TimesListPupUp = document.getElementById('main-container');
         const handle = document.getElementById('drag-handle');

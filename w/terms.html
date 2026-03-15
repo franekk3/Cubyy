@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Cubyy - Terms & Policy </title>
+    <link rel="icon" type="image/png" href="../media/icons/icon.png">
+    <link rel="stylesheet" href="../styles/m3-styles.css">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+	<meta name="apple-mobile-web-app-title" content="Cubyy">
+	<link rel="apple-touch-icon" href="../media/icons/icon.png">
+    <link rel="manifest" href="../manifest.json">
+    <style>
+        body {
+            justify-content: flex-start;
+        }
+        .terms-label {
+            font-family: sans-serif, 'Google Sans'; font-weight: bold; font-size: 30px; color: #312252;
+        }
+        .text {
+            color: #49454f;
+        }
+        @media (prefers-color-scheme: dark) {
+        .terms-label {
+           color:   #E6E1E5; font-family: sans-serif, 'Google Sans'; font-weight: bold; font-size: 30px; 
+        }
+        .text {
+            color: #bab5bf;
+        }
+        }
+    </style>
+</head>
+<body ontouchstart="">
+    <div class="m3-card2" style="margin: 20px; margin-bottom: 100px; padding: 15px;"> 
+        <h1 class="terms-label">Terms & Policy</h1>
+        
+        <h2 class='text' style="font-family: 'Google Sans', sans-serif; font-size: 20px; ">Privacy Policy</h2>
+        <p class='text' style="font-family: 'Google Sans', sans-serif; line-height: 1.6;">
+            Cubyy respects your privacy. <strong>We do not collect, store, or sell any of your personal data.</strong> 
+            All your solving times and settings are stored locally on your device using your browser's local storage. 
+            We have no access to your data, and we do not use any tracking cookies or analytics.
+        </p>
+
+        <h2 class='text' style="font-family: 'Google Sans', sans-serif; font-size: 20px; margin-top: 25px;">Terms of Use</h2>
+        <p class='text' style="font-family: 'Google Sans', sans-serif; line-height: 1.6;">
+            Cubyy is an Open Source project provided "as is," without any warranty of any kind. By using this tool, you agree that you are using it at your own risk. 
+            You are free to use, modify, and distribute this software under the terms of the project's license.
+        </p>
+
+        <h2 class='text' style="font-family: 'Google Sans', sans-serif; font-size: 20px; margin-top: 25px;">Credits & Open Source</h2>
+        <p class='text' style="font-family: 'Google Sans', sans-serif; line-height: 1.6;">
+            Cubyy is built with love for the cubing community. We are proud to be an Open Source project. 
+            You can view the source code, contribute, or report issues on our 
+            <a href="https://github.com/franekk3/Cubyy" style="color: #6750a4; font-weight: bold; text-decoration: none;">GitHub repository</a>.
+        </p>
+        
+        <p style="font-size: 12px; color: #938f99; margin-top: 30px;">Last updated: March 2026</p>
+    </div>
+    <p style="margin: 50px;"> </p>
+    <div  class="nav-bar">
+        <div onclick="window.location.href='../index.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+            <img id="home-button" class="nav-bar-image " src="../media/icons/home.png">
+            <p class="nav-bar-label" > Home </p>
+        </div>
+        <div onclick="window.location.href='../times.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+            <img id="add-button" class="nav-bar-image" src="../media/icons/list.png">
+            <p class="nav-bar-label"> Times </p>
+        </div>
+        <div onclick="window.location.href='../settings.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+            <img id="account-button" class="nav-bar-image nav-bar-image-choosed" src="../media/icons/settings_filled.png">
+            <p class="nav-bar-label"> Settings </p>
+        </div>
+    </div>
+
+
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.getElementById('home-button').src = '../media/dm/home.png';
+            document.getElementById('add-button').src = '../media/dm/list.png';
+            document.getElementById('account-button').src = '../media/dm/settings_filled.png';
+        } else {
+            document.getElementById('home-button').src = '../media/icons/home.png';
+            document.getElementById('add-button').src = '../media/icons/list.png';
+            document.getElementById('account-button').src = '../media/icons/settings_filled.png';
+        }
+         function isMobileDevice() { return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia("(max-width: 768px)").matches; } 
+ function loadCSS(file) { const link = document.createElement("link"); link.rel = "stylesheet"; link.href = file; document.head.appendChild(link); } 
+ if (isMobileDevice()) { loadCSS("../styles/style-mobile.css"); } else { loadCSS("../styles/style-desktop.css"); }
+
+ if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../sw.js')
+            .then(reg => console.log('Service Worker is already registered!', reg))
+            .catch(err => console.log('Error reghistering SW:', err));
+    });
+}
+    </script>
+</body>
+</html>

@@ -260,13 +260,123 @@ body.no-scroll {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    animation: slideUp2 0.5s ease-out;
+    animation: slideUp2 0.2s ease-out;
+    height: 60%;
+    max-height: 400px;
 }
 .time-details-box-hide {
-    animation: slideDown2 0.5s ease-in;
+    animation: slideDown2 0.2s ease-in;
 }
 #details-time {
     font-size: 60px;
     font-weight: bold;
     margin: 10px 0;
+}
+.timer-default { color: #262035; }
+.timer-ready { color: #2E7D32; } /* Zielony */
+.timer-holding { color: #B3261E; } /* Czerwony */
+.stats-trigger {
+    background-color: #e8def7; margin-top: 0px; position: absolute; bottom: 16%; z-index: 99;
+}
+.last-time {
+    display: none; text-align: center; font-family: 'Google Sans'; color: #49454F; margin-top: 10px; font-size: 14px;
+}
+.drawer-box {
+    z-index: 1000 ; box-shadow: 0 4px 10px #fefbfea7; display: flex; flex-direction: column; position: fixed; bottom: 0px; width: 95%; max-width: 640px; margin: 0px auto; height: 65%; max-height: 550px; background-color: #f7f2f9; border-radius: 28px 28px 0px 0px; overflow: hidden; justify-content: flex-start; align-items: center;
+}
+.list-page-spinner {
+    background-color: #d0bcff;
+}
+.rows-box {
+    background-color: #F3EDF7;
+    color:  #1D1B20;
+}
+.rows-hr {
+    margin: 20px 0; color: #CAC4D0;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #141117;
+    color: white;
+  }
+  .m3-card2{
+    background-color: #302b3b;
+    color: #c8b2ff;
+  }
+  .timer-display{
+    color: #65558f;
+  }
+  .nav-bar {
+    background-color: #221e26;
+}
+.nav-bar-label {
+    color: #c9c3cf;
+}
+.nav-bar-image:hover {
+    background-color: #494257;
+}
+.nav-bar-image-choosed{
+    background-color: #494257 !important; 
+}
+    .timer-default { color: #E6E0E9; } /* Jasny kolor dla ciemnego tła */
+    .timer-ready { color: #66BB6A; } /* Jaśniejszy zielony */
+    .timer-holding { color: #EF5350; } /* Jaśniejszy czerwony */
+.notification {
+    background-color: #494257e9;
+    border: 1px solid #65558f;
+    color: #c9c3cf;
+}
+.spiner-part1 {
+    background-color: #494257;
+    color: #c9c3cf;
+}
+.spiner-part2 {
+    background-color: #494257;
+    color: #c9c3cf;
+}
+.options-bar {
+    background-color: #494257;
+}
+.options-bar-icon {
+    background-color: #65558f;
+}
+.options-bar-icon.active {
+    background-color: #c9c3cf; /* Jaśniejszy fiolet dla zaznaczenia */
+}
+.stats-trigger {
+    background-color: #494257;
+    color: #c9c3cf;
+}
+.bluetooth-button {
+    background-color: #494257;
+    color: #c9c3cf;
+}
+.last-time {
+    color: #c9c3cf;
+}
+.drawer-box{
+    background-color: #1e1b24;
+    color: #c8b2ff;
+    box-shadow: 0 4px 10px #474747a7
+}
+.list-page-spinner {
+    background-color: #65558f;
+    color: #c9c3cf;
+}
+.time-box {
+    background-color: #494257;
+    color: #c9c3cf;
+}
+.time-details-box {
+    background-color: #1e1b24;
+    color: #c8b2ff;
+    box-shadow: 0 4px 10px #474747a7
+}
+.rows-box {
+    background-color: #3a3643;
+    color: #c8b2ff;
+}
+.rows-hr {
+    color: #65558f;
+}
 }

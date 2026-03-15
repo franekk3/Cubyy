@@ -64,3 +64,26 @@
 .hidden3 {
     display: none;
 }
+@media (prefers-color-scheme: dark) {
+  .nav-bar {
+    background-color: #221e26;
+}
+.m3-card-small2 {
+    background-color: #514665;
+}
+.m3-card-small1 {
+    background-color: #514665;
+}
+.time-label1 {
+    color: #e8def7;
+}
+.time-label2 {
+    color: #e8def7;
+}
+.description-label2 {
+    color: #e8def7;
+}
+.description-label1 {
+    color: #e8def7;
+}
+}

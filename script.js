@@ -1,13 +1,4 @@
- // Ta funkcja uruchamia się automatycznie przy każdym załadowaniu strony
-window.onload = function() {
-    loadTimes();            // Wczytaj czasy z pamięci
-    updateTimesList();      // Wyświetl listę (jeśli element istnieje)
-    updateLastSolveDisplay(); // Zaktualizuj podgląd ostatniego ułożenia
-    updateStats();
-    if (typeof loadOrGenerateScramble === 'function') {
-        loadOrGenerateScramble(); // Wczytaj scramble tylko jeśli funkcja istnieje
-    }
-};
+
 
 
 function calculateAoX(size) {
@@ -460,7 +451,7 @@ function resetTimer() {
     if (timerNumbers) timerNumbers.textContent = '0.000';
     if (timerDisplay) {
         timerDisplay.style.fontWeight = 'bold';
-        timerDisplay.style.color = ''; 
+        setTimerState('default');
     }
     
     releaseWakeLock();
@@ -592,22 +583,22 @@ function updateTimesList() {
     break;
                 case 'hands_on':
                     stateText = '👆 Hands On - Hold and wait...';
-                    timerDisplay.style.color = '#B3261E'; // M3 Red
+                    setTimerState('holding');
                     break;
                 case 'hands_off':
                     stateText = '⚡ Hands Off - Waiting during grace period';
                     break;
                 case 'get_set':
                     stateText = '⏳ Get Set! - Timer ready, remove hands to start';
-                    timerDisplay.style.color = '#2E7D32'; // M3 Green
+                    setTimerState('ready');
                     break;
                 case 'running':
                     stateText = `⏱️ Running - ${(value / 1000).toFixed(3)}s`;
-                    timerDisplay.style.color = '';
+                    setTimerState('default');
                     break;
                 case 'stopped':
                     stateText = `⏹️ Stopped - Final: ${formatTime(value)}s`;
-                    timerDisplay.style.color = '';
+                    setTimerState('default');
                     break;
                 case 'finished':
                     stateText = `✅ Finished - ${(value / 1000).toFixed(3)}s saved`;
@@ -752,7 +743,7 @@ function handleTouchStart(event) {
         touchStartTime = Date.now();
         
         // Zmieniamy kolor na czerwony (czekaj)
-        document.getElementById('timerDisplay').style.color = '#B3261E'; 
+        setTimerState('holding');
 
         if (touchHoldInterval) clearInterval(touchHoldInterval);
 
@@ -760,7 +751,7 @@ function handleTouchStart(event) {
             if (spacePressed && (Date.now() - touchStartTime) >= SPACE_HOLD_TIME) {
                 isReady = true;
                 // Zmieniamy kolor na zielony (gotowy!)
-                document.getElementById('timerDisplay').style.color = '#2E7D32'; 
+                setTimerState('ready'); 
                 //showNotification('🚀 Ready! Release to start...', 'info');
                 clearInterval(touchHoldInterval);
             }
@@ -778,12 +769,12 @@ function handleTouchEnd(event) {
 
         if (isReady) {
             // Startujemy nowy pomiar
-            document.getElementById('timerDisplay').style.color = ''; // Powrót do domyślnego
+            setTimerState('default');
             startTimer();
             isReady = false;
         } else {
             // Puściłeś za wcześnie - zresetuj kolor i stan
-            document.getElementById('timerDisplay').style.color = '';
+            setTimerState('default');
             isReady = false;
             if (holdTime < SPACE_HOLD_TIME) {
                 showNotification('👆 Hold for 0.5 seconds', 'info');
@@ -814,7 +805,7 @@ function handleTouchEnd(event) {
                     spacePressStartTime = Date.now();
 
                     // Ustawiamy kolor CZERWONY od razu po naciśnięciu
-                    document.getElementById('timerNumbers').style.color = '#B3261E';
+                    setTimerState('holding');
                     //showNotification('⏸️ Holding space...', 'info');
                     
                     // Czyścimy stary interwał na wszelki wypadek
@@ -824,7 +815,7 @@ function handleTouchEnd(event) {
                         if (spacePressed && (Date.now() - spacePressStartTime) >= SPACE_HOLD_TIME) {
                             isReady = true;
                             // Zmieniamy na ZIELONY po 0.5s
-                            document.getElementById('timerNumbers').style.color = '#2E7D32';
+                            setTimerState('ready');
                             document.getElementById('timerDisplay').style.fontWeight = 'bold';
                             //showNotification('🚀 Ready! Release to start...', 'info');
                             clearInterval(readyCheckInterval);
@@ -843,7 +834,7 @@ function handleTouchEnd(event) {
                     spacePressed = false;
                     
                     // Powrót do domyślnego koloru cyfr
-                    document.getElementById('timerNumbers').style.color = '#262035';
+                    setTimerState('default');
 
                     if (isReady) {
                         startTimer();
@@ -878,20 +869,28 @@ function updateLastSolveDisplay() {
         lastSolveElement.style.display = 'none';
     }
 }
-
-// Wywołujemy funkcję od razu przy ładowaniu strony
-
-// Musimy też pamiętać, aby wywołać tę funkcję po każdym nowym ułożeniu
-// oraz po usunięciu wszystkich czasów.
-// DOPISZ te wywołania w swoich istniejących funkcjach:
-
-// 1. W funkcji stopTimer() dopisz na końcu:
-// updateLastSolveDisplay();
-
-// 2. W funkcji deleteAllTimes() dopisz po saveTimes():
-// updateLastSolveDisplay();
-        // Load times and scramble on page load
-        loadTimes();
-        updateLastSolveDisplay();
-        loadOrGenerateScramble();
-        updateTimesList();
+function setTimerState(state) {
+    const el = document.getElementById('timerNumbers');
+    if (!el) return;
+    
+    // Usuwamy stare klasy
+    el.classList.remove('timer-default', 'timer-ready', 'timer-holding');
+    
+    // Dodajemy właściwą klasę
+    if (state === 'ready') el.classList.add('timer-ready');
+    else if (state === 'holding') el.classList.add('timer-holding');
+    else el.classList.add('timer-default');
+}
+// --- START ---
+window.onload = function() {
+    loadTimes();
+    updateLastSolveDisplay();
+    loadOrGenerateScramble();
+    updateTimesList();
+    updateStats();
+    
+    // Inicjalizacja stanu koloru na start
+    setTimerState('default');
+    
+    console.log("Cubyy załadowany pomyślnie!");
+};

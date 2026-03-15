@@ -19,24 +19,35 @@
         body {
             justify-content: flex-start;
         }
+        .setttings-label {
+            font-family: sans-serif, 'Google Sans'; font-weight: bold; font-size: 30px; color: #312252;
+        }
+        @media (prefers-color-scheme: dark) {
+        .settings-label {
+           color:   #E6E1E5; font-family: sans-serif, 'Google Sans'; font-weight: bold; font-size: 30px; 
+        }
+        }
     </style>
 </head>
 <body ontouchstart="">
     <div class="m3-card2"> 
-        <p style="font-family: sans-serif, 'Google Sans'; font-weight: bold; font-size: 30px; color: #312252;"> Settings </p>
+        <p class="settings-label"> Settings </p>
         <p> For now there are no settings to change! 😔 </p>
-        <div style='background-color: #F3EDF7;'>
-            <hr style="margin: 20px 0; color: #CAC4D0;">
-            <p style="color: #1D1B20;"> Cubyy version: 1.0  </p>
-            <hr style="margin: 20px 0; color: #CAC4D0;">
-            <p onclick="window.location.href='https://github.com/franekk3'" style="color: #1D1B20; cursor: pointer;"> Cubyy by <b> Franekk3 </b></a>  </p>
-            <hr style="margin: 20px 0; color: #CAC4D0;">
+        <div class='rows-box'>
+            <hr class="rows-hr">
+            <p > Cubyy version: 1.0.1  </p>
+            <hr class="rows-hr">
+            <p onclick="window.location.href='https://github.com/franekk3'" style=" cursor: pointer;"> Cubyy by <b> Franekk3 </b></a>  </p>
+            <hr class="rows-hr">
         </div>
         <div style="display: flex; justify-content: center; margin: 10px; flex-direction: row; gap: 25px;">
-            <button class="m3-ButtonWithIconWithAnimatedShapeSample"> Credits <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/heart.png"> </button>
-            <button class="m3-ButtonWithIconWithAnimatedShapeSample"> Terms & Policy <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/heart.png"> </button>
+            <button onclick="window.location.href='./w/credits.html'" class="m3-ButtonWithIconWithAnimatedShapeSample"> Credits <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/heart.png"> </button>
+            <button onclick="window.location.href='./w/terms.html'" class="m3-ButtonWithIconWithAnimatedShapeSample"> Terms & Policy <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/policy.png"> </button>
         </div>
-
+        <div style="display: flex; justify-content: center; margin: 10px; flex-direction: row; gap: 25px;">
+            <button onclick="window.location.href='https://github.com/franekk3/Cubyy'" class="m3-ButtonWithIconWithAnimatedShapeSample"><img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/github-logo.png"> GitHub </button>
+            <button onclick="window.location.href='https://discord.gg/KXVR5aT6nf'" class="m3-ButtonWithIconWithAnimatedShapeSample"><img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/discord-logo.png"> Discord </button>
+        </div>
     </div>
 
     <div  class="nav-bar">
@@ -56,5 +67,16 @@
 
 
     <script src="./script.js"></script>
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.getElementById('home-button').src = './media/dm/home.png';
+            document.getElementById('add-button').src = './media/dm/list.png';
+            document.getElementById('account-button').src = './media/dm/settings_filled.png';
+        } else {
+            document.getElementById('home-button').src = './media/icons/home.png';
+            document.getElementById('add-button').src = './media/icons/list.png';
+            document.getElementById('account-button').src = './media/icons/settings_filled.png';
+        }
+    </script>
 </body>
 </html>

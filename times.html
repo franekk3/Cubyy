@@ -39,25 +39,28 @@
     <div onclick='hideTimeDetails()' class="hidden2" style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;" id="overlay2"></div>
     <div class="time-details-box hidden2" id="time-details-box">
         <div  style="width: 100%; text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
-            <img id="detail-plus2" onclick="togglePlusTwoDetail()" style="background-color: #d0bcff; border-radius: 12px;" height="35px" width="35px" src="./media/icons/+2.png">
-            <img id="detail-dnf" onclick="toggleDnfDetail()" style="background-color: #d0bcff; border-radius: 12px;" height="35px" width="35px" src="./media/icons/block.png">
-            <img onclick="deleteSingleSolve()" style="background-color: #d0bcff; border-radius: 12px;" height="35px" width="35px" src="./media/icons/delete.png">
-            <img onclick='hideTimeDetails()' style="background-color: #d0bcff; border-radius: 12px;" height="35px" width="35px" src="./media/icons/arrow_down.png">
+            <img id="detail-plus2" onclick="togglePlusTwoDetail()" style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px" src="./media/icons/+2.png">
+            <img id="detail-dnf" onclick="toggleDnfDetail()" style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px" src="./media/icons/block.png">
+            <img onclick="deleteSingleSolve()" style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px" src="./media/icons/delete.png">
+            <img onclick='hideTimeDetails()' style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px" src="./media/icons/arrow_down.png">
+        </div>
+        <div style="display: flex; flex-direction: column; height: 100%; width: 100%; justify-content: center; align-items: center;">
+            <p id="details-time"> time </p>
+            <p id="details-scramble"> scramble </p>
+            <p style="margin: 20px;"> </p>
         </div>
 
-        <p id="details-time"> time </p>
-        <p id="details-scramble"> scramble </p>
     </div>
     <div class="m3-card2" style=" margin: 10px; margin-top: 20px; max-height: 90%; overflow-y: auto; width: 95%; max-width: 576px;">
         <p style="font-size: 30px;"> Your Times </p>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
             <div class="spinner-container"> 
-                <div class="spiner-part1" style="background-color: #d0bcff;"> 3x3 </div>
-                <div class="spiner-part2" style="background-color: #d0bcff;"> <img height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
+                <div class="spiner-part1 list-page-spinner" > 3x3 </div>
+                <div class="spiner-part2 list-page-spinner" > <img id="arrowDownIcon1" height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
             </div>
             <div class="spinner-container"> 
-                <div class="spiner-part1" style="background-color: #d0bcff;"> Session1 </div>
-                <div class="spiner-part2" style="background-color: #d0bcff;"> <img height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
+                <div class="spiner-part1 list-page-spinner" > Session1 </div>
+                <div class="spiner-part2 list-page-spinner" > <img id="arrowDownIcon2" height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
             </div>
         </div>
         <div class="options-bar.show">
@@ -84,13 +87,26 @@
     </div>
             <p style="margin: 50px;"> </p>
     <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.getElementById('home-button').src = './media/dm/home.png';
+            document.getElementById('add-button').src = './media/dm/list_filled.png';
+            document.getElementById('account-button').src = './media/dm/settings.png';
+            document.getElementById('arrowDownIcon1').src = './media/dm/arrow_down.png';
+            document.getElementById('arrowDownIcon2').src = './media/dm/arrow_down.png';
+        } else {
+            document.getElementById('home-button').src = './media/icons/home.png';
+            document.getElementById('add-button').src = './media/icons/list_filled.png';
+            document.getElementById('account-button').src = './media/icons/settings.png';
+            document.getElementById('arrowDownIcon1').src = './media/icons/arrow_down.png';
+            document.getElementById('arrowDownIcon2').src = './media/icons/arrow_down.png';
+        }
 
         function hideTimeDetails() {
             document.getElementById('time-details-box').classList.add('time-details-box-hide');
             setTimeout(() => {
                 document.getElementById('time-details-box').classList.add('hidden2');   
                 document.getElementById('time-details-box').classList.remove('time-details-box-hide');
-            }, 480);
+            }, 180);
 
             document.getElementById('overlay2').classList.add('hidden2'); 
         }
