@@ -172,7 +172,16 @@
         opacity: 1;
     }
 }
-
+@keyframes slideUp2 {
+    from {
+        transform: translateX(-50%) translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(10);
+        opacity: 1;
+    }
+}
 /* Animacja zjazdu w dół */
 @keyframes slideDown {
     from {
@@ -181,6 +190,16 @@
     }
     to {
         transform: translateX(0%) translateY(100%);
+        opacity: 0;
+    }
+}
+@keyframes slideDown2 {
+    from {
+        transform: translateX(-50%) translateY(10);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-50%) translateY(100%);
         opacity: 0;
     }
 }
@@ -225,4 +244,29 @@ body.no-scroll {
     gap: 5px;
     width: 100%;
     margin-top: 10px;
+}
+.time-details-box {
+    background-color: #e8def7;
+    border-radius: 16px;
+    padding: 10px;
+    width: 90%;
+    max-width: 576px;
+    margin: 10px auto;
+    text-align: center;
+    color: #65558f;
+    font-family: 'Google Sans', sans-serif;
+    position: absolute;    animation: fadeIn 0.3s ease-out;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    animation: slideUp2 0.5s ease-out;
+}
+.time-details-box-hide {
+    animation: slideDown2 0.5s ease-in;
+}
+#details-time {
+    font-size: 60px;
+    font-weight: bold;
+    margin: 10px 0;
 }

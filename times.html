@@ -36,6 +36,18 @@
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
+    <div onclick='hideTimeDetails()' class="hidden2" style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;" id="overlay2"></div>
+    <div class="time-details-box hidden2" id="time-details-box">
+        <div  style="width: 100%; text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
+            <img id="detail-plus2" onclick="togglePlusTwoDetail()" style="background-color: #d0bcff; border-radius: 12px;" height="35px" width="35px" src="./media/icons/+2.png">
+            <img id="detail-dnf" onclick="toggleDnfDetail()" style="background-color: #d0bcff; border-radius: 12px;" height="35px" width="35px" src="./media/icons/block.png">
+            <img onclick="deleteSingleSolve()" style="background-color: #d0bcff; border-radius: 12px;" height="35px" width="35px" src="./media/icons/delete.png">
+            <img onclick='hideTimeDetails()' style="background-color: #d0bcff; border-radius: 12px;" height="35px" width="35px" src="./media/icons/arrow_down.png">
+        </div>
+
+        <p id="details-time"> time </p>
+        <p id="details-scramble"> scramble </p>
+    </div>
     <div class="m3-card2" style=" margin: 10px; margin-top: 20px; max-height: 90%; overflow-y: auto; width: 95%; max-width: 576px;">
         <p style="font-size: 30px;"> Your Times </p>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
@@ -73,6 +85,82 @@
             <p style="margin: 50px;"> </p>
     <script>
 
+        function hideTimeDetails() {
+            document.getElementById('time-details-box').classList.add('time-details-box-hide');
+            setTimeout(() => {
+                document.getElementById('time-details-box').classList.add('hidden2');   
+                document.getElementById('time-details-box').classList.remove('time-details-box-hide');
+            }, 480);
+
+            document.getElementById('overlay2').classList.add('hidden2'); 
+        }
+
+let currentDetailIndex = null; // Zmienna trzymająca indeks aktualnie przeglądanego ułożenia
+
+function showTimeDetails(index) {
+    currentDetailIndex = index; // Zapamiętujemy, co otworzyliśmy
+    const solve = times[index];
+    if (!solve) return;
+
+    const detailsBox = document.getElementById('time-details-box');
+    const overlay = document.getElementById('overlay2');
+    const timeDisplay = document.getElementById('details-time');
+    const scrambleDisplay = document.getElementById('details-scramble');
+
+    // Aktualizujemy wygląd ikon (podświetlenie/skalowanie)
+    updateDetailIcons(solve);
+
+    const formatted = solve.isDnf ? "DNF" : (formatTime(solve.time) + (solve.isPlusTwo ? "+" : ""));
+    timeDisplay.textContent = formatted;
+    scrambleDisplay.textContent = solve.scramble || "No scramble";
+
+    detailsBox.classList.remove('hidden2');
+    overlay.classList.remove('hidden2');
+    
+    if (navigator.vibrate) navigator.vibrate(50);
+}
+function updateDetailIcons(solve) {
+    const plusTwoIcon = document.getElementById('detail-plus2');
+    const dnfIcon = document.getElementById('detail-dnf');
+
+    // Resetujemy skale i przezroczystość
+    plusTwoIcon.style.transform = solve.isPlusTwo ? "scale(1.2)" : "scale(1)";
+    plusTwoIcon.style.opacity = solve.isPlusTwo ? "1" : "0.5";
+
+    dnfIcon.style.transform = solve.isDnf ? "scale(1.2)" : "scale(1)";
+    dnfIcon.style.opacity = solve.isDnf ? "1" : "0.5";
+}
+function togglePlusTwoDetail() {
+    if (currentDetailIndex === null) return;
+    const solve = times[currentDetailIndex];
+    
+    solve.isPlusTwo = !solve.isPlusTwo;
+    if (solve.isPlusTwo) solve.isDnf = false; // Jeśli +2, to nie DNF
+
+    saveTimes();
+    updateTimesList();
+    showTimeDetails(currentDetailIndex); // Odśwież widok detali
+}
+function toggleDnfDetail() {
+    if (currentDetailIndex === null) return;
+    const solve = times[currentDetailIndex];
+    
+    solve.isDnf = !solve.isDnf;
+    if (solve.isDnf) solve.isPlusTwo = false; // Jeśli DNF, to nie +2
+
+    saveTimes();
+    updateTimesList();
+    showTimeDetails(currentDetailIndex); // Odśwież widok detali
+}
+function deleteSingleSolve() {
+    if (currentDetailIndex === null) return;
+    if (confirm("Delete this solve?")) {
+        times.splice(currentDetailIndex, 1);
+        saveTimes();
+        updateTimesList();
+        hideTimeDetails();
+    }
+}
 // --- EKSPORT DANYCH (Format csTimer) ---
 function exportToCsTimer() {
     const csTimerFormat = {
@@ -215,26 +303,24 @@ function updateTimesList() {
 
     const contentExists = times.length > 0;
 
-    // 1. NOWA LISTA - Kafelki jeden obok drugiego
     if (newContainer) {
-        // Dodajemy style do kontenera, żeby układał kafelki w rzędzie
         newContainer.style.display = 'flex';
         newContainer.style.flexWrap = 'wrap';
         newContainer.style.gap = '8px';
         newContainer.style.justifyContent = 'center';
 
-        newContainer.innerHTML = contentExists ? times.map((t) => {
+        // Kluczowa zmiana: dodajemy onclick="showTimeDetails(${index})" do każdego kafelka
+        newContainer.innerHTML = contentExists ? times.map((t, index) => {
             const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
-            // Zwracamy sam kafelek bez numeru #
-            return `<p class="time-box" style="margin: 0;">${formatted}</p>`;
+            return `<p class="time-box" onclick="showTimeDetails(${index})" style="margin: 0; cursor: pointer; user-select: none;">${formatted}</p>`;
         }).join('') : '<p style="text-align:center; opacity:0.5; width: 100%;">No times yet</p>';
     }
 
-    // 2. STARA LISTA - Ignoruje, jeśli nie ma, lub wyświetla po staremu
+    // Stara lista (jeśli jej używasz, też może być klikalna)
     if (oldContainer) {
         oldContainer.innerHTML = contentExists ? times.map((t, index) => {
             const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
-            return `<div>#${times.length - index}: ${formatted}</div>`;
+            return `<div onclick="showTimeDetails(${index})" style="cursor:pointer;">#${times.length - index}: ${formatted}</div>`;
         }).join('') : '(No times yet)';
     }
 }
