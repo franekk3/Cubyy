@@ -11,7 +11,7 @@
 	4. Clean and intuitive Times List .
 	5. Some SpeedCubing Timer's basics like Scramble generator or timer it self.
 	6. Option to import/export Times (cstimer.net format)
-	7.  Fully Mobile & Desktop Support 
+	7. Fully Mobile & Desktop Support 
 
 ---
 
