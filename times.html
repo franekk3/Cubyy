@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +11,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
-	<meta name="apple-mobile-web-app-title" content="Cubyy">
-	<link rel="apple-touch-icon" href="./media/icons/icon.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+        rel="stylesheet">
+    <meta name="apple-mobile-web-app-title" content="Cubyy">
+    <link rel="apple-touch-icon" href="./media/icons/icon.png">
     <link rel="manifest" href="manifest.json">
     <style>
         body {
@@ -21,71 +24,93 @@
         }
     </style>
 </head>
+
 <body ontouchstart="">
-    <div  class="nav-bar">
-        <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+    <div class="nav-bar">
+        <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element">
             <img id="home-button" class="nav-bar-image " src="./media/icons/home.png">
-            <p class="nav-bar-label" > Home </p>
+            <p class="nav-bar-label"> Home </p>
         </div>
-        <div onclick="window.location.href='./times.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+        <div onclick="window.location.href='./times.html'; navigator.vibrate(100)" class="nav-bar-element">
             <img id="add-button" class="nav-bar-image nav-bar-image-choosed" src="./media/icons/list_filled.png">
             <p class="nav-bar-label"> Times </p>
         </div>
-        <div onclick="window.location.href='./settings.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+        <div onclick="window.location.href='./settings.html'; navigator.vibrate(100)" class="nav-bar-element">
             <img id="account-button" class="nav-bar-image" src="./media/icons/settings.png">
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
-    <div onclick='hideTimeDetails()' class="hidden2" style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;" id="overlay2"></div>
+    <div onclick='hideTimeDetails()' class="hidden2"
+        style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;"
+        id="overlay2"></div>
     <div class="time-details-box hidden2" id="time-details-box">
-        <div  style="width: 100%; text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
-            <img id="detail-plus2" onclick="togglePlusTwoDetail()" style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px" src="./media/icons/+2.png">
-            <img id="detail-dnf" onclick="toggleDnfDetail()" style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px" src="./media/icons/block.png">
-            <img onclick="deleteSingleSolve()" style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px" src="./media/icons/delete.png">
-            <img onclick='hideTimeDetails()' style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px" src="./media/icons/arrow_down.png">
+        <div style="width: 100%; text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
+            <img id="detail-plus2" onclick="togglePlusTwoDetail()"
+                style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px"
+                src="./media/icons/+2.png">
+            <img id="detail-dnf" onclick="toggleDnfDetail()" style="background-color: #d0bcff; border-radius: 12px;"
+                height="40px" width="40px" src="./media/icons/block.png">
+            <img onclick="deleteSingleSolve()" style="background-color: #d0bcff; border-radius: 12px;" height="40px"
+                width="40px" src="./media/icons/delete.png">
+            <img onclick='hideTimeDetails()' style="background-color: #d0bcff; border-radius: 12px;" height="40px"
+                width="40px" src="./media/icons/arrow_down.png">
         </div>
-        <div style="display: flex; flex-direction: column; height: 100%; width: 100%; justify-content: center; align-items: center;">
+        <div
+            style="display: flex; flex-direction: column; height: 100%; width: 100%; justify-content: center; align-items: center;">
             <p id="details-time"> time </p>
             <p id="details-scramble"> scramble </p>
             <p style="margin: 20px;"> </p>
         </div>
 
     </div>
-    <div class="m3-card2" style=" margin: 10px; margin-top: 20px; max-height: 90%; overflow-y: auto; width: 95%; max-width: 576px;">
+    <div class="m3-card2"
+        style=" margin: 10px; margin-top: 20px; max-height: 90%; overflow-y: auto; width: 95%; max-width: 576px;">
         <p style="font-size: 30px;"> Your Times </p>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
-            <div class="spinner-container"> 
-                <div class="spiner-part1 list-page-spinner" > 3x3 </div>
-                <div class="spiner-part2 list-page-spinner" > <img id="arrowDownIcon1" height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
+            <div class="spinner-container" style="position: relative;">
+                <select id="cubeSelectTimes" onchange="onCubeChangeTimes(this.value)"
+                    style="opacity: 0; position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer; -webkit-appearance: none; appearance: none;">
+                    <option value="3x3">3x3</option>
+                    <option value="2x2">2x2</option>
+                    <option value="4x4">4x4</option>
+                    <option value="Pyraminx">Pyraminx</option>
+                    <option value="Skewb">Skewb</option>
+                </select>
+                <div class="spiner-part1 list-page-spinner" id="cube-spinner-text"> 3x3 </div>
+                <div class="spiner-part2 list-page-spinner"> <img id="arrowDownIcon1" height="30px" width="30px"
+                        src="./media/icons/arrow_down.png"> </div>
             </div>
-            <div class="spinner-container"> 
-                <div class="spiner-part1 list-page-spinner" > Session1 </div>
-                <div class="spiner-part2 list-page-spinner" > <img id="arrowDownIcon2" height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
+            <div class="spinner-container">
+                <div class="spiner-part1 list-page-spinner"> Session1 </div>
+                <div class="spiner-part2 list-page-spinner"> <img id="arrowDownIcon2" height="30px" width="30px"
+                        src="./media/icons/arrow_down.png"> </div>
             </div>
         </div>
         <div class="options-bar.show">
             <img id='delete-icon' onclick="deleteAllTimes()" class="options-bar-icon" src="./media/icons/delete.png">
-            
+
             <img id='export-icon' onclick="exportToCsTimer()" class="options-bar-icon" src="./media/icons/download.png">
-            
+
             <label for="file-upload" style="cursor: pointer;">
                 <img id='import-icon' class="options-bar-icon" src="./media/icons/upload.png">
             </label>
             <input id="file-upload" type="file" style="display:none" onchange="importFromCsTimer(event)">
         </div>
-        <div id="timesList2" class="newtimelist">     
-    
+        <div id="timesList2" class="newtimelist">
+
         </div>
     </div>
     </div>
 
 
-    <div id="timesList2"class="m3-card2 hidden2" style=" margin: 10px; max-height: 90%; overflow-y: auto; width: 90%; max-width: 576px;">
-        <button onclick="deleteAllTimes()" class="m3-FilledTonalButtonWithAnimatedShapeSample" style="scale: 1; margin: 0 auto; margin-bottom: 10px;"> Delete All Times</button>
-    
+    <div id="timesList2" class="m3-card2 hidden2"
+        style=" margin: 10px; max-height: 90%; overflow-y: auto; width: 90%; max-width: 576px;">
+        <button onclick="deleteAllTimes()" class="m3-FilledTonalButtonWithAnimatedShapeSample"
+            style="scale: 1; margin: 0 auto; margin-bottom: 10px;"> Delete All Times</button>
+
         <div id="timesList"></div>
     </div>
-            <p style="margin: 50px;"> </p>
+    <p style="margin: 50px;"> </p>
     <script>
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.getElementById('home-button').src = './media/dm/home.png';
@@ -96,265 +121,315 @@
             document.getElementById('import-icon').src = './media/dm/upload.png';
             document.getElementById('export-icon').src = './media/dm/download.png';
             document.getElementById('delete-icon').src = './media/dm/delete.png';
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "./styles/style-dark.css";
+            document.head.appendChild(link);
         } else {
             document.getElementById('home-button').src = './media/icons/home.png';
             document.getElementById('add-button').src = './media/icons/list_filled.png';
             document.getElementById('account-button').src = './media/icons/settings.png';
             document.getElementById('arrowDownIcon1').src = './media/icons/arrow_down.png';
             document.getElementById('arrowDownIcon2').src = './media/icons/arrow_down.png';
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "./styles/style-light.css"; // ścieżka do pliku
+            document.head.appendChild(link);
         }
 
         function hideTimeDetails() {
             document.getElementById('time-details-box').classList.add('time-details-box-hide');
             setTimeout(() => {
-                document.getElementById('time-details-box').classList.add('hidden2');   
+                document.getElementById('time-details-box').classList.add('hidden2');
                 document.getElementById('time-details-box').classList.remove('time-details-box-hide');
             }, 180);
 
-            document.getElementById('overlay2').classList.add('hidden2'); 
+            document.getElementById('overlay2').classList.add('hidden2');
         }
 
-let currentDetailIndex = null; // Zmienna trzymająca indeks aktualnie przeglądanego ułożenia
+        let currentDetailIndex = null; // Zmienna trzymająca indeks aktualnie przeglądanego ułożenia
 
-function showTimeDetails(index) {
-    currentDetailIndex = index; // Zapamiętujemy, co otworzyliśmy
-    const solve = times[index];
-    if (!solve) return;
+        function showTimeDetails(index) {
+            currentDetailIndex = index; // Zapamiętujemy, co otworzyliśmy
+            const solve = times[index];
+            if (!solve) return;
 
-    const detailsBox = document.getElementById('time-details-box');
-    const overlay = document.getElementById('overlay2');
-    const timeDisplay = document.getElementById('details-time');
-    const scrambleDisplay = document.getElementById('details-scramble');
+            const detailsBox = document.getElementById('time-details-box');
+            const overlay = document.getElementById('overlay2');
+            const timeDisplay = document.getElementById('details-time');
+            const scrambleDisplay = document.getElementById('details-scramble');
 
-    // Aktualizujemy wygląd ikon (podświetlenie/skalowanie)
-    updateDetailIcons(solve);
+            // Aktualizujemy wygląd ikon (podświetlenie/skalowanie)
+            updateDetailIcons(solve);
 
-    const formatted = solve.isDnf ? "DNF" : (formatTime(solve.time) + (solve.isPlusTwo ? "+" : ""));
-    timeDisplay.textContent = formatted;
-    scrambleDisplay.textContent = solve.scramble || "No scramble";
+            const formatted = solve.isDnf ? "DNF" : (formatTime(solve.time) + (solve.isPlusTwo ? "+" : ""));
+            timeDisplay.textContent = formatted;
+            scrambleDisplay.textContent = solve.scramble || "No scramble";
 
-    detailsBox.classList.remove('hidden2');
-    overlay.classList.remove('hidden2');
-    
-    if (navigator.vibrate) navigator.vibrate(50);
-}
-function updateDetailIcons(solve) {
-    const plusTwoIcon = document.getElementById('detail-plus2');
-    const dnfIcon = document.getElementById('detail-dnf');
+            detailsBox.classList.remove('hidden2');
+            overlay.classList.remove('hidden2');
 
-    // Resetujemy skale i przezroczystość
-    plusTwoIcon.style.transform = solve.isPlusTwo ? "scale(1.2)" : "scale(1)";
-    plusTwoIcon.style.opacity = solve.isPlusTwo ? "1" : "0.5";
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+        function updateDetailIcons(solve) {
+            const plusTwoIcon = document.getElementById('detail-plus2');
+            const dnfIcon = document.getElementById('detail-dnf');
 
-    dnfIcon.style.transform = solve.isDnf ? "scale(1.2)" : "scale(1)";
-    dnfIcon.style.opacity = solve.isDnf ? "1" : "0.5";
-}
-function togglePlusTwoDetail() {
-    if (currentDetailIndex === null) return;
-    const solve = times[currentDetailIndex];
-    
-    solve.isPlusTwo = !solve.isPlusTwo;
-    if (solve.isPlusTwo) solve.isDnf = false; // Jeśli +2, to nie DNF
+            // Resetujemy skale i przezroczystość
+            plusTwoIcon.style.transform = solve.isPlusTwo ? "scale(1.2)" : "scale(1)";
+            plusTwoIcon.style.opacity = solve.isPlusTwo ? "1" : "0.5";
 
-    saveTimes();
-    updateTimesList();
-    showTimeDetails(currentDetailIndex); // Odśwież widok detali
-}
-function toggleDnfDetail() {
-    if (currentDetailIndex === null) return;
-    const solve = times[currentDetailIndex];
-    
-    solve.isDnf = !solve.isDnf;
-    if (solve.isDnf) solve.isPlusTwo = false; // Jeśli DNF, to nie +2
+            dnfIcon.style.transform = solve.isDnf ? "scale(1.2)" : "scale(1)";
+            dnfIcon.style.opacity = solve.isDnf ? "1" : "0.5";
+        }
+        function togglePlusTwoDetail() {
+            if (currentDetailIndex === null) return;
+            const solve = times[currentDetailIndex];
 
-    saveTimes();
-    updateTimesList();
-    showTimeDetails(currentDetailIndex); // Odśwież widok detali
-}
-function deleteSingleSolve() {
-    if (currentDetailIndex === null) return;
-    if (confirm("Delete this solve?")) {
-        times.splice(currentDetailIndex, 1);
-        saveTimes();
-        updateTimesList();
-        hideTimeDetails();
-    }
-}
-// --- EKSPORT DANYCH (Format csTimer) ---
-function exportToCsTimer() {
-    const csTimerFormat = {
-        "session1": times.map(t => [
-            [0, t.time], // csTimer przechowuje czas w milisekundach w tym miejscu
-            t.scramble,
-            "", // komentarz
-            Math.floor(new Date(t.date).getTime() / 1000) // Timestamp w sekundach
-        ]),
-        "properties": { "sessionName": "Cubyy Export" }
-    };
-
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(csTimerFormat));
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "cubyy_export_" + new Date().toLocaleDateString() + ".json");
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-    showNotification("Export started!", "success");
-}
-
-// --- IMPORT DANYCH (Z weryfikacją duplikatów) ---
-function importFromCsTimer(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const importedData = JSON.parse(e.target.result);
-            let importedCount = 0;
-            let skipCount = 0;
-
-            // csTimer przechowuje sesje w kluczach session1, session2 itd.
-            Object.keys(importedData).forEach(key => {
-                if (key.startsWith('session') && Array.isArray(importedData[key])) {
-                    importedData[key].forEach(item => {
-                        // Mapowanie formatu csTimer:
-                        // item[0][1] to czas, item[1] to scramble
-                        const importedTime = item[0][1];
-                        const importedScramble = item[1];
-
-                        // SPRAWDZANIE: Czy mamy już taki sam CZAS na takim samym SCRAMBLU?
-                        const isDuplicate = times.some(existing => 
-                            existing.time === importedTime && 
-                            existing.scramble === importedScramble
-                        );
-
-                        if (!isDuplicate) {
-                            times.push({
-                                time: importedTime,
-                                scramble: importedScramble,
-                                date: new Date(item[3] * 1000).toISOString(), // Używamy daty z pliku
-                                isPlusTwo: false,
-                                isDnf: item[0][0] === -1
-                            });
-                            importedCount++;
-                        } else {
-                            skipCount++;
-                        }
-                    });
-                }
-            });
-
-            if (importedCount > 0) {
-                // Sortujemy po dacie, aby najnowsze były na górze
-                times.sort((a, b) => new Date(b.date) - new Date(a.date));
-                saveTimes();
-                updateTimesList();
-                // Jeśli masz funkcję updateStats, też ją wywołaj
-                if (typeof updateStats === 'function') updateStats();
-                
-                alert(`Imported ${importedCount} new solves! (Skipped ${skipCount} duplicates)`);
-            } else {
-                alert(`No new solves. Skipped ${skipCount} duplicates.`);
+            // Jeśli był DNF, najpierw go usuwamy (bo nie można mieć obu kar na raz)
+            if (solve.isDnf) {
+                solve.isDnf = false;
             }
 
-        } catch (err) {
-            console.error("Import Error:", err);
-            alert("Error: This file is not a valid csTimer export.");
+            solve.isPlusTwo = !solve.isPlusTwo;
+
+            // Kluczowa zmiana: faktycznie dodajemy lub odejmujemy 2 sekundy
+            if (solve.isPlusTwo) {
+                solve.time += 2000;
+            } else {
+                solve.time -= 2000;
+            }
+
+            saveTimes();
+            updateTimesList();
+            showTimeDetails(currentDetailIndex); // Odśwież widok detali
         }
-    };
-    reader.readAsText(file);
-    // Resetujemy input, żeby można było wybrać ten sam plik dwa razy
-    event.target.value = ''; 
-}
-// --- FUNKCJE POMOCNICZE ---
-function formatTime(ms) {
-    if (ms === null || ms === undefined) return "0.000";
-    const minutes = Math.floor(ms / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    const milliseconds = Math.floor(ms % 1000);
-    const msStr = milliseconds.toString().padStart(3, '0');
-    
-    if (minutes > 0) {
-        const secStr = seconds.toString().padStart(2, '0');
-        return `${minutes}:${secStr}.${msStr}`;
-    }
-    return `${seconds}.${msStr}`;
-}
+        function toggleDnfDetail() {
+            if (currentDetailIndex === null) return;
+            const solve = times[currentDetailIndex];
 
-function isMobileDevice() { 
-    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia("(max-width: 768px)").matches; 
-} 
+            // Jeśli miał +2, odejmujemy je przed nałożeniem DNF
+            if (!solve.isDnf && solve.isPlusTwo) {
+                solve.isPlusTwo = false;
+                solve.time -= 2000;
+            }
 
-function loadCSS(file) { 
-    const link = document.createElement("link"); 
-    link.rel = "stylesheet"; 
-    link.href = file; 
-    document.head.appendChild(link); 
-} 
+            solve.isDnf = !solve.isDnf;
 
-// --- LOGIKA CZASÓW ---
-let times = [];
+            saveTimes();
+            updateTimesList();
+            showTimeDetails(currentDetailIndex);
+        }
+        function deleteSingleSolve() {
+            if (currentDetailIndex === null) return;
+            if (confirm("Delete this solve?")) {
+                times.splice(currentDetailIndex, 1);
+                saveTimes();
+                updateTimesList();
+                hideTimeDetails();
+            }
+        }
+        // --- EKSPORT DANYCH (Format csTimer) ---
+        function exportToCsTimer() {
+            const csTimerFormat = {
+                "session1": times.map(t => [
+                    [0, t.time], // csTimer przechowuje czas w milisekundach w tym miejscu
+                    t.scramble,
+                    "", // komentarz
+                    Math.floor(new Date(t.date).getTime() / 1000) // Timestamp w sekundach
+                ]),
+                "properties": { "sessionName": "Cubyy Export" }
+            };
 
-function saveTimes() {
-    localStorage.setItem('cubeTimerTimes', JSON.stringify(times));
-}
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(csTimerFormat));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "cubyy_export_" + new Date().toLocaleDateString() + ".json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            showNotification("Export started!", "success");
+        }
 
-function loadTimes() {
-    const saved = localStorage.getItem('cubeTimerTimes');
-    if (saved) {
-        times = JSON.parse(saved);
-    }
-    updateTimesList();
-}
+        // --- IMPORT DANYCH (Z weryfikacją duplikatów) ---
+        function importFromCsTimer(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-function deleteAllTimes() {
-    if (confirm('Are you sure you want to delete all saved times?')) {
-        times = [];
-        saveTimes();
-        updateTimesList();
-    }
-}
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    let importedCount = 0;
+                    let skipCount = 0;
 
-function updateTimesList() {
-    const newContainer = document.querySelector('.newtimelist');
-    const oldContainer = document.getElementById('timesList');
+                    // csTimer przechowuje sesje w kluczach session1, session2 itd.
+                    Object.keys(importedData).forEach(key => {
+                        if (key.startsWith('session') && Array.isArray(importedData[key])) {
+                            importedData[key].forEach(item => {
+                                // Mapowanie formatu csTimer:
+                                // item[0][1] to czas, item[1] to scramble
+                                const importedTime = item[0][1];
+                                const importedScramble = item[1];
 
-    const contentExists = times.length > 0;
+                                // SPRAWDZANIE: Czy mamy już taki sam CZAS na takim samym SCRAMBLU?
+                                const isDuplicate = times.some(existing =>
+                                    existing.time === importedTime &&
+                                    existing.scramble === importedScramble
+                                );
 
-    if (newContainer) {
-        newContainer.style.display = 'flex';
-        newContainer.style.flexWrap = 'wrap';
-        newContainer.style.gap = '8px';
-        newContainer.style.justifyContent = 'center';
+                                if (!isDuplicate) {
+                                    times.push({
+                                        time: importedTime,
+                                        scramble: importedScramble,
+                                        date: new Date(item[3] * 1000).toISOString(), // Używamy daty z pliku
+                                        isPlusTwo: false,
+                                        isDnf: item[0][0] === -1
+                                    });
+                                    importedCount++;
+                                } else {
+                                    skipCount++;
+                                }
+                            });
+                        }
+                    });
 
-        // Kluczowa zmiana: dodajemy onclick="showTimeDetails(${index})" do każdego kafelka
-        newContainer.innerHTML = contentExists ? times.map((t, index) => {
-            const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
-            return `<p class="time-box" onclick="showTimeDetails(${index})" style="margin: 0; cursor: pointer; user-select: none;">${formatted}</p>`;
-        }).join('') : '<p style="text-align:center; opacity:0.5; width: 100%;">No times yet</p>';
-    }
+                    if (importedCount > 0) {
+                        // Sortujemy po dacie, aby najnowsze były na górze
+                        times.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        saveTimes();
+                        updateTimesList();
+                        // Jeśli masz funkcję updateStats, też ją wywołaj
+                        if (typeof updateStats === 'function') updateStats();
 
-    // Stara lista (jeśli jej używasz, też może być klikalna)
-    if (oldContainer) {
-        oldContainer.innerHTML = contentExists ? times.map((t, index) => {
-            const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
-            return `<div onclick="showTimeDetails(${index})" style="cursor:pointer;">#${times.length - index}: ${formatted}</div>`;
-        }).join('') : '(No times yet)';
-    }
-}
+                        alert(`Imported ${importedCount} new solves! (Skipped ${skipCount} duplicates)`);
+                    } else {
+                        alert(`No new solves. Skipped ${skipCount} duplicates.`);
+                    }
 
-// --- START ---
-if (isMobileDevice()) { loadCSS("./styles/style-mobile.css"); } else { loadCSS("./styles/style-desktop.css"); }
+                } catch (err) {
+                    console.error("Import Error:", err);
+                    alert("Error: This file is not a valid csTimer export.");
+                }
+            };
+            reader.readAsText(file);
+            // Resetujemy input, żeby można było wybrać ten sam plik dwa razy
+            event.target.value = '';
+        }
+        // --- FUNKCJE POMOCNICZE ---
+        function formatTime(ms) {
+            if (ms === null || ms === undefined) return "0.000";
+            const minutes = Math.floor(ms / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            const milliseconds = Math.floor(ms % 1000);
+            const msStr = milliseconds.toString().padStart(3, '0');
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
-    });
-}
+            if (minutes > 0) {
+                const secStr = seconds.toString().padStart(2, '0');
+                return `${minutes}:${secStr}.${msStr}`;
+            }
+            return `${seconds}.${msStr}`;
+        }
 
-// Uruchomienie ładowania danych
-loadTimes();
+        function isMobileDevice() {
+            return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia("(max-width: 768px)").matches;
+        }
+
+        function loadCSS(file) {
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = file;
+            document.head.appendChild(link);
+        }
+
+        // --- LOGIKA CZASÓW ---
+        let times = [];
+        let currentCube = localStorage.getItem('cubeTimerCube') || '3x3';
+        const CUBES = ["3x3", "2x2", "4x4", "Pyraminx", "Skewb"];
+
+        function onCubeChangeTimes(newCube) {
+            if (CUBES.includes(newCube)) {
+                currentCube = newCube;
+                localStorage.setItem('cubeTimerCube', currentCube);
+                let spinner = document.getElementById('cube-spinner-text');
+                if (spinner) spinner.textContent = currentCube;
+
+                // update select to match if changed from elsewhere
+                let selectEl = document.getElementById('cubeSelectTimes');
+                if (selectEl) selectEl.value = currentCube;
+
+                loadTimes();
+            }
+        }
+
+        function saveTimes() {
+            let key = currentCube === '3x3' ? 'cubeTimerTimes' : 'cubeTimerTimes_' + currentCube;
+            localStorage.setItem(key, JSON.stringify(times));
+        }
+
+        function loadTimes() {
+            let key = currentCube === '3x3' ? 'cubeTimerTimes' : 'cubeTimerTimes_' + currentCube;
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                times = JSON.parse(saved);
+            } else {
+                times = [];
+            }
+            updateTimesList();
+        }
+
+        function deleteAllTimes() {
+            if (confirm('Are you sure you want to delete all saved times?')) {
+                times = [];
+                saveTimes();
+                updateTimesList();
+            }
+        }
+
+        function updateTimesList() {
+            const newContainer = document.querySelector('.newtimelist');
+            const oldContainer = document.getElementById('timesList');
+
+            const contentExists = times.length > 0;
+
+            if (newContainer) {
+                newContainer.style.display = 'flex';
+                newContainer.style.flexWrap = 'wrap';
+                newContainer.style.gap = '8px';
+                newContainer.style.justifyContent = 'center';
+
+                // Kluczowa zmiana: dodajemy onclick="showTimeDetails(${index})" do każdego kafelka
+                newContainer.innerHTML = contentExists ? times.map((t, index) => {
+                    const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
+                    return `<p class="time-box" onclick="showTimeDetails(${index})" style="margin: 0; cursor: pointer; user-select: none;">${formatted}</p>`;
+                }).join('') : '<p style="text-align:center; opacity:0.5; width: 100%;">No times yet</p>';
+            }
+
+            // Stara lista (jeśli jej używasz, też może być klikalna)
+            if (oldContainer) {
+                oldContainer.innerHTML = contentExists ? times.map((t, index) => {
+                    const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
+                    return `<div onclick="showTimeDetails(${index})" style="cursor:pointer;">#${times.length - index}: ${formatted}</div>`;
+                }).join('') : '(No times yet)';
+            }
+        }
+
+        // --- START ---
+        if (isMobileDevice()) { loadCSS("./styles/style-mobile.css"); } else { loadCSS("./styles/style-desktop.css"); }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
+            });
+        }
+
+        // Uruchomienie ładowania danych
+        let spinner = document.getElementById('cube-spinner-text');
+        if (spinner) spinner.textContent = currentCube;
+        let selectEl = document.getElementById('cubeSelectTimes');
+        if (selectEl) selectEl.value = currentCube;
+        loadTimes();
     </script>
 </body>
+
 </html>

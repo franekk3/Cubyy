@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,57 +11,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
-	<meta name="apple-mobile-web-app-title" content="Cubyy">
-	<link rel="apple-touch-icon" href="./media/icons/icon.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+        rel="stylesheet">
+    <meta name="apple-mobile-web-app-title" content="Cubyy">
+    <link rel="apple-touch-icon" href="./media/icons/icon.png">
     <link rel="manifest" href="manifest.json">
     <style>
         body {
             justify-content: flex-start;
         }
+
         .setttings-label {
-            font-family: sans-serif, 'Google Sans'; font-weight: bold; font-size: 30px; color: #312252;
+            font-family: sans-serif, 'Google Sans';
+            font-weight: bold;
+            font-size: 30px;
+            color: #312252;
         }
+
         @media (prefers-color-scheme: dark) {
-        .settings-label {
-           color:   #E6E1E5; font-family: sans-serif, 'Google Sans'; font-weight: bold; font-size: 30px; 
-        }
+            .settings-label {
+                color: #E6E1E5;
+                font-family: sans-serif, 'Google Sans';
+                font-weight: bold;
+                font-size: 30px;
+            }
         }
     </style>
 </head>
+
 <body ontouchstart="">
-    <div class="m3-card2"> 
+    <div class="m3-card2">
         <p class="settings-label"> Settings </p>
         <p> For now there are no settings to change! 😔 </p>
         <div class='rows-box'>
             <hr class="rows-hr">
-            <p > Cubyy version: 1.0.1  </p>
+            <p> Cubyy version: 1.0.1 </p>
             <hr class="rows-hr">
-            <p onclick="window.location.href='https://github.com/franekk3'" style=" cursor: pointer;"> Cubyy by <b> Franekk3 </b></a>  </p>
+            <p onclick="window.location.href='https://github.com/franekk3'" style=" cursor: pointer;"> Cubyy by <b>
+                    Franekk3 </b></a> </p>
             <hr class="rows-hr">
         </div>
         <div style="display: flex; justify-content: center; margin: 10px; flex-direction: row; gap: 25px;">
-            <button onclick="window.location.href='./w/credits.html'" class="m3-ButtonWithIconWithAnimatedShapeSample"> Credits <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/heart.png"> </button>
-            <button onclick="window.location.href='./w/terms.html'" class="m3-ButtonWithIconWithAnimatedShapeSample"> Terms & Policy <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/policy.png"> </button>
+            <button onclick="window.location.href='./w/credits.html'" class="m3-ButtonWithIconWithAnimatedShapeSample">
+                Credits <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/heart.png">
+            </button>
+            <button onclick="window.location.href='./w/terms.html'" class="m3-ButtonWithIconWithAnimatedShapeSample">
+                Terms & Policy <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon"
+                    src="./media/icons/policy.png"> </button>
         </div>
         <div style="display: flex; justify-content: center; margin: 10px; flex-direction: row; gap: 25px;">
-            <button onclick="window.location.href='https://github.com/franekk3/Cubyy'" class="m3-ButtonWithIconWithAnimatedShapeSample"><img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/github-logo.png"> GitHub </button>
-            <button onclick="window.location.href='https://discord.gg/KXVR5aT6nf'" class="m3-ButtonWithIconWithAnimatedShapeSample"><img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/discord-logo.png"> Discord </button>
+            <button onclick="window.location.href='https://github.com/franekk3/Cubyy'"
+                class="m3-ButtonWithIconWithAnimatedShapeSample"><img
+                    class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/github-logo.png"> GitHub
+            </button>
+            <button onclick="window.location.href='https://discord.gg/KXVR5aT6nf'"
+                class="m3-ButtonWithIconWithAnimatedShapeSample"><img
+                    class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/discord-logo.png"> Discord
+            </button>
         </div>
     </div>
 
-    <div  class="nav-bar">
-        <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+    <div class="nav-bar">
+        <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element">
             <img id="home-button" class="nav-bar-image " src="./media/icons/home.png">
-            <p class="nav-bar-label" > Home </p>
+            <p class="nav-bar-label"> Home </p>
         </div>
-        <div onclick="window.location.href='./times.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+        <div onclick="window.location.href='./times.html'; navigator.vibrate(100)" class="nav-bar-element">
             <img id="add-button" class="nav-bar-image" src="./media/icons/list.png">
             <p class="nav-bar-label"> Times </p>
         </div>
-        <div onclick="window.location.href='./settings.html'; navigator.vibrate(100)" class="nav-bar-element"> 
-            <img id="account-button" class="nav-bar-image nav-bar-image-choosed" src="./media/icons/settings_filled.png">
+        <div onclick="window.location.href='./settings.html'; navigator.vibrate(100)" class="nav-bar-element">
+            <img id="account-button" class="nav-bar-image nav-bar-image-choosed"
+                src="./media/icons/settings_filled.png">
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
@@ -72,11 +96,20 @@
             document.getElementById('home-button').src = './media/dm/home.png';
             document.getElementById('add-button').src = './media/dm/list.png';
             document.getElementById('account-button').src = './media/dm/settings_filled.png';
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "./styles/style-dark.css"; // ścieżka do pliku
+            document.head.appendChild(link);
         } else {
             document.getElementById('home-button').src = './media/icons/home.png';
             document.getElementById('add-button').src = './media/icons/list.png';
             document.getElementById('account-button').src = './media/icons/settings_filled.png';
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "./styles/style-light.css"; // ścieżka do pliku
+            document.head.appendChild(link);
         }
     </script>
 </body>
+
 </html>

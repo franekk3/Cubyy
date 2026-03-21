@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,123 +11,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
-	<meta name="apple-mobile-web-app-title" content="Cubyy">
-	<link rel="apple-touch-icon" href="./media/icons/icon.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+        rel="stylesheet">
+    <meta name="apple-mobile-web-app-title" content="Cubyy">
+    <link rel="apple-touch-icon" href="./media/icons/icon.png">
     <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
     <div class="m3-card2">
         <p id="scramble"> scramble </p>
     </div>
     <div class="m3-card" style="height: 60%;">
-        <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" height="30px" width="30px" src="./media/icons/bluetooth.png" alt="Connect Bluetooth timer"></button>
-        <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)" style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;"><span id="timerNumbers">0.000</span>
-            <p id="last-solve"  class="last-time"></p>
-            <div id="options-bar"  class="options-bar" ontouchstart="event.stopPropagation()">
+        <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" height="30px" width="30px"
+                src="./media/icons/bluetooth.png" alt="Connect Bluetooth timer"></button>
+        <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)"
+            ontouchend="handleTouchEnd(event)"
+            style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
+            <span id="timerNumbers">0.000</span>
+            <p id="last-solve" class="last-time"></p>
+            <div id="options-bar" class="options-bar" ontouchstart="event.stopPropagation()">
                 <img id="add2tosolve" class="options-bar-icon" src="./media/icons/+2.png">
                 <img id="addDnfToSolve" class="options-bar-icon" src="./media/icons/block.png">
                 <img id="deleteSolve" class="options-bar-icon" src="./media/icons/delete.png">
             </div>
         </div>
-        
+
         <div class="spinner-container" style="    left: 50%;    position: absolute;     top: 0px;
 
-    transform: translateX(-50%);"> 
-            <div class="spiner-part1"> 3x3 </div>
-            <div class="spiner-part2"> <img id="arrowDownIcon" height="30px" width="30px" src="./media/icons/arrow_down.png"> </div>
+    transform: translateX(-50%);">
+            <select id="cubeSelect" onchange="onCubeChange(this.value)"
+                style="opacity: 0; position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer; -webkit-appearance: none; appearance: none;">
+                <option value="3x3">3x3</option>
+                <option value="2x2">2x2</option>
+                <option value="4x4">4x4</option>
+                <option value="Pyraminx">Pyraminx</option>
+                <option value="Skewb">Skewb</option>
+            </select>
+            <div class="spiner-part1" id="cube-spinner-text"> 3x3 </div>
+            <div class="spiner-part2"> <img id="arrowDownIcon" height="30px" width="30px"
+                    src="./media/icons/arrow_down.png"> </div>
         </div>
     </div>
 
-    
 
 
-    <div id="gantimerInfo" style="display: none; margin-top: 10px; padding: 10px; background: #e3f2fd; border: 1px solid #2196F3; border-radius: 16px;">
+
+    <div id="gantimerInfo"
+        style="display: none; margin-top: 10px; padding: 10px; background: #e3f2fd; border: 1px solid #2196F3; border-radius: 16px;">
         <strong>GanTimer Info:</strong><br>
         <div id="gantimerState">-</div>
     </div>
-    
 
-        <button onclick="showTimesListPupUp()" class="stats-trigger m3-ButtonWithAnimatedShapeSample"> Stats </button>
+
+    <button onclick="showTimesListPupUp()" class="stats-trigger m3-ButtonWithAnimatedShapeSample"> Stats </button>
 
 
     <p style="margin: 50px"> </p>
     <div id="notificationsBox" class="notification">
-            <p>  </p>
+        <p> </p>
     </div>
-    <div  class="nav-bar">
-        <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+    <div class="nav-bar">
+        <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element">
             <img id="home-button" class="nav-bar-image nav-bar-image-choosed" src="./media/icons/home_filled.png">
-            <p class="nav-bar-label" > Home </p>
+            <p class="nav-bar-label"> Home </p>
         </div>
-        <div onclick="window.location.href='./times.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+        <div onclick="window.location.href='./times.html'; navigator.vibrate(100)" class="nav-bar-element">
             <img id="add-button" class="nav-bar-image" src="./media/icons/list.png">
             <p class="nav-bar-label"> Times </p>
         </div>
-        <div onclick="window.location.href='./settings.html'; navigator.vibrate(100)" class="nav-bar-element"> 
+        <div onclick="window.location.href='./settings.html'; navigator.vibrate(100)" class="nav-bar-element">
             <img id="account-button" class="nav-bar-image" src="./media/icons/settings.png">
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
-<div onclick='hideTimesListPupUp()' class="hidden2" style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;" id="overlay"></div>
-
-</div>
- <div class="anim-open  hidden2 drawer-box" id="main-container">
-    <div id="iframe-shield" style="display: none; position: absolute; top: 40px; left: 0; width: 100%; height: 100%; z-index: 10; background: transparent;"></div>
-    <div onclick='hideTimesListPupUp()' id="drag-handle" style="width: 100%; height: 40px; cursor: grab; display: flex; justify-content: center; align-items: center; z-index: 20;">
-        <hr  style="width: 30px; height: 4px; border: none; border-radius: 2px; background-color: #515052; margin: 10px;">
-    </div>
-    <div class="m3-card2" style=" margin: 10px; height: 100%; overflow-y: auto; width: 90%; max-width: 576px; justify-content: flex-start; align-items: center; margin: 10px; margin-top: 0px;">
-        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
-            <div class="m3-card-small1"> 
-                <p id='currentAo5' class="time-label1"> 0 </p>
-                <p class="description-label1"> Current Ao5 </p>    
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; margin-right: 10px;">
-                <div class="m3-card-small2" > 
-                    <p id='currentAo12' class="time-label2" > 0 </p>
-                    <p class="description-label2" > Current Ao12 </p>    
-                </div>
-                <div class="m3-card-small2" > 
-                    <p id='currentAo100' class="time-label2" > 0 </p>
-                    <p class="description-label2" > Current Ao100 </p>    
-                </div>
-            </div>    
- 
-        </div>
-        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
-            <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; margin-right: 10px;">
-                <div class="m3-card-small2" > 
-                    <p id='currentAllAvg' class="time-label2" > 0 </p>
-                    <p class="description-label2" > All times Average </p>    
-                </div>
-                <div class="m3-card-small2" > 
-                    <p id='PersonalWorst' class="time-label2" > 0 </p>
-                    <p class="description-label2" > Personal Worst </p>    
-                </div>
-            </div>    
-            <div class="m3-card-small1"> 
-                <p id='PersonalBest' class="time-label1"> 0 </p>
-                <p class="description-label1"> Personal Best </p>    
-            </div>
-        </div>   
-        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
-            <div class="m3-card-small1"> 
-                <p id='bestAo5' class="time-label1"> 0 </p>
-                <p class="description-label1"> Best Ao5 </p>
-            </div>
-            <div class="m3-card-small1"> 
-                <p id="solvesCount" class="time-label1"> 0 </p>
-                <p class="description-label1"> Solves Count </p>
-            </div>
-        </div>
+    <div onclick='hideTimesListPupUp()' class="hidden2"
+        style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;"
+        id="overlay"></div>
 
     </div>
-            <p style="margin: 40px;"> </p>
+    <div class="anim-open  hidden2 drawer-box" id="main-container">
+        <div id="iframe-shield"
+            style="display: none; position: absolute; top: 40px; left: 0; width: 100%; height: 100%; z-index: 10; background: transparent;">
+        </div>
+        <div onclick='hideTimesListPupUp()' id="drag-handle"
+            style="width: 100%; height: 40px; cursor: grab; display: flex; justify-content: center; align-items: center; z-index: 20;">
+            <hr
+                style="width: 30px; height: 4px; border: none; border-radius: 2px; background-color: #515052; margin: 10px;">
+        </div>
+        <div class="m3-card2"
+            style=" margin: 10px; height: 100%; overflow-y: auto; width: 90%; max-width: 576px; justify-content: flex-start; align-items: center; margin: 10px; margin-top: 0px;">
+            <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
+                <div class="m3-card-small1">
+                    <p id='currentAo5' class="time-label1"> 0 </p>
+                    <p class="description-label1"> Current Ao5 </p>
+                </div>
+                <div
+                    style="display: flex; flex-direction: column; gap: 10px; justify-content: center; margin-right: 10px;">
+                    <div class="m3-card-small2">
+                        <p id='currentAo12' class="time-label2"> 0 </p>
+                        <p class="description-label2"> Current Ao12 </p>
+                    </div>
+                    <div class="m3-card-small2">
+                        <p id='currentAo100' class="time-label2"> 0 </p>
+                        <p class="description-label2"> Current Ao100 </p>
+                    </div>
+                </div>
+
+            </div>
+            <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
+                <div
+                    style="display: flex; flex-direction: column; gap: 10px; justify-content: center; margin-right: 10px;">
+                    <div class="m3-card-small2">
+                        <p id='currentAllAvg' class="time-label2"> 0 </p>
+                        <p class="description-label2"> All times Average </p>
+                    </div>
+                    <div class="m3-card-small2">
+                        <p id='PersonalWorst' class="time-label2"> 0 </p>
+                        <p class="description-label2"> Personal Worst </p>
+                    </div>
+                </div>
+                <div class="m3-card-small1">
+                    <p id='PersonalBest' class="time-label1"> 0 </p>
+                    <p class="description-label1"> Personal Best </p>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
+                <div class="m3-card-small1">
+                    <p id='bestAo5' class="time-label1"> 0 </p>
+                    <p class="description-label1"> Best Ao5 </p>
+                </div>
+                <div class="m3-card-small1">
+                    <p id="solvesCount" class="time-label1"> 0 </p>
+                    <p class="description-label1"> Solves Count </p>
+                </div>
+            </div>
+
+        </div>
+        <p style="margin: 40px;"> </p>
     </div>
-    
-</div> 
+
+    </div>
 
     <script src="./script.js"></script>
 
@@ -140,6 +167,11 @@
             document.getElementById('addDnfToSolve').src = './media/dm/block.png';
             document.getElementById('deleteSolve').src = './media/dm/delete.png';
             document.getElementById('add2tosolve').src = './media/dm/+2.png';
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "./styles/style-dark.css"; // ścieżka do pliku
+            document.head.appendChild(link);
+
         } else {
             document.getElementById('home-button').src = './media/icons/home_filled.png';
             document.getElementById('add-button').src = './media/icons/list.png';
@@ -149,6 +181,10 @@
             document.getElementById('addDnfToSolve').src = './media/icons/block.png';
             document.getElementById('deleteSolve').src = './media/icons/delete.png';
             document.getElementById('add2tosolve').src = './media/icons/+2.png';
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "./styles/style-light.css"; // ścieżka do pliku
+            document.head.appendChild(link);
         }
 
 
@@ -156,80 +192,81 @@
         const OverLay = document.getElementById('overlay');
         const TimesListPupUp = document.getElementById('main-container');
         const handle = document.getElementById('drag-handle');
-const shield = document.getElementById('iframe-shield');
-let startY = 0;
-let isDragging = false;
+        const shield = document.getElementById('iframe-shield');
+        let startY = 0;
+        let isDragging = false;
 
-// --- FUNKCJE POMOCNICZE ---
-function enableShield(on) {
-    shield.style.display = on ? 'block' : 'none';
-}
+        // --- FUNKCJE POMOCNICZE ---
+        function enableShield(on) {
+            shield.style.display = on ? 'block' : 'none';
+        }
 
-// --- OBSŁUGA DOTYKU (Mobile) ---
-handle.addEventListener('touchstart', e => {
-    startY = e.touches[0].clientY;
-    isDragging = true;
-    enableShield(true); // Nakładamy tarczę, by ruch palca nie uciekł do iframe
-}, { passive: true });
+        // --- OBSŁUGA DOTYKU (Mobile) ---
+        handle.addEventListener('touchstart', e => {
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            enableShield(true); // Nakładamy tarczę, by ruch palca nie uciekł do iframe
+        }, { passive: true });
 
-window.addEventListener('touchend', e => {
-    if (!isDragging) return;
-    
-    const endY = e.changedTouches[0].clientY;
-    handleGesture(startY, endY);
-    
-    isDragging = false;
-    enableShield(false); // Zdejmujemy tarczę - iframe znów jest w pełni interaktywny
-}, { passive: true });
+        window.addEventListener('touchend', e => {
+            if (!isDragging) return;
 
-// --- OBSŁUGA MYSZY (PC) ---
-handle.addEventListener('mousedown', e => {
-    startY = e.clientY;
-    isDragging = true;
-    enableShield(true);
+            const endY = e.changedTouches[0].clientY;
+            handleGesture(startY, endY);
 
-    const onMouseUp = (upEvent) => {
-        handleGesture(startY, upEvent.clientY);
-        isDragging = false;
-        enableShield(false);
-        window.removeEventListener('mouseup', onMouseUp);
-    };
-    
-    window.addEventListener('mouseup', onMouseUp);
-});
+            isDragging = false;
+            enableShield(false); // Zdejmujemy tarczę - iframe znów jest w pełni interaktywny
+        }, { passive: true });
 
-function handleGesture(start, end) {
-    const threshold = 50;
-    const diff = end - start;
-    if (Math.abs(diff) > threshold) {
-        if (diff > 0) hideTimesListPupUp();
-        else funkcjaDlaGory();
-    }
-}
+        // --- OBSŁUGA MYSZY (PC) ---
+        handle.addEventListener('mousedown', e => {
+            startY = e.clientY;
+            isDragging = true;
+            enableShield(true);
 
-function hideTimesListPupUp() { 
-    enableScroll()
-    OverLay.classList.add('hidden2');
-    TimesListPupUp.classList.add('anim-close');
-        setTimeout(() => {
-        TimesListPupUp.classList.add('hidden2');
-}, 300);
-}
-function showTimesListPupUp() { 
-    disableScroll()
-    TimesListPupUp.classList.remove('hidden2');
-    TimesListPupUp.classList.remove('anim-close');
-    OverLay.classList.remove('hidden2');
-    
-}
-function disableScroll() {
-  document.body.classList.add('no-scroll');
-}
+            const onMouseUp = (upEvent) => {
+                handleGesture(startY, upEvent.clientY);
+                isDragging = false;
+                enableShield(false);
+                window.removeEventListener('mouseup', onMouseUp);
+            };
 
-function enableScroll() {
-  document.body.classList.remove('no-scroll');
-}
+            window.addEventListener('mouseup', onMouseUp);
+        });
+
+        function handleGesture(start, end) {
+            const threshold = 50;
+            const diff = end - start;
+            if (Math.abs(diff) > threshold) {
+                if (diff > 0) hideTimesListPupUp();
+                else funkcjaDlaGory();
+            }
+        }
+
+        function hideTimesListPupUp() {
+            enableScroll()
+            OverLay.classList.add('hidden2');
+            TimesListPupUp.classList.add('anim-close');
+            setTimeout(() => {
+                TimesListPupUp.classList.add('hidden2');
+            }, 300);
+        }
+        function showTimesListPupUp() {
+            disableScroll()
+            TimesListPupUp.classList.remove('hidden2');
+            TimesListPupUp.classList.remove('anim-close');
+            OverLay.classList.remove('hidden2');
+
+        }
+        function disableScroll() {
+            document.body.classList.add('no-scroll');
+        }
+
+        function enableScroll() {
+            document.body.classList.remove('no-scroll');
+        }
 
     </script>
 </body>
+
 </html>
