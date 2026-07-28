@@ -15,15 +15,15 @@
     left: 0px;
     top: 0px;
     width: 90px;
-    z-index: 9999;
+    z-index: 998;
     text-align: center;
 }
 .nav-bar-element {
     padding-top: 10px;
 }
 .nav-bar-image{
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
 }
 .nav-bar-label {
     font-size: 16px;

@@ -27,38 +27,38 @@
 
 <body ontouchstart="">
     <div class="nav-bar">
-        <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element">
+        <div onclick="window.location.href='./index.html'" class="nav-bar-element">
             <img id="home-button" class="nav-bar-image " src="./media/icons/home.png">
             <p class="nav-bar-label"> Home </p>
         </div>
-        <div onclick="window.location.href='./times.html'; navigator.vibrate(100)" class="nav-bar-element">
+        <div onclick="window.location.href='./times.html'" class="nav-bar-element">
             <img id="add-button" class="nav-bar-image nav-bar-image-choosed" src="./media/icons/list_filled.png">
             <p class="nav-bar-label"> Times </p>
         </div>
-        <div onclick="window.location.href='./settings.html'; navigator.vibrate(100)" class="nav-bar-element">
+        <div onclick="window.location.href='./settings.html'" class="nav-bar-element">
             <img id="account-button" class="nav-bar-image" src="./media/icons/settings.png">
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
     <div onclick='hideTimeDetails()' class="hidden2"
-        style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;"
+        style="background-color: #000000cb; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 999;"
         id="overlay2"></div>
     <div class="time-details-box hidden2" id="time-details-box">
         <div style="width: 100%; text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
             <img id="detail-plus2" onclick="togglePlusTwoDetail()"
-                style="background-color: #d0bcff; border-radius: 12px;" height="40px" width="40px"
+                style="background-color: #d0bcff; border-radius: 12px; padding: 4px;" height="25px" width="25px"
                 src="./media/icons/+2.png">
-            <img id="detail-dnf" onclick="toggleDnfDetail()" style="background-color: #d0bcff; border-radius: 12px;"
-                height="40px" width="40px" src="./media/icons/block.png">
-            <img onclick="deleteSingleSolve()" style="background-color: #d0bcff; border-radius: 12px;" height="40px"
-                width="40px" src="./media/icons/delete.png">
-            <img onclick='hideTimeDetails()' style="background-color: #d0bcff; border-radius: 12px;" height="40px"
-                width="40px" src="./media/icons/arrow_down.png">
+            <img id="detail-dnf" onclick="toggleDnfDetail()" style="background-color: #d0bcff; border-radius: 12px;padding: 4px;"
+                height="25px" width="25px" src="./media/icons/block.png">
+            <img onclick="deleteSingleSolve()" style="background-color: #d0bcff; border-radius: 12px;padding: 4px;" height="25px"
+                width="25px" src="./media/icons/delete.png">
+            <img onclick='hideTimeDetails()' style="background-color: #d0bcff; border-radius: 12px;padding: 4px;" height="25px"
+                width="25px" src="./media/icons/arrow_down.png">
         </div>
         <div
             style="display: flex; flex-direction: column; height: 100%; width: 100%; justify-content: center; align-items: center;">
             <p id="details-time"> time </p>
-            <p id="details-scramble"> scramble </p>
+            <p id="details-scramble" style="font-weight: bold; font-size: 17px; max-width: 90%;;"> scramble </p>
             <p style="margin: 20px;"> </p>
         </div>
 
@@ -77,12 +77,12 @@
                     <option value="Skewb">Skewb</option>
                 </select>
                 <div class="spiner-part1 list-page-spinner" id="cube-spinner-text"> 3x3 </div>
-                <div class="spiner-part2 list-page-spinner"> <img id="arrowDownIcon1" height="30px" width="30px"
+                <div class="spiner-part2 list-page-spinner"> <img id="arrowDownIcon1" height="25px" width="25px"
                         src="./media/icons/arrow_down.png"> </div>
             </div>
             <div class="spinner-container">
                 <div class="spiner-part1 list-page-spinner"> Session1 </div>
-                <div class="spiner-part2 list-page-spinner"> <img id="arrowDownIcon2" height="30px" width="30px"
+                <div class="spiner-part2 list-page-spinner"> <img id="arrowDownIcon2" height="25px" width="25px"
                         src="./media/icons/arrow_down.png"> </div>
             </div>
         </div>
@@ -169,7 +169,6 @@
             detailsBox.classList.remove('hidden2');
             overlay.classList.remove('hidden2');
 
-            if (navigator.vibrate) navigator.vibrate(50);
         }
         function updateDetailIcons(solve) {
             const plusTwoIcon = document.getElementById('detail-plus2');

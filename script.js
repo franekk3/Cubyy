@@ -382,79 +382,79 @@ function deleteAllTimes() {
 // Scramble generator for cubes
 function generateScramble() {
     if (currentCube === '2x2') {
-        const moves = ['R', 'F', 'U'];
-        const modifiers = ['', "'", '2'];
-        let scramble = [];
-        let lastMove = '';
-        for (let i = 0; i < 9; i++) {
-            let move;
-            do { move = moves[Math.floor(Math.random() * moves.length)]; } while (move === lastMove);
-            lastMove = move;
-            scramble.push(move + modifiers[Math.floor(Math.random() * modifiers.length)]);
-        }
+        const sciany = ['U', 'R', 'F'];     
+        const modyfikatory = ['', "'", '2'];     
+        let scramble = [];     
+        let ostatnia = null;     
+        while (scramble.length < 11) {         
+            let nowa = sciany[Math.floor(Math.random() * sciany.length)];         
+            if (nowa === ostatnia) continue;         
+            let mod = modyfikatory[Math.floor(Math.random() * modyfikatory.length)];         
+            scramble.push(nowa + mod);         
+            ostatnia = nowa;     }     
         return scramble.join(' ');
     } else if (currentCube === '4x4') {
-        const moves = ['U', 'D', 'L', 'R', 'F', 'B', 'Uw', 'Dw', 'Lw', 'Rw', 'Fw', 'Bw'];
-        const modifiers = ['', "'", '2'];
-        let scramble = [];
-        let lastMove = '';
-        for (let i = 0; i < 40; i++) {
-            let move;
-            do { move = moves[Math.floor(Math.random() * moves.length)]; } while (move === lastMove || (move[0] === lastMove[0] && move.length === lastMove.length));
-            lastMove = move;
-            scramble.push(move + modifiers[Math.floor(Math.random() * modifiers.length)]);
-        }
-        return scramble.join(' ');
+        const osieZwykle = [ ['U', 'D'], ['R', 'L'], ['F', 'B'] ];     
+        const osiePelne = [ ['U', 'D', 'Uw', 'Dw'], ['R', 'L', 'Rw'], ['F', 'B', 'Fw'] ];     
+        const modyfikatory = ['', "'", '2'];     
+        let scramble = [];     
+        let historiaOsi = [];     
+        let ostatniRuchCzysty = '';     
+        while (scramble.length < 40) {         
+            let nrOsi = Math.floor(Math.random() * 3);         
+            if (historiaOsi.length >= 2 && historiaOsi[historiaOsi.length - 1] === nrOsi && historiaOsi[historiaOsi.length - 2] === nrOsi) {             continue;         }         
+            let litera = '';         
+            if (scramble.length < 20) {             
+                let opcje = osieZwykle[nrOsi];             
+                litera = opcje[Math.floor(Math.random() * opcje.length)];         } 
+            else {             
+                let opcje = osiePelne[nrOsi];             
+                litera = opcje[Math.floor(Math.random() * opcje.length)];         
+            }         
+            if (historiaOsi.length >= 1 && historiaOsi[historiaOsi.length - 1] === nrOsi) {             
+                if (litera === ostatniRuchCzysty) continue;             
+                if ((litera === 'U' && ostatniRuchCzysty === 'Uw') || (litera === 'Uw' && ostatniRuchCzysty === 'U')) continue;             
+                if ((litera === 'D' && ostatniRuchCzysty === 'Dw') || (litera === 'Dw' && ostatniRuchCzysty === 'D')) continue;             
+                if ((litera === 'R' && ostatniRuchCzysty === 'Rw') || (litera === 'Rw' && ostatniRuchCzysty === 'R')) continue;             
+                if ((litera === 'L' && ostatniRuchCzysty === 'Lw') || (litera === 'Lw' && ostatniRuchCzysty === 'L')) continue;             
+                if ((litera === 'F' && ostatniRuchCzysty === 'Fw') || (litera === 'Fw' && ostatniRuchCzysty === 'F')) continue;         }         
+                let mod = modyfikatory[Math.floor(Math.random() * modyfikatory.length)];         
+                scramble.push(litera + mod);         
+                historiaOsi.push(nrOsi);         
+                ostatniRuchCzysty = litera;     }     
+                return scramble.join(' ');
     } else if (currentCube === 'Pyraminx') {
-        const moves = ['U', 'L', 'R', 'B'];
-        const modifiers = ['', "'"];
-        let scramble = [];
-        let lastMove = '';
-        for (let i = 0; i < 11; i++) {
-            let move;
-            do { move = moves[Math.floor(Math.random() * moves.length)]; } while (move === lastMove);
-            lastMove = move;
-            scramble.push(move + modifiers[Math.floor(Math.random() * modifiers.length)]);
-        }
-        const tips = ['u', 'l', 'r', 'b'];
-        tips.forEach(tip => {
-            if (Math.random() > 0.5) {
-                scramble.push(tip + modifiers[Math.floor(Math.random() * modifiers.length)]);
-            }
-        });
-        return scramble.join(' ');
+        const duzeSciany = ['U', 'L', 'R', 'B'];     const maleCzubki = ['u', 'l', 'r', 'b'];     const modyfikatory = ['', "'"];          let scramble = [];     let ostatnia = null;          while (scramble.length < 11) {         let nowa = duzeSciany[Math.floor(Math.random() * duzeSciany.length)];         if (nowa === ostatnia) continue;                  let mod = modyfikatory[Math.floor(Math.random() * modyfikatory.length)];         scramble.push(nowa + mod);         ostatnia = nowa;     }          maleCzubki.forEach(czubek => {         let stan = Math.floor(Math.random() * 3);         if (stan === 1) scramble.push(czubek);         else if (stan === 2) scramble.push(czubek + "'");     });          return scramble.join(' ');
     } else if (currentCube === 'Skewb') {
-        const moves = ['R', 'L', 'U', 'B'];
-        const modifiers = ['', "'"];
-        let scramble = [];
-        let lastMove = '';
-        for (let i = 0; i < 11; i++) {
-            let move;
-            do { move = moves[Math.floor(Math.random() * moves.length)]; } while (move === lastMove);
-            lastMove = move;
-            scramble.push(move + modifiers[Math.floor(Math.random() * modifiers.length)]);
-        }
+        const sciany = ['R', 'L', 'U', 'B'];     
+        const modyfikatory = ['', "'"];          
+        let scramble = [];     
+        let ostatnia = null;          
+        while (scramble.length < 11) {         
+            let nowa = sciany[Math.floor(Math.random() * sciany.length)];         
+            if (nowa === ostatnia) continue;                  
+            let mod = modyfikatory[Math.floor(Math.random() * modyfikatory.length)];         
+            scramble.push(nowa + mod);         ostatnia = nowa;     }          
         return scramble.join(' ');
     }
 
     // Default 3x3
-    const moves = ['R', 'L', 'U', 'D', 'F', 'B'];
-    const modifiers = ['', "'", '2'];
-    let scramble = [];
-    let lastMove = '';
+    const sciany = ['U', 'D', 'R', 'L', 'F', 'B'];     
+    const modyfikatory = ['', "'", '2'];     
+    const przeciwne = { 'U':'D', 'D':'U', 'R':'L', 'L':'R', 'F':'B', 'B':'F' };     
+    let scrambleSciany = []; 
+    let scramble = [];     
+    let dlugosc = 20;
+    while (scramble.length < dlugosc) {         
+        let nowaSciana = sciany[Math.floor(Math.random() * sciany.length)];         
+        let ostatnia = scrambleSciany[scrambleSciany.length - 1] || null;         
+        let przedostatnia = scrambleSciany[scrambleSciany.length - 2] || null;         
+        if (nowaSciana === ostatnia) continue;         
+        if (ostatnia && nowaSciana === przeciwne[ostatnia] && nowaSciana === przedostatnia) continue;         
+        let mod = modyfikatory[Math.floor(Math.random() * modyfikatory.length)];         
+        scrambleSciany.push(nowaSciana); scramble.push(nowaSciana + mod);     }     
+    return scramble.join(' '); };
 
-    for (let i = 0; i < 20; i++) {
-        let move;
-        do {
-            move = moves[Math.floor(Math.random() * moves.length)];
-        } while (move === lastMove); // Avoid consecutive same moves
-        lastMove = move;
-        const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
-        scramble.push(move + modifier);
-    }
-
-    return scramble.join(' ');
-}
 
 // Load scramble from localStorage or generate new one
 function loadOrGenerateScramble() {

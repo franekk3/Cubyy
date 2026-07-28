@@ -51,7 +51,7 @@
                 <option value="Skewb">Skewb</option>
             </select>
             <div class="spiner-part1" id="cube-spinner-text"> 3x3 </div>
-            <div class="spiner-part2"> <img id="arrowDownIcon" height="30px" width="30px"
+            <div class="spiner-part2"> <img id="arrowDownIcon" height="25px" width="25px"
                     src="./media/icons/arrow_down.png"> </div>
         </div>
     </div>
@@ -74,21 +74,21 @@
         <p> </p>
     </div>
     <div class="nav-bar">
-        <div onclick="window.location.href='./index.html'; navigator.vibrate(100)" class="nav-bar-element">
+        <div onclick="window.location.href='./index.html'" class="nav-bar-element">
             <img id="home-button" class="nav-bar-image nav-bar-image-choosed" src="./media/icons/home_filled.png">
             <p class="nav-bar-label"> Home </p>
         </div>
-        <div onclick="window.location.href='./times.html'; navigator.vibrate(100)" class="nav-bar-element">
+        <div onclick="window.location.href='./times.html'" class="nav-bar-element">
             <img id="add-button" class="nav-bar-image" src="./media/icons/list.png">
             <p class="nav-bar-label"> Times </p>
         </div>
-        <div onclick="window.location.href='./settings.html'; navigator.vibrate(100)" class="nav-bar-element">
+        <div onclick="window.location.href='./settings.html'" class="nav-bar-element">
             <img id="account-button" class="nav-bar-image" src="./media/icons/settings.png">
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
     <div onclick='hideTimesListPupUp()' class="hidden2"
-        style="background-color: #b5b1b18a; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 100;"
+        style="background-color: #000000cb; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 1000;"
         id="overlay"></div>
 
     </div>
@@ -102,7 +102,7 @@
                 style="width: 30px; height: 4px; border: none; border-radius: 2px; background-color: #515052; margin: 10px;">
         </div>
         <div class="m3-card2"
-            style=" margin: 10px; height: 100%; overflow-y: auto; width: 90%; max-width: 576px; justify-content: flex-start; align-items: center; margin: 10px; margin-top: 0px;">
+            style=" margin: 10px; height: 100%; overflow-y: auto; width: 90%; max-width: 576px; justify-content: center; align-items: center; margin: 10px; margin-top: 0px;">
             <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin: 10px;">
                 <div class="m3-card-small1">
                     <p id='currentAo5' class="time-label1"> 0 </p>
@@ -150,7 +150,6 @@
             </div>
 
         </div>
-        <p style="margin: 40px;"> </p>
     </div>
 
     </div>
@@ -169,7 +168,7 @@
             document.getElementById('add2tosolve').src = './media/dm/+2.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
-            link.href = "./styles/style-dark.css"; // ścieżka do pliku
+            link.href = "./styles/style-dark.css"; 
             document.head.appendChild(link);
 
         } else {
@@ -183,7 +182,7 @@
             document.getElementById('add2tosolve').src = './media/icons/+2.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
-            link.href = "./styles/style-light.css"; // ścieżka do pliku
+            link.href = "./styles/style-light.css"; 
             document.head.appendChild(link);
         }
 
