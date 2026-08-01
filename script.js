@@ -117,10 +117,26 @@ function calculateAoX_Internal(subset) {
 }
 
 
-function isMobileDevice() { return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia("(max-width: 768px)").matches; }
-function loadCSS(file) { const link = document.createElement("link"); link.rel = "stylesheet"; link.href = file; document.head.appendChild(link); }
-if (isMobileDevice()) { loadCSS("./styles/style-mobile.css"); } else { loadCSS("./styles/style-desktop.css"); }
+        const themeStylesheet = document.createElement("link");
+        themeStylesheet.rel = "stylesheet";
+        document.head.appendChild(themeStylesheet);
 
+        function isMobileDevice() { 
+        return window.matchMedia("(max-width: 768px)").matches; 
+        }
+
+        function updateStyles() {
+        const targetCss = isMobileDevice() ? "../styles/style-mobile.css" : "../styles/style-desktop.css";
+        
+        if (themeStylesheet.getAttribute("href") !== targetCss) {
+            themeStylesheet.href = targetCss;
+        }
+        }
+
+        updateStyles();
+
+        window.addEventListener("resize", updateStyles);
+        
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
@@ -487,7 +503,18 @@ function startTimer() {
         timerInterval = setInterval(updateDisplay, 10);
     }
 }
-
+function formatDate(date) {
+    timestamp = date;
+    const formattedDate = new Date(timestamp).toLocaleString('pl-PL', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+    }).replace(',', ''); // Usuwa domyślny przecinek między czasem a datą
+   return formattedDate; // Wynik: "16:50:00 31.07.2026"
+}
 function stopTimer(externalTime = null) {
     if (isRunning) {
         isRunning = false;
@@ -505,7 +532,7 @@ function stopTimer(externalTime = null) {
 
         times.unshift({
             time: elapsedTime,
-            date: new Date().toLocaleTimeString(),
+            date: Date.now(),
             scramble: currentScramble,
             isPlusTwo: false, // Dodajemy flagi dla kar
             isDnf: false
@@ -994,3 +1021,6 @@ window.onload = function () {
 
     console.log("Cubyy załadowany pomyślnie!");
 };
+
+data = Date.now()
+console.log(formatDate(data))

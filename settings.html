@@ -47,7 +47,7 @@
         <p> For now there are no settings to change! 😔 </p>
         <div class='rows-box'>
             <hr class="rows-hr">
-            <p> Cubyy version: 1.0.2 </p>
+            <p> Cubyy version: 1.0.3 </p>
             <hr class="rows-hr">
             <p onclick="window.location.href='https://github.com/franekk3'" style=" cursor: pointer;"> Cubyy by <b>
                     Franekk3 </b></a> </p>
@@ -55,20 +55,20 @@
         </div>
         <div style="display: flex; justify-content: center; margin: 10px; flex-direction: row; gap: 25px;">
             <button onclick="window.location.href='./w/credits.html'" class="m3-ButtonWithIconWithAnimatedShapeSample">
-                Credits <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/heart.png">
+                Credits <img id="credits-button" class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/heart.png">
             </button>
             <button onclick="window.location.href='./w/terms.html'" class="m3-ButtonWithIconWithAnimatedShapeSample">
-                Terms & Policy <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon"
+                Terms & Policy <img id="terms-button" class="m3-ButtonWithIconWithAnimatedShapeSample-icon"
                     src="./media/icons/policy.png"> </button>
         </div>
         <div style="display: flex; justify-content: center; margin: 10px; flex-direction: row; gap: 25px;">
             <button onclick="window.location.href='https://github.com/franekk3/Cubyy'"
-                class="m3-ButtonWithIconWithAnimatedShapeSample"><img
-                    class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/github-logo.png"> GitHub
+                class="m3-ButtonWithIconWithAnimatedShapeSample"><img id="github-button"
+                    class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/github.png"> GitHub
             </button>
             <button onclick="window.location.href='https://discord.gg/KXVR5aT6nf'"
-                class="m3-ButtonWithIconWithAnimatedShapeSample"><img
-                    class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/discord-logo.png"> Discord
+                class="m3-ButtonWithIconWithAnimatedShapeSample"><img id="discord-button"
+                    class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/icons/discord.png"> Discord
             </button>
         </div>
     </div>
@@ -96,17 +96,25 @@
             document.getElementById('home-button').src = './media/dm/home.png';
             document.getElementById('add-button').src = './media/dm/list.png';
             document.getElementById('account-button').src = './media/dm/settings_filled.png';
+            document.getElementById('terms-button').src = './media/dm/policy.png';
+            document.getElementById('credits-button').src = './media/dm/heart.png';
+            document.getElementById('discord-button').src = './media/dm/discord.png';
+            document.getElementById('github-button').src = './media/dm/github.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
-            link.href = "./styles/style-dark.css"; // ścieżka do pliku
+            link.href = "./styles/css/dark.css"; // ścieżka do pliku
             document.head.appendChild(link);
         } else {
             document.getElementById('home-button').src = './media/icons/home.png';
             document.getElementById('add-button').src = './media/icons/list.png';
             document.getElementById('account-button').src = './media/icons/settings_filled.png';
+            document.getElementById('terms-button').src = './media/icons/policy.png';
+            document.getElementById('credits-button').src = './media/icons/heart.png';
+            document.getElementById('discord-button').src = './media/icons/discord.png';
+            document.getElementById('github-button').src = './media/icons/github.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
-            link.href = "./styles/style-light.css"; // ścieżka do pliku
+            link.href = "./styles/css/light.css"; // ścieżka do pliku
             document.head.appendChild(link);
         }
     </script>

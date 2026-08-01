@@ -44,24 +44,27 @@
 .nav-bar-label {
     margin: 5px;
     padding: 0px;
-    color: #48454e;
+    color: var(--md-sys-color-on-surface);
     font-family: 'Google Sans', sans-serif;
     font-size: 14px;
+    font-weight: 600;
 }
 
 .nav-bar-image-choosed {
-    background-color: #e8def7 !important;
+    background-color: var(--md-sys-color-primary-fixed-dim) !important;
 }
 
 .nav-bar-image:hover {
-    background-color: #e8def7
+    background-color: var(--md-sys-color-surface-container-highest);
 }
 
 .bluetooth-button {
     padding: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #e8def7;
+    background-color: var(--md-sys-color-primary);
     border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 16px;
     justify-content: center;
     align-items: center;
@@ -70,7 +73,9 @@
     top: 0px;
     right: 0px;
     margin: 10px;
-    scale: 1.1;
+    scale: 1.05;
+    height: 45px;
+    width: 45px;
     transition: border-radius 0.2s cubic-bezier(0.4, 0, 0.2, 1),
         background-color 0.2s ease,
         transform 0.1s ease;
@@ -88,19 +93,23 @@
 .notification {
     display: none;
     position: fixed;
-    top: 10px;
+    top: 8px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #e7def7e9;
-    border: 1px solid #d0bcff;
-    color: #65558f;
+    background-color: var(--md-sys-color-on-primary-container);
+    border: 1px solid var(--md-sys-color-surface-tint);
+    color: var(--md-sys-color-on-primary);
+    opacity: 0.9;
     font-weight: bold;
     text-align: center;
-    padding: 5px;
+    padding: 4px 6px;
     border-radius: 10px;
     font-family: 'Google Sans', sans-serif;
     font-size: 12px;
     z-index: 10000;
+    p {
+        margin: 2px;
+    }
 }
 
 .spinner-container {
@@ -115,17 +124,19 @@
 }
 
 .spiner-part1 {
-    background-color: #e8def7;
+    background-color: var(--md-sys-color-primary);
     border-radius: 22px 3px 3px 22px;
     padding: 5px 15px;
     font-family: 'Google Sans', sans-serif;
     font-size: 20px;
     display: flex;
+    font-weight: 600;
     width: fit-content;
+    color: var(--md-sys-color-on-primary);
 }
 
 .spiner-part2 {
-    background-color: #e8def7;
+    background-color: var(--md-sys-color-primary);
     border-radius: 3px 22px 22px 3px;
     padding: 5px 5px;
     display: flex;
@@ -160,7 +171,7 @@
     gap: 5px;
     margin: 10px auto 0 auto;
     /* Wycentrowanie */
-    background-color: #e8def7;
+    background-color: var(--md-sys-color-surface-container-high);
     border-radius: 16px;
     padding: 5px;
     width: fit-content;
@@ -187,14 +198,14 @@
     /* Trochę więcej miejsca na kliknięcie */
     border-radius: 12px;
     transition: all 0.2s ease;
-    background-color: #e0d3f3;
+    background-color: var(--md-sys-color-secondary-container);
     cursor: pointer;
 }
 
 /* Styl dla aktywnej ikony (+2 lub DNF) */
 .options-bar-icon.active {
     transform: scale(1.1);
-    background-color: #d0bcff;
+    background-color: var(--md-sys-color-inverse-primary);
     /* Nieco ciemniejszy fiolet dla zaznaczenia */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -266,13 +277,13 @@ body.no-scroll {
 }
 
 .time-box {
-    background-color: #dccbe8;
+    background-color: var(--md-sys-color-on-primary-container);
     padding: 5px;
     padding-top: 20px;
     padding-bottom: 20px;
     border-radius: 12px;
     text-align: center;
-    color: #262035;
+    color: var(--md-sys-color-primary-container);
     justify-content: center;
     align-items: center;
     position: relative;
@@ -296,14 +307,14 @@ body.no-scroll {
 }
 
 .time-details-box {
-    background-color: #e8def7;
+    background-color: var(--md-sys-color-secondary-container);
     border-radius: 16px;
     padding: 10px;
     width: 90%;
     max-width: 576px;
     margin: 10px auto;
     text-align: center;
-    color: #65558f;
+    color: var(--md-sys-color-on-secondary-container);;
     font-family: 'Google Sans', sans-serif;
     position: absolute;
     top: 50%;
@@ -326,7 +337,7 @@ body.no-scroll {
 }
 
 .timer-default {
-    color: #262035;
+    color: var(--md-sys-color-on-surface);
 }
 
 .timer-ready {
@@ -340,10 +351,11 @@ body.no-scroll {
 
 /* Czerwony */
 .stats-trigger {
-    background-color: #e8def7;
+    background-color: var(--md-sys-color-primary);
     margin-top: 0px;
     position: absolute;
     bottom: 16%;
+    font-weight: 600;
     z-index: 99;
 }
 
@@ -351,14 +363,14 @@ body.no-scroll {
     display: none;
     text-align: center;
     font-family: 'Google Sans';
-    color: #49454F;
+    color: var(--md-sys-color-outline);
     margin-top: 10px;
     font-size: 14px;
 }
 
 .drawer-box {
     z-index: 1000;
-    box-shadow: 0 4px 10px #fefbfea7;
+    box-shadow: 0 4px 10px var(--md-sys-color-shadow);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -368,25 +380,21 @@ body.no-scroll {
     margin: 0px auto;
     height: 65%;
     max-height: 550px;
-    background-color: #f7f2f9;
+    background-color: var(--md-sys-color-surface-container-high);
     border-radius: 28px 28px 0px 0px;
     overflow: hidden;
     justify-content: flex-start;
     align-items: center;
 }
 
-.list-page-spinner {
-    background-color: #d0bcff;
-}
-
 .rows-box {
-    background-color: #F3EDF7;
-    color: #1D1B20;
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface);
 }
 
 .rows-hr {
     margin: 20px 0;
-    background-color: #CAC4D0;
+    background-color: var(--md-sys-color-outline);
     border: none;
     height: 2px;
 

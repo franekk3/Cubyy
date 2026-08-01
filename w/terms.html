@@ -104,7 +104,7 @@
             document.getElementById('account-button').src = '../media/dm/settings_filled.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
-            link.href = "../styles/style-dark.css";
+            link.href = "../styles/css/dark.css";
             document.head.appendChild(link);
 
         } else {
@@ -113,20 +113,47 @@
             document.getElementById('account-button').src = '../media/icons/settings_filled.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
-            link.href = "../styles/style-light.css";
+            link.href = "../styles/css/light.css";
             document.head.appendChild(link);
         }
-        function isMobileDevice() { return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia("(max-width: 768px)").matches; }
-        function loadCSS(file) { const link = document.createElement("link"); link.rel = "stylesheet"; link.href = file; document.head.appendChild(link); }
-        if (isMobileDevice()) { loadCSS("../styles/style-mobile.css"); } else { loadCSS("../styles/style-desktop.css"); }
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.getElementById('home-button').src = '../media/dm/home.png';
+            document.getElementById('add-button').src = '../media/dm/list.png';
+            document.getElementById('account-button').src = '../media/dm/settings_filled.png';
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "../styles/css/dark.css";
+            document.head.appendChild(link);
 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('../sw.js')
-                    .then(reg => console.log('Service Worker is already registered!', reg))
-                    .catch(err => console.log('Error reghistering SW:', err));
-            });
+        } else {
+            document.getElementById('home-button').src = '../media/icons/home.png';
+            document.getElementById('add-button').src = '../media/icons/list.png';
+            document.getElementById('account-button').src = '../media/icons/settings_filled.png';
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "../styles/css/light.css";
+            document.head.appendChild(link);
         }
+        const themeStylesheet = document.createElement("link");
+        themeStylesheet.rel = "stylesheet";
+        document.head.appendChild(themeStylesheet);
+
+        function isMobileDevice() { 
+        return window.matchMedia("(max-width: 768px)").matches; 
+        }
+
+        function updateStyles() {
+        const targetCss = isMobileDevice() ? "../styles/style-mobile.css" : "../styles/style-desktop.css";
+        
+        if (themeStylesheet.getAttribute("href") !== targetCss) {
+            themeStylesheet.href = targetCss;
+        }
+        }
+
+        updateStyles();
+
+        window.addEventListener("resize", updateStyles);
+
     </script>
 </body>
 

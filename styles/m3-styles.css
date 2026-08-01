@@ -1,7 +1,7 @@
             body {
                 font-family: 'Google Sans', sans-serif;
                 display: flex;
-                background-color: #fffbfe;
+                background-color: var(--md-sys-color-surface);
                 height: 100vh;
                 align-items: center;
                 flex-direction: column;
@@ -32,14 +32,14 @@
             }
             .m3-ButtonWithAnimatedShapeSample {
                 gap: 10px;
-                background-color: #d1bcff;
+                background-color: var(--md-sys-color-primary);
                 display: flex;
                 font-family: 'Google Sans', sans-serif;
                 font-size: 17px;
                 text-align: center;
                 border-radius: 18px; 
                 border: none;
-                color: #371e6f;
+                color: var(--md-sys-color-on-primary);
                 padding: 7px;
                 padding-inline: 20px;
                 font-weight: 450;
@@ -55,7 +55,7 @@
 
             /* Stan wciśnięty */
             .m3-ButtonWithAnimatedShapeSample:active {
-                background-color: #c7abe4;
+                background-color: var(--md-sys-color-surface-tint);
                 border-radius: 10px; /* Nowy promień */
                 transform: scale(0.98); /* Opcjonalnie: lekki efekt wciśnięcia */
             }
@@ -93,14 +93,14 @@
             }
             .m3-ButtonWithIconWithAnimatedShapeSample {
                 gap: 10px;
-                background-color: #d1bcff;
+                background-color: var(--md-sys-color-primary);
                 display: flex;
                 font-family: 'Google Sans', sans-serif;
                 font-size: 17px;
                 text-align: center;
                 border-radius: 18px; 
                 border: none;
-                color: #371e6f;
+                color: var(--md-sys-color-on-primary);
                 padding: 7px;
                 padding-inline: 20px;
                 font-weight: 450;
@@ -116,7 +116,7 @@
 
             /* Stan wciśnięty */
             .m3-ButtonWithIconWithAnimatedShapeSample:active {
-                background-color: #c7abe4;
+                background-color: var(--md-sys-color-surface-tint);
                 border-radius: 10px; /* Nowy promień */
                 transform: scale(0.98); /* Opcjonalnie: lekki efekt wciśnięcia */
             }
@@ -408,7 +408,7 @@
                 border-radius: 12px;
                 margin-top:  20px;
                 text-align: center;
-                color: #262035;
+                color: var(--md-sys-color-on-surface);
                 justify-content: center;
                 align-items: center;
                 width: 90%;
@@ -417,7 +417,7 @@
                 padding-top: 40px;
             }
             .m3-card2 {
-                background-color: #e7e0ec;
+                background-color: var(--md-sys-color-surface-container);
                 padding: 5px;
                 margin: 20px;
                 margin-bottom: 0px;
@@ -425,7 +425,7 @@
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 font-family: 'Google Sans', sans-serif;
                 font-size: 18px;
-                color: #371e6f;
+                color: var(--md-sys-color-on-surface);
                 max-width: 600px;
                 width: 90%;
                 text-align: center;

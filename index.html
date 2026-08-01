@@ -168,7 +168,7 @@
             document.getElementById('add2tosolve').src = './media/dm/+2.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
-            link.href = "./styles/style-dark.css"; 
+            link.href = "./styles/css/dark.css"; 
             document.head.appendChild(link);
 
         } else {
@@ -182,7 +182,7 @@
             document.getElementById('add2tosolve').src = './media/icons/+2.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
-            link.href = "./styles/style-light.css"; 
+            link.href = "./styles/css/light.css"; 
             document.head.appendChild(link);
         }
 
@@ -195,7 +195,6 @@
         let startY = 0;
         let isDragging = false;
 
-        // --- FUNKCJE POMOCNICZE ---
         function enableShield(on) {
             shield.style.display = on ? 'block' : 'none';
         }
@@ -204,7 +203,7 @@
         handle.addEventListener('touchstart', e => {
             startY = e.touches[0].clientY;
             isDragging = true;
-            enableShield(true); // Nakładamy tarczę, by ruch palca nie uciekł do iframe
+            enableShield(true); 
         }, { passive: true });
 
         window.addEventListener('touchend', e => {
@@ -214,10 +213,9 @@
             handleGesture(startY, endY);
 
             isDragging = false;
-            enableShield(false); // Zdejmujemy tarczę - iframe znów jest w pełni interaktywny
+            enableShield(false); 
         }, { passive: true });
 
-        // --- OBSŁUGA MYSZY (PC) ---
         handle.addEventListener('mousedown', e => {
             startY = e.clientY;
             isDragging = true;
