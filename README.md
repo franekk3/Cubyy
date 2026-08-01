@@ -5,13 +5,13 @@
 ---
 
 
-	1. Fully Support for PWA
+	1. Support for PWA
 	2. Gan Smart Timer is fully supported.
-	3. Google's Material 3 Design inspired UI (built from scrach).
+	3. Google's Material 3 Design inspired UI.
 	4. Clean and intuitive Times List .
 	5. Some SpeedCubing Timer's basics like Scramble generator or timer it self.
 	6. Option to import/export Times (cstimer.net format)
-	7. Fully Mobile & Desktop Support 
+	7. Full Mobile & Desktop Support 
 	8. Fully dark mode support
 
 ---
