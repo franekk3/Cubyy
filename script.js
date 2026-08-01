@@ -126,7 +126,7 @@ function calculateAoX_Internal(subset) {
         }
 
         function updateStyles() {
-        const targetCss = isMobileDevice() ? "../styles/style-mobile.css" : "../styles/style-desktop.css";
+        const targetCss = isMobileDevice() ? "./styles/style-mobile.css" : "./styles/style-desktop.css";
         
         if (themeStylesheet.getAttribute("href") !== targetCss) {
             themeStylesheet.href = targetCss;
