@@ -19,4 +19,4 @@
 
 ##### **Project is avible on:**
 
-###### &#x09;[**cubyy.vercel.app**](https://cubyy.vercel.apl)
+###### &#x09;[**cubyy.vercel.app**](https://cubyy.vercel.app)
