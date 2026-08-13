@@ -26,6 +26,11 @@
 </head>
 
 <body ontouchstart="">
+                    <div id="sessionListPopup" class="hidden2"
+                        style="position: absolute; left: 50%; top: 35px; transform: translateY(50%) translateX(-50%); right: 0; z-index: 999; background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: 20px; box-shadow: 0 18px 40px rgba(0,0,0,0.12); overflow: hidden;width: 320px;">
+                        <div style="padding: 10px 0px; font-weight: 700; color: var(--md-sys-color-on-surface); border-bottom: 1px solid rgba(0,0,0,0.08);">Select session</div>
+                        <div id="sessionListItems" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding: 12px 8px;"></div>
+                    </div>
     <div class="nav-bar">
         <div onclick="window.location.href='./index.html'" class="nav-bar-element">
             <img id="home-button" class="nav-bar-image " src="./media/icons/home.png">
@@ -64,27 +69,47 @@
         </div>
 
     </div>
+
     <div class="m3-card2"
         style=" margin: 10px; margin-top: 20px; max-height: 90%; overflow-y: auto; width: 95%; max-width: 576px;">
-        <p style="font-size: 30px;"> Your Times </p>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
-            <div class="spinner-container" style="position: relative;">
-                <select id="cubeSelectTimes" onchange="onCubeChangeTimes(this.value)"
-                    style="opacity: 0; position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer; -webkit-appearance: none; appearance: none;">
-                    <option value="3x3">3x3</option>
-                    <option value="2x2">2x2</option>
-                    <option value="4x4">4x4</option>
-                    <option value="Pyraminx">Pyraminx</option>
-                    <option value="Skewb">Skewb</option>
-                </select>
-                <div class="spiner-part1 list-page-spinner" id="cube-spinner-text"> 3x3 </div>
-                <div class="spiner-part2 list-page-spinner"> <img id="arrowDownIcon1" height="25px" width="25px"
-                        src="./media/icons/arrow_down.png"> </div>
-            </div>
-            <div class="spinner-container" style="display: none">
-                <div class="spiner-part1 list-page-spinner"> Session1 </div>
-                <div class="spiner-part2 list-page-spinner"> <img id="arrowDownIcon2" height="25px" width="25px"
-                        src="./media/icons/arrow_down.png"> </div>
+        <p style="font-size: 30px;"> Your Solves </p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; width: auto; flex-direction: row !important;">
+            <!-- Hidden cube select kept for compatibility; visible cube/session control is combined below -->
+            <select id="cubeSelectTimes" onchange="onCubeChangeTimes(this.value)" style="display:none;">
+                <option value="3x3">3x3</option>
+                <option value="2x2">2x2</option>
+                <option value="4x4">4x4</option>
+                <option value="Pyraminx">Pyraminx</option>
+                <option value="Skewb">Skewb</option>
+            </select>
+                <div class="spinner-container" style="position: relative;  margin-bottom: 0px; display: flex; justify-content: center; align-items: center;">
+                    <button id="sessionCubeButton" onclick="toggleSessionList()" class="m3-ButtonWithAnimatedShapeSample"
+                        style="width: auto; display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; font-weight: 600; gap: 8px;">
+                        <span id="sessionCubeButtonText" style="font-size: 14px;">3x3 | 3x3</span>
+                        <img id="arrowDownIconSession" height="20px" width="20px" src="./media/icons/arrow_down.png" alt="Open session list">
+                    </button>
+
+                </div>
+
+            <button onclick="openSessionModal()" class="m3-ButtonWithAnimatedShapeSample" style="align-self: center; font-weight: bold; padding: 3px 10px; border-radius: 10px; font-size: 20px; margin-left: 8px;"> + </button>
+        </div>
+        <div id="sessionModalOverlay" onclick="closeSessionModal()" class="session-modal-overlay hidden2"></div>
+        <div id="sessionModal" class="session-modal hidden2">
+            <label for="sessionCubeSelect" style="margin-top: 10px; display: block; font-weight: 600; margin-bottom: 10px;">Cube</label>
+            <select id="sessionCubeSelect" style="width: 98%; padding: 10px; margin-top: 5px; border-radius: 12px; outline: solid 0.1px #aaa; background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface);">
+                <option value="3x3">3x3</option>
+                <option value="2x2">2x2</option>
+                <option value="4x4">4x4</option>
+                <option value="Pyraminx">Pyraminx</option>
+                <option value="Skewb">Skewb</option>
+            </select>
+            
+            <h2>New session</h2>
+            <input id="sessionNameInput" style="outline: solid 1px #aaa" placeholder="Session name" aria-label="Session name">
+
+            <div class="session-modal-buttons">
+                <button class="tonal" onclick="closeSessionModal()">Cancel</button>
+                <button id="sessionModalSubmit" class="primary" onclick="createSessionFromModal()">Create</button>
             </div>
         </div>
         <div class="options-bar.show">
@@ -117,12 +142,11 @@
             document.getElementById('home-button').src = './media/dm/home.png';
             document.getElementById('add-button').src = './media/dm/list_filled.png';
             document.getElementById('account-button').src = './media/dm/settings.png';
-            document.getElementById('arrowDownIcon1').src = './media/dm/arrow_down.png';
-            document.getElementById('arrowDownIcon2').src = './media/dm/arrow_down.png';
             document.getElementById('import-icon').src = './media/dm/upload.png';
             document.getElementById('export-icon').src = './media/dm/download.png';
             document.getElementById('delete-icon').src = './media/dm/delete.png';
             document.getElementById('hide-popup-arrow').src = './media/dm/arrow_down.png';
+            document.getElementById('arrowDownIconSession').src = './media/dm/arrow_down.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
             link.href = "./styles/css/dark.css";
@@ -131,8 +155,7 @@
             document.getElementById('home-button').src = './media/icons/home.png';
             document.getElementById('add-button').src = './media/icons/list_filled.png';
             document.getElementById('account-button').src = './media/icons/settings.png';
-            document.getElementById('arrowDownIcon1').src = './media/icons/arrow_down.png';
-            document.getElementById('arrowDownIcon2').src = './media/icons/arrow_down.png';
+            document.getElementById('arrowDownIconSession').src = './media/icons/arrow_down_white.png';
             document.getElementById('hide-popup-arrow').src = './media/dm/arrow_down-old.png';
             document.getElementById('detail-plus2').src = './media/icons/+2_white.png';
             document.getElementById('detail-dnf').src = './media/icons/block_white.png';
@@ -404,33 +427,321 @@ function importFromCsTimer(event) {
             document.head.appendChild(link);
         }
 
+        function showNotification(message, type = 'info') {
+            alert(message);
+        }
+
         // --- LOGIKA CZASÓW ---
-        let times = [];
-        let currentCube = localStorage.getItem('cubeTimerCube') || '3x3';
         const CUBES = ["3x3", "2x2", "4x4", "Pyraminx", "Skewb"];
+        let currentCube = localStorage.getItem('cubeTimerCube') || '3x3';
+        let currentSessionId = localStorage.getItem('cubeTimerSessionId') || null;
+        let sessions = [];
+        let times = [];
+        let editingSessionId = null; // for modal edit mode
+
+        function getSessionsKey() {
+            return 'cubeTimerSessions';
+        }
+
+        function getSessionTimesKey(sessionId) {
+            return 'cubeTimerTimes_' + sessionId;
+        }
+
+        function defaultSessionIdForCube(cube) {
+            return cube.toLowerCase().replace(/\s+/g, '') + '_default';
+        }
+
+        function loadSessions() {
+            const raw = localStorage.getItem(getSessionsKey());
+            if (raw) {
+                try {
+                    sessions = JSON.parse(raw);
+                    if (!Array.isArray(sessions)) sessions = [];
+                } catch (err) {
+                    sessions = [];
+                }
+            } else {
+                sessions = [];
+            }
+        }
+
+        function saveSessions() {
+            localStorage.setItem(getSessionsKey(), JSON.stringify(sessions));
+        }
+
+        function ensureDefaultSession(cube) {
+            const existingForCube = sessions.find(s => s.cube === cube);
+            if (!existingForCube) {
+                const defaultId = defaultSessionIdForCube(cube);
+                sessions.push({
+                    id: defaultId,
+                    name: cube,
+                    cube: cube,
+                    createdAt: Date.now()
+                });
+            }
+        }
+
+        function ensureSessions() {
+            loadSessions();
+            CUBES.forEach(cube => ensureDefaultSession(cube));
+            const currentSession = sessions.find(s => s.id === currentSessionId);
+            if (!currentSession) {
+                const existing = sessions.find(s => s.cube === currentCube);
+                currentSessionId = existing ? existing.id : defaultSessionIdForCube(currentCube);
+            }
+            const updatedSession = sessions.find(s => s.id === currentSessionId);
+            if (!updatedSession || updatedSession.cube !== currentCube) {
+                const existing = sessions.find(s => s.cube === currentCube);
+                currentSessionId = existing ? existing.id : defaultSessionIdForCube(currentCube);
+            }
+            localStorage.setItem('cubeTimerSessionId', currentSessionId);
+            saveSessions();
+        }
+
+        function getSessionsForCube(cube) {
+            return sessions.filter(s => s.cube === cube);
+        }
+
+        function getCurrentSession() {
+            return sessions.find(s => s.id === currentSessionId) || sessions.find(s => s.id === defaultSessionIdForCube(currentCube));
+        }
+
+        function updateSessionSelect() {
+            const spinner = document.getElementById('session-spinner-text');
+            const selectEl = document.getElementById('sessionSelectTimes');
+            const buttonText = document.getElementById('sessionCubeButtonText');
+            const currentSession = getCurrentSession();
+            if (spinner && currentSession) spinner.innerHTML = `<img style="width: 25px; height: 25px;" src='./media/${isDarkMode() ? "dm" : "icons"}/sessions.png'><p>${currentSession.name}</p>` ;
+            if (buttonText && currentSession) buttonText.innerHTML = `<img src='./media/${isDarkMode() ? 'dm' : 'icons'}/3d_cube.png'>${currentCube}  <p></p>  <img src='./media/${isDarkMode() ? 'dm' : 'icons'}/sessions.png'>${currentSession.name}`;
+            if (selectEl) {
+                const options = getSessionsForCube(currentCube).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                selectEl.innerHTML = options;
+                selectEl.value = currentSession ? currentSession.id : defaultSessionIdForCube(currentCube);
+            }
+        }
+
+        function getStorageKey() {
+            return currentSessionId ? getSessionTimesKey(currentSessionId) : (currentCube === '3x3' ? 'cubeTimerTimes' : 'cubeTimerTimes_' + currentCube);
+        }
 
         function onCubeChangeTimes(newCube) {
-            if (CUBES.includes(newCube)) {
-                currentCube = newCube;
+            if (!CUBES.includes(newCube)) return;
+            currentCube = newCube;
+            localStorage.setItem('cubeTimerCube', currentCube);
+            ensureSessions();
+            updateSessionSelect();
+            const spinner = document.getElementById('cube-spinner-text');
+            if (spinner) spinner.innerHTML = `<img style="width: 25px; height: 25px;" src='./media/${isDarkMode() ? "dm" : "icons"}/3d_cube.png'><p>${currentCube}</p>`;
+            const selectEl = document.getElementById('cubeSelectTimes');
+            if (selectEl) selectEl.value = currentCube;
+            loadTimes();
+        }
+
+        function onSessionChangeTimes(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+            currentSessionId = sessionId;
+            localStorage.setItem('cubeTimerSessionId', currentSessionId);
+            updateSessionSelect();
+            loadTimes();
+        }
+
+        function openSessionModal() {
+            const overlay = document.getElementById('sessionModalOverlay');
+            const modal = document.getElementById('sessionModal');
+            const input = document.getElementById('sessionNameInput');
+            const cubeSelect = document.getElementById('sessionCubeSelect');
+            const title = modal ? modal.querySelector('h2') : null;
+            if (!overlay || !modal || !input || !cubeSelect) return;
+
+            editingSessionId = null;
+            input.value = '';
+            cubeSelect.value = currentCube;
+            if (title) title.textContent = 'New session';
+            overlay.classList.remove('hidden2');
+            modal.classList.remove('hidden2');
+            input.focus();
+        }
+
+        function closeSessionModal() {
+            const overlay = document.getElementById('sessionModalOverlay');
+            const modal = document.getElementById('sessionModal');
+            const input = document.getElementById('sessionNameInput');
+            const cubeSelect = document.getElementById('sessionCubeSelect');
+            const submitButton = document.getElementById('sessionModalSubmit');
+            if (overlay && modal) {
+                overlay.classList.add('hidden2');
+                modal.classList.add('hidden2');
+            }
+            if (input) input.value = '';
+            if (cubeSelect) cubeSelect.value = currentCube;
+            if (submitButton) submitButton.textContent = 'Create';
+            editingSessionId = null;
+        }
+
+        function createNewSession(name, cube) {
+            if (!name || !name.trim()) return null;
+            const safeName = name.trim();
+            const safeCube = CUBES.includes(cube) ? cube : currentCube;
+            const sessionId = `session_${safeCube.toLowerCase().replace(/\s+/g, '')}_${Date.now()}`;
+            const session = { id: sessionId, name: safeName, cube: safeCube, createdAt: Date.now() };
+            sessions.push(session);
+            saveSessions();
+            return session;
+        }
+
+        function createSessionFromModal() {
+            hideSessionList();
+            const input = document.getElementById('sessionNameInput');
+            const cubeSelect = document.getElementById('sessionCubeSelect');
+            const modal = document.getElementById('sessionModal');
+            const submitButton = document.getElementById('sessionModalSubmit');
+            if (!input || !cubeSelect || !submitButton) return;
+            const name = input.value.trim();
+            const cube = cubeSelect.value;
+            if (!name) {
+                showNotification('Enter a session name', 'error');
+                return;
+            }
+
+            if (editingSessionId) {
+                const s = sessions.find(x => x.id === editingSessionId);
+                if (!s) {
+                    showNotification('Session not found', 'error');
+                    closeSessionModal();
+                    return;
+                }
+                s.name = name;
+                s.cube = cube;
+                saveSessions();
+                updateSessionSelect();
+                buildSessionList();
+                closeSessionModal();
+                return;
+            }
+
+            const session = createNewSession(name, cube);
+            if (session) {
+                currentSessionId = session.id;
+                currentCube = session.cube;
+                localStorage.setItem('cubeTimerSessionId', currentSessionId);
                 localStorage.setItem('cubeTimerCube', currentCube);
-                let spinner = document.getElementById('cube-spinner-text');
-                if (spinner) spinner.textContent = currentCube;
-
-                // update select to match if changed from elsewhere
-                let selectEl = document.getElementById('cubeSelectTimes');
-                if (selectEl) selectEl.value = currentCube;
-
+                updateSessionSelect();
+                closeSessionModal();
                 loadTimes();
             }
         }
 
-        function saveTimes() {
-            let key = currentCube === '3x3' ? 'cubeTimerTimes' : 'cubeTimerTimes_' + currentCube;
-            localStorage.setItem(key, JSON.stringify(times));
+        // Build popup list of sessions (used by combined button)
+        function buildSessionList() {
+            const container = document.getElementById('sessionListItems');
+            if (!container) return;
+            const ordered = sessions.slice().sort((a, b) => {
+                const cubeIndex = CUBES.indexOf(a.cube) - CUBES.indexOf(b.cube);
+                if (cubeIndex !== 0) return cubeIndex;
+                return a.name.localeCompare(b.name, 'pl', { sensitivity: 'base' });
+            });
+
+            container.innerHTML = ordered.map(session => {
+                const active = session.id === currentSessionId ? 'opacity: 0.65;' : '';
+                const iconSource = isDarkMode() ? 'dm' : 'icons';
+                return `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid var(--md-sys-color-outline);">
+                        <button type="button" onclick="selectSession('${session.id}')"
+                            style="all: unset; width: 100%; display: flex; justify-content: space-between; align-items: center;  cursor: pointer; color: var(--md-sys-color-on-surface); background: transparent; ${active}">
+                            <span>${session.cube} | ${session.name}</span>
+                            <span style="opacity: 0.6; font-size: 0.95em;">Select</span>
+                        </button>
+                        <img src="./media/${iconSource}/edit_session.png" alt="Edit" style="background: var(--md-sys-color-surface-container-highest); padding: 2px; border-radius: 5px; width: 20px; height: 20px; cursor: pointer; margin-left: 10px;" onclick="editSession('${session.id}')">
+                        <img src="./media/${iconSource}/delete_session.png" alt="Delete" style="background: var(--md-sys-color-error-container); padding: 2px; border-radius: 5px; width: 20px; height: 20px; cursor: pointer; margin-left: 10px;" onclick="deleteSession('${session.id}')">
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleSessionList() {
+            const popup = document.getElementById('sessionListPopup');
+            if (!popup) return;
+            if (popup.classList.contains('hidden2')) {
+                buildSessionList();
+                popup.classList.remove('hidden2');
+            } else {
+                popup.classList.add('hidden2');
+            }
+        }
+
+        function hideSessionList() {
+            const popup = document.getElementById('sessionListPopup');
+            if (popup) popup.classList.add('hidden2');
+        }
+
+        function selectSession(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+            currentSessionId = sessionId;
+            currentCube = session.cube;
+            localStorage.setItem('cubeTimerSessionId', currentSessionId);
+            localStorage.setItem('cubeTimerCube', currentCube);
+            updateSessionSelect();
+            hideSessionList();
+            loadTimes();
+        }
+
+        function editSession(sessionId) {
+            editingSessionId = sessionId;
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+            const overlay = document.getElementById('sessionModalOverlay');
+            const modal = document.getElementById('sessionModal');
+            const input = document.getElementById('sessionNameInput');
+            const cubeSelect = document.getElementById('sessionCubeSelect');
+            const submitButton = document.getElementById('sessionModalSubmit');
+            const title = modal ? modal.querySelector('h2') : null;
+            if (!overlay || !modal || !input || !cubeSelect || !submitButton) return;
+            input.value = session.name;
+            cubeSelect.value = session.cube;
+            submitButton.textContent = 'Save';
+            if (title) title.textContent = 'Edit session';
+            overlay.classList.remove('hidden2');
+            modal.classList.remove('hidden2');
+            input.focus();
+            hideSessionList();
+        }
+
+        function deleteSession(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            hideSessionList();
+            if (!session) return;
+            const cube = session.cube;
+            const sessionsForCube = sessions.filter(s => s.cube === cube);
+            if (sessionsForCube.length <= 1) {
+                showNotification('Cannot delete the last session for this cube', 'error');
+                return;
+            }
+
+            // custom confirm using native confirm for now (simple)
+            if (!confirm(`Delete session "${session.name}"? This will permanently remove all times saved in this session.`)) return;
+
+            try { localStorage.removeItem(getSessionTimesKey(sessionId)); } catch (e) {}
+            sessions = sessions.filter(s => s.id !== sessionId);
+            saveSessions();
+            if (currentSessionId === sessionId) {
+                const remaining = sessions.find(s => s.cube === cube);
+                currentSessionId = remaining ? remaining.id : defaultSessionIdForCube(cube);
+                localStorage.setItem('cubeTimerSessionId', currentSessionId);
+                currentCube = cube;
+                localStorage.setItem('cubeTimerCube', currentCube);
+            }
+            updateSessionSelect();
+            buildSessionList();
+            loadTimes();
         }
 
         function loadTimes() {
-            let key = currentCube === '3x3' ? 'cubeTimerTimes' : 'cubeTimerTimes_' + currentCube;
+            ensureSessions();
+            updateSessionSelect();
+            const key = getStorageKey();
             const saved = localStorage.getItem(key);
             if (saved) {
                 times = JSON.parse(saved);
@@ -438,6 +749,10 @@ function importFromCsTimer(event) {
                 times = [];
             }
             updateTimesList();
+        }
+
+        function saveTimes() {
+            localStorage.setItem(getStorageKey(), JSON.stringify(times));
         }
 
         function deleteAllTimes() {
@@ -460,18 +775,16 @@ function importFromCsTimer(event) {
                 newContainer.style.gap = '8px';
                 newContainer.style.justifyContent = 'center';
 
-                // Kluczowa zmiana: dodajemy onclick="showTimeDetails(${index})" do każdego kafelka
                 newContainer.innerHTML = contentExists ? times.map((t, index) => {
                     const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
                     return `<p class="time-box" onclick="showTimeDetails(${index})" style="margin: 0; cursor: pointer; user-select: none;">${formatted}</p>`;
                 }).join('') : '<p style="text-align:center; opacity:0.5; width: 100%;">No times yet</p>';
             }
 
-            // Stara lista (jeśli jej używasz, też może być klikalna)
             if (oldContainer) {
                 oldContainer.innerHTML = contentExists ? times.map((t, index) => {
                     const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
-                    return `<div onclick="showTimeDetails(${index})" style="cursor:pointer;">#${times.length - index}: ${formatted}</div>`;
+                    return `<div onclick="showTimeDetails(${index})" style="cursor:pointer; padding: 8px; border-bottom: 1px solid rgba(0,0,0,0.08);">#${times.length - index}: ${formatted}</div>`;
                 }).join('') : '(No times yet)';
             }
         }
@@ -505,7 +818,7 @@ function importFromCsTimer(event) {
 
         // Uruchomienie ładowania danych
         let spinner = document.getElementById('cube-spinner-text');
-        if (spinner) spinner.textContent = currentCube;
+        if (spinner) spinner.innerHTML = `<img style="width: 25px; height: 25px;" src='./media/${isDarkMode() ? "dm" : "icons"}/3d_cube.png'><p>${currentCube}</p>`;;
         let selectEl = document.getElementById('cubeSelectTimes');
         if (selectEl) selectEl.value = currentCube;
         loadTimes();
@@ -520,6 +833,13 @@ function importFromCsTimer(event) {
             year: 'numeric'
             }).replace(',', ''); // Usuwa domyślny przecinek między czasem a datą
         return formattedDate; // Wynik: "16:50:00 31.07.2026"
+        }
+        function isDarkMode() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+                return true;
+            } else {
+                return false;
+            }
         }
     </script>
 </body>

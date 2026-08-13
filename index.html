@@ -24,9 +24,15 @@
     <div class="m3-card2">
         <p id="scramble"> scramble </p>
     </div>
-    <div class="m3-card" style="height: 60%;">
-        <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" height="30px" width="30px"
+    <div class="m3-card" style=" height: 100%; min-height: 60%; width: 95%; ">
+        <div class="floating-options">
+            <button class="bluetooth-button"  onclick="inputTime()"><img id="inputIcon" 
+                src="./media/icons/input.png" alt="Input Time"></button>
+            <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" 
                 src="./media/icons/bluetooth.png" alt="Connect Bluetooth timer"></button>
+
+        </div>
+        
         <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)"
             ontouchend="handleTouchEnd(event)"
             style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
@@ -39,20 +45,19 @@
             </div>
         </div>
 
-        <div class="spinner-container" style="    left: 50%;    position: absolute;     top: 0px;
-
-    transform: translateX(-50%);">
-            <select id="cubeSelect" onchange="onCubeChange(this.value)"
-                style="opacity: 0; position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer; -webkit-appearance: none; appearance: none;">
-                <option value="3x3">3x3</option>
-                <option value="2x2">2x2</option>
-                <option value="4x4">4x4</option>
-                <option value="Pyraminx">Pyraminx</option>
-                <option value="Skewb">Skewb</option>
-            </select>
-            <div class="spiner-part1" id="cube-spinner-text"> 3x3 </div>
-            <div class="spiner-part2"> <img id="arrowDownIcon" height="25px" width="25px"
-                    src="./media/icons/arrow_down.png"> </div>
+        <div style="left: 50%; position: absolute; top: 0px; transform: translateX(-50%); display: flex; gap: 0px; align-items: center; width: min(90%, 280px); z-index: 900;">
+            <div class="spinner-container" style="position: relative; width: 100%; margin-bottom: 0px; display: flex; justify-content: center; align-items: center;">
+                <button id="sessionCubeButton" onclick="toggleSessionList()" class="m3-ButtonWithAnimatedShapeSample"
+                    style="width: auto; display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; font-weight: 600; gap: 8px;">
+                    <span id="sessionCubeButtonText" style="font-size: 14px; margin-left: 4px;">3x3 | 3x3</span>
+                    <img id="arrowDownIconSession" height="20px" width="20px" src="./media/icons/arrow_down.png" alt="Open session list">
+                </button>
+                <div id="sessionListPopup" class="hidden2"
+                    style="position: absolute; left: 50%; transform: translateX(-50%); right: 0; top: calc(100% + 8px); z-index: 999; background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: 20px; box-shadow: 0 18px 40px rgba(0,0,0,0.12); overflow: hidden;width: 320px;">
+                    <div style="padding: 10px 0px; font-weight: 700; color: var(--md-sys-color-on-surface); border-bottom: 1px solid rgba(0,0,0,0.08);">Select session</div>
+                    <div id="sessionListItems" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding: 12px 8px;"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -68,6 +73,50 @@
 
     <button onclick="showTimesListPupUp()" class="stats-trigger m3-ButtonWithAnimatedShapeSample"> Stats </button>
 
+    <div id="sessionModalOverlay" class="session-modal-overlay hidden2"
+        style="position: fixed; inset: 0; z-index: 1100;"></div>
+    <div id="sessionModal" class="session-modal hidden2">
+        <h2>New session</h2>
+        <input id="sessionNameInput" placeholder="Session name" aria-label="Session name">
+        <div class="session-modal-buttons">
+            <button class="tonal" onclick="closeSessionModal()">Cancel</button>
+            <button class="primary" onclick="createSessionFromModal()">Create</button>
+        </div>
+    </div>
+
+    <!-- Manual input time modal -->
+    <div id="inputTimeOverlay" class="session-modal-overlay hidden2"
+        onclick="closeInputTimeModal()" style="position: fixed; inset: 0; z-index: 1110;">
+    </div>
+    <div id="inputTimeModal" class="session-modal hidden2" style="z-index: 1111;" style="padding: 10px;">
+        <h2>Manual time entry</h2>
+        <label style="display:block; font-weight:700; font-size: 19px; margin-bottom: 10px;">Time</label>
+        <input id="manualTimeInput" placeholder="e.g. 13.456 or 1:23.789" aria-label="Time input">
+        <label style="display:block; font-weight:700; font-size: 19px; margin-top:0px; margin-bottom: 10px;">Scramble</label>
+        <div style="display: flex; flex-direction: row; margin-bottom: 10px; justify-content: center; align-items: center; gap: 10px;">
+            <textarea id="manualScrambleInput" rows="2" style="padding: 10px; width: 76%; border-radius: 16px; color: var(--md-sys-color-on-surface); background: var(--md-sys-color-surface-container-low);"></textarea>
+                <label class="switch">
+                    <input  type="checkbox" id="useCurrentScramble" checked>
+                    <span class="slider round"></span>
+                </label>
+        </div>
+        <label for="useCurrentScramble" style="font-size: 10px; font-weight: bold; margin-bottom: 0px;"> Check to use current scramble</label>
+        <label style="display:block; font-weight:700; margin-top: 10px; font-size: 19px; margin-bottom: 0px;">Date</label>
+        <div style="display: flex; flex-direction: row; margin-bottom: -5px; justify-content: center; align-items: center; gap: 10px; ">
+            <input id="manualDateInput" type="datetime-local" style="width: 76%; margin-top: 15px;">
+                <label class="switch">
+                    <input  type="checkbox" id="useCurrentDate" checked>
+                    <span class="slider round"></span>
+                </label>
+        </div>
+        <label for="useCurrentDate" style="font-size: 10px; font-weight: bold; margin-bottom: 10px;"> Check to use current date/time</label>
+        
+
+        <div class="session-modal-buttons" style="margin-top:10px;">
+            <button class="tonal" onclick="closeInputTimeModal()">Cancel</button>
+            <button class="primary" onclick="saveInputTime()">Save</button>
+        </div>
+    </div>
 
     <p style="margin: 50px"> </p>
     <div id="notificationsBox" class="notification">
@@ -161,11 +210,12 @@
             document.getElementById('home-button').src = './media/dm/home_filled.png';
             document.getElementById('add-button').src = './media/dm/list.png';
             document.getElementById('account-button').src = './media/dm/settings.png';
-            document.getElementById('arrowDownIcon').src = './media/dm/arrow_down.png';
             document.getElementById('bluetoothIcon').src = './media/dm/bluetooth.png';
+            document.getElementById('arrowDownIconSession').src = './media/dm/arrow_down.png';
             document.getElementById('addDnfToSolve').src = './media/dm/block.png';
             document.getElementById('deleteSolve').src = './media/dm/delete.png';
             document.getElementById('add2tosolve').src = './media/dm/+2.png';
+            document.getElementById('inputIcon').src = './media/dm/input.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
             link.href = "./styles/css/dark.css"; 
@@ -176,10 +226,11 @@
             document.getElementById('add-button').src = './media/icons/list.png';
             document.getElementById('account-button').src = './media/icons/settings.png';
             document.getElementById('bluetoothIcon').src = './media/icons/bluetooth.png';
-            document.getElementById('arrowDownIcon').src = './media/icons/arrow_down.png';
+            document.getElementById('arrowDownIconSession').src = './media/icons/arrow_down.png';
             document.getElementById('addDnfToSolve').src = './media/icons/block.png';
             document.getElementById('deleteSolve').src = './media/icons/delete.png';
             document.getElementById('add2tosolve').src = './media/icons/+2.png';
+            document.getElementById('inputIcon').src = './media/icons/input.png';
             const link = document.createElement("link");
             link.rel = "stylesheet";
             link.href = "./styles/css/light.css"; 

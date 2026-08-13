@@ -323,12 +323,259 @@ function releaseWakeLock() {
 }
 
 let currentCube = localStorage.getItem('cubeTimerCube') || '3x3';
+let currentSessionId = localStorage.getItem('cubeTimerSessionId') || null;
+let sessions = [];
+let editingSessionId = null; // when set, session modal will perform edit instead of create
 const CUBES = ["3x3", "2x2", "4x4", "Pyraminx", "Skewb"];
+
+function getSessionsKey() {
+    return 'cubeTimerSessions';
+}
+
+function getSessionTimesKey(sessionId) {
+    return 'cubeTimerTimes_' + sessionId;
+}
+
+function defaultSessionIdForCube(cube) {
+    return cube.toLowerCase().replace(/\s+/g, '') + '_default';
+}
+
+function loadSessions() {
+    const raw = localStorage.getItem(getSessionsKey());
+    if (raw) {
+        try {
+            sessions = JSON.parse(raw);
+            if (!Array.isArray(sessions)) sessions = [];
+        } catch (err) {
+            sessions = [];
+        }
+    } else {
+        sessions = [];
+    }
+}
+
+function saveSessions() {
+    localStorage.setItem(getSessionsKey(), JSON.stringify(sessions));
+}
+
+function ensureDefaultSession(cube) {
+    const existingForCube = sessions.find(s => s.cube === cube);
+    if (!existingForCube) {
+        const defaultId = defaultSessionIdForCube(cube);
+        sessions.push({
+            id: defaultId,
+            name: cube,
+            cube: cube,
+            createdAt: Date.now()
+        });
+    }
+}
+
+function ensureSessions() {
+    loadSessions();
+    CUBES.forEach(cube => ensureDefaultSession(cube));
+    const currentSession = sessions.find(s => s.id === currentSessionId);
+    if (!currentSession) {
+        const existing = sessions.find(s => s.cube === currentCube);
+        currentSessionId = existing ? existing.id : defaultSessionIdForCube(currentCube);
+    }
+    const updatedSession = sessions.find(s => s.id === currentSessionId);
+    if (!updatedSession || updatedSession.cube !== currentCube) {
+        const existing = sessions.find(s => s.cube === currentCube);
+        currentSessionId = existing ? existing.id : defaultSessionIdForCube(currentCube);
+    }
+    localStorage.setItem('cubeTimerSessionId', currentSessionId);
+    saveSessions();
+}
+
+function getSessionsForCube(cube) {
+    return sessions.filter(s => s.cube === cube);
+}
+
+function getCurrentSession() {
+    return sessions.find(s => s.id === currentSessionId) || sessions.find(s => s.id === defaultSessionIdForCube(currentCube));
+}
+
+function updateSessionSelect() {
+    const spinner = document.getElementById('session-spinner-text');
+    const buttonText = document.getElementById('sessionCubeButtonText');
+    const selectEl = document.getElementById('sessionSelect');
+
+    const currentSession = getCurrentSession();
+    if (spinner && currentSession) spinner.textContent = currentSession.name;
+    if (buttonText && currentSession) buttonText.innerHTML = `<img src='./media/${isDarkMode() ? 'dm' : 'icons'}/3d_cube.png'>${currentCube}  <p></p>  <img src='./media/${isDarkMode() ? 'dm' : 'icons'}/sessions.png'>${currentSession.name}`;
+    if (selectEl) {
+        const options = getSessionsForCube(currentCube).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        selectEl.innerHTML = options;
+        selectEl.value = currentSession ? currentSession.id : defaultSessionIdForCube(currentCube);
+    }
+}
+
+function buildSessionList() {
+    const container = document.getElementById('sessionListItems');
+    if (!container) return;
+    const ordered = sessions.slice().sort((a, b) => {
+        const cubeIndex = CUBES.indexOf(a.cube) - CUBES.indexOf(b.cube);
+        if (cubeIndex !== 0) return cubeIndex;
+        return a.name.localeCompare(b.name, 'pl', { sensitivity: 'base' });
+    });
+
+    container.innerHTML = ordered.map(session => {
+        const active = session.id === currentSessionId ? 'opacity: 0.65;' : '';
+        const iconSource = isDarkMode() ? 'dm' : 'icons';
+        return `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid var(--md-sys-color-outline);">
+            <button type="button" onclick="selectSession('${session.id}')"
+                style="all: unset; width: 100%; display: flex; justify-content: space-between; align-items: center;  cursor: pointer; color: var(--md-sys-color-on-surface); background: transparent; ${active}">
+                <span>${session.cube} | ${session.name}</span>
+                <span style="opacity: 0.6; font-size: 0.95em;">Select</span>
+            </button>
+            <img src="./media/${iconSource}/edit_session.png" alt="Edit" style="background: var(--md-sys-color-surface-container-highest); padding: 2px; border-radius: 5px; width: 20px; height: 20px; cursor: pointer; margin-left: 10px;" onclick="editSession('${session.id}')">
+            <img src="./media/${iconSource}/delete_session.png" alt="Delete" style="background: var(--md-sys-color-error-container); padding: 2px; border-radius: 5px; width: 20px; height: 20px; cursor: pointer; margin-left: 10px;" onclick="deleteSession('${session.id}')">
+        </div>
+            `;
+    }).join('');
+}
+
+// Edit a session's name via browser prompt
+function editSession(sessionId) {
+    // reuse session modal for editing
+    openSessionModal(sessionId);
+}
+
+// Delete a session after confirmation. Ensure at least one session remains per cube.
+function deleteSession(sessionId) {
+    const session = sessions.find(s => s.id === sessionId);
+    if (!session) return;
+
+    const cube = session.cube;
+    const sessionsForCube = sessions.filter(s => s.cube === cube);
+    if (sessionsForCube.length <= 1) {
+        showNotification('Cannot delete the last session for this cube', 'error');
+        return;
+    }
+
+    // create a custom confirm modal dynamically
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.inset = '0';
+    overlay.style.background = 'rgba(0,0,0,0.45)';
+    overlay.style.zIndex = 1200;
+
+    const modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.left = '50%';
+    modal.style.top = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+    modal.style.background = 'var(--md-sys-color-surface)';
+    modal.style.color = 'var(--md-sys-color-on-surface)';
+    modal.style.padding = '16px';
+    modal.style.borderRadius = '12px';
+    modal.style.boxShadow = '0 8px 20px rgba(0,0,0,0.2)';
+    modal.style.zIndex = 1201;
+    modal.style.minWidth = '260px';
+
+    modal.innerHTML = `
+        <div style="font-weight:700; margin-bottom:8px;">Delete session</div>
+        <div style="margin-bottom:12px;">Delete session "${session.name}"? This will permanently remove all times saved in this session.</div>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+            <button id="_cancelDel" style="padding:8px 12px; border-radius:8px;">Cancel</button>
+            <button id="_confirmDel" style="padding:8px 12px; border-radius:8px; background:var(--md-sys-color-error); color:var(--md-sys-color-on-error);">Delete</button>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(modal);
+
+    const cleanup = () => {
+        modal.remove();
+        overlay.remove();
+    };
+
+    document.getElementById('_cancelDel').addEventListener('click', cleanup);
+    document.getElementById('_confirmDel').addEventListener('click', () => {
+        // Remove stored times for this session (if any)
+        try { localStorage.removeItem(getSessionTimesKey(sessionId)); } catch (e) {}
+
+        // Remove the session from the list
+        sessions = sessions.filter(s => s.id !== sessionId);
+        saveSessions();
+
+        // If the deleted session was the current one, switch to another session for the same cube
+        if (currentSessionId === sessionId) {
+            const remaining = sessions.find(s => s.cube === cube);
+            currentSessionId = remaining ? remaining.id : defaultSessionIdForCube(cube);
+            localStorage.setItem('cubeTimerSessionId', currentSessionId);
+            currentCube = cube;
+            localStorage.setItem('cubeTimerCube', currentCube);
+        }
+
+        updateSessionSelect();
+        buildSessionList();
+        resetTimer();
+        loadTimes();
+        setNewScramble();
+        updateLastSolveDisplay();
+        updateStats();
+        showNotification('Session deleted', 'info');
+        cleanup();
+    });
+}
+
+function toggleSessionList() {
+    const popup = document.getElementById('sessionListPopup');
+    if (!popup) return;
+    if (popup.classList.contains('hidden2')) {
+        buildSessionList();
+        popup.classList.remove('hidden2');
+    } else {
+        popup.classList.add('hidden2');
+    }
+}
+
+function hideSessionList() {
+    const popup = document.getElementById('sessionListPopup');
+    if (popup) popup.classList.add('hidden2');
+}
+
+function selectSession(sessionId) {
+    const session = sessions.find(s => s.id === sessionId);
+    if (!session) return;
+
+    currentSessionId = sessionId;
+    currentCube = session.cube;
+    localStorage.setItem('cubeTimerSessionId', currentSessionId);
+    localStorage.setItem('cubeTimerCube', currentCube);
+
+    ensureSessions();
+    updateSessionSelect();
+    hideSessionList();
+    resetTimer();
+    loadTimes();
+    setNewScramble();
+    updateLastSolveDisplay();
+    updateStats();
+}
+
+function onSessionChange(sessionId) {
+    const session = sessions.find(s => s.id === sessionId);
+    if (!session) return;
+    currentSessionId = sessionId;
+    localStorage.setItem('cubeTimerSessionId', currentSessionId);
+    updateSessionSelect();
+    resetTimer();
+    loadTimes();
+    updateLastSolveDisplay();
+    updateStats();
+}
 
 function onCubeChange(newCube) {
     if (CUBES.includes(newCube)) {
         currentCube = newCube;
         localStorage.setItem('cubeTimerCube', currentCube);
+        ensureSessions();
+        updateSessionSelect();
+
         let spinner = document.getElementById('cube-spinner-text');
         if (spinner) spinner.textContent = currentCube;
 
@@ -343,8 +590,99 @@ function onCubeChange(newCube) {
     }
 }
 
+function createNewSession(name) {
+    if (!name || !name.trim()) return null;
+    const safeName = name.trim();
+    const sessionId = `session_${currentCube.toLowerCase().replace(/\s+/g, '')}_${Date.now()}`;
+    const session = {
+        id: sessionId,
+        name: safeName,
+        cube: currentCube,
+        createdAt: Date.now()
+    };
+    sessions.push(session);
+    saveSessions();
+    return session;
+}
+
+function openSessionModal(sessionId = null) {
+    const overlay = document.getElementById('sessionModalOverlay');
+    const modal = document.getElementById('sessionModal');
+    const input = document.getElementById('sessionNameInput');
+    const title = modal ? modal.querySelector('h2') : null;
+    if (!overlay || !modal || !input) return;
+
+    editingSessionId = null;
+    if (sessionId) {
+        const session = sessions.find(s => s.id === sessionId);
+        if (!session) return;
+        input.value = session.name;
+        editingSessionId = sessionId;
+        if (title) title.textContent = 'Edit session';
+    } else {
+        input.value = '';
+        if (title) title.textContent = 'New session';
+    }
+
+    overlay.classList.remove('hidden2');
+    modal.classList.remove('hidden2');
+    input.focus();
+}
+
+function closeSessionModal() {
+    const overlay = document.getElementById('sessionModalOverlay');
+    const modal = document.getElementById('sessionModal');
+    if (overlay && modal) {
+        overlay.classList.add('hidden2');
+        modal.classList.add('hidden2');
+        // reset editing state
+        editingSessionId = null;
+        const title = modal.querySelector('h2');
+        if (title) title.textContent = 'New session';
+    }
+}
+
+function createSessionFromModal() {
+    const input = document.getElementById('sessionNameInput');
+    if (!input) return;
+    const name = input.value.trim();
+    if (!name) {
+        showNotification('Enter a session name', 'error');
+        return;
+    }
+
+    if (editingSessionId) {
+        // perform rename
+        const session = sessions.find(s => s.id === editingSessionId);
+        if (!session) {
+            showNotification('Session not found', 'error');
+            closeSessionModal();
+            return;
+        }
+        session.name = name;
+        saveSessions();
+        updateSessionSelect();
+        buildSessionList();
+        showNotification('Session renamed', 'info');
+        closeSessionModal();
+        return;
+    }
+
+    const session = createNewSession(name);
+    if (session) {
+        currentSessionId = session.id;
+        localStorage.setItem('cubeTimerSessionId', currentSessionId);
+        updateSessionSelect();
+        resetTimer();
+        loadTimes();
+        updateLastSolveDisplay();
+        updateStats();
+        closeSessionModal();
+    }
+}
+
 function getStorageKey() {
-    return currentCube === '3x3' ? 'cubeTimerTimes' : 'cubeTimerTimes_' + currentCube;
+    return currentSessionId ? getSessionTimesKey(currentSessionId) : (currentCube === '3x3' ? 'cubeTimerTimes' : 'cubeTimerTimes_' + currentCube);
 }
 
 // Show notification for 3 seconds
@@ -368,7 +706,16 @@ function showNotification(message, type = 'info') {
 
 // Load times from localStorage on page load
 function loadTimes() {
-    const saved = localStorage.getItem(getStorageKey());
+    const key = getStorageKey();
+    let saved = localStorage.getItem(key);
+    if (!saved) {
+        const legacyKey = currentCube === '3x3' ? 'cubeTimerTimes' : 'cubeTimerTimes_' + currentCube;
+        saved = localStorage.getItem(legacyKey);
+        if (saved) {
+            localStorage.setItem(key, saved);
+            localStorage.removeItem(legacyKey);
+        }
+    }
     if (saved) {
         times = JSON.parse(saved);
     } else {
@@ -488,6 +835,122 @@ function setNewScramble() {
 function getCurrentScramble() {
     return document.getElementById('scramble').textContent.trim();
 }
+
+// --- Manual input time modal functions ---
+function inputTime() {
+    const overlay = document.getElementById('inputTimeOverlay');
+    const modal = document.getElementById('inputTimeModal');
+    const timeInput = document.getElementById('manualTimeInput');
+    const scrambleInput = document.getElementById('manualScrambleInput');
+    const dateInput = document.getElementById('manualDateInput');
+    const useScr = document.getElementById('useCurrentScramble');
+    const useDate = document.getElementById('useCurrentDate');
+    if (!overlay || !modal || !timeInput || !scrambleInput || !dateInput || !useScr || !useDate) return;
+
+    // Defaults
+    timeInput.value = '';
+    scrambleInput.value = getCurrentScramble();
+    scrambleInput.disabled = true;
+    useScr.checked = true;
+
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, '0');
+    dateInput.value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    dateInput.disabled = true;
+    useDate.checked = true;
+
+    // Wire checkbox toggles
+    useScr.onchange = () => {
+        scrambleInput.disabled = useScr.checked;
+        if (useScr.checked) scrambleInput.value = getCurrentScramble();
+    };
+    useDate.onchange = () => {
+        dateInput.disabled = useDate.checked;
+        if (useDate.checked) {
+            const d = new Date();
+            dateInput.value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+    };
+
+    overlay.classList.remove('hidden2');
+    modal.classList.remove('hidden2');
+    timeInput.focus();
+}
+
+function closeInputTimeModal() {
+    const overlay = document.getElementById('inputTimeOverlay');
+    const modal = document.getElementById('inputTimeModal');
+    const useScr = document.getElementById('useCurrentScramble');
+    const useDate = document.getElementById('useCurrentDate');
+    if (overlay && modal) {
+        overlay.classList.add('hidden2');
+        modal.classList.add('hidden2');
+    }
+    // clear handlers
+    if (useScr) useScr.onchange = null;
+    if (useDate) useDate.onchange = null;
+}
+
+function parseTimeToMs(str) {
+    if (!str) return null;
+    str = str.trim();
+    // Accept formats: M:SS.mmm or S.mmm or SS.mmm
+    if (str.includes(':')) {
+        const parts = str.split(':');
+        if (parts.length !== 2) return null;
+        const minutes = parseInt(parts[0], 10);
+        const secPart = parseFloat(parts[1].replace(',', '.'));
+        if (isNaN(minutes) || isNaN(secPart)) return null;
+        return Math.round(minutes * 60000 + secPart * 1000);
+    } else {
+        const seconds = parseFloat(str.replace(',', '.'));
+        if (isNaN(seconds)) return null;
+        return Math.round(seconds * 1000);
+    }
+}
+
+function saveInputTime() {
+    const timeInput = document.getElementById('manualTimeInput');
+    const scrambleInput = document.getElementById('manualScrambleInput');
+    const dateInput = document.getElementById('manualDateInput');
+    const useScr = document.getElementById('useCurrentScramble');
+    const useDate = document.getElementById('useCurrentDate');
+    if (!timeInput || !scrambleInput || !dateInput || !useScr || !useDate) return;
+
+    const ms = parseTimeToMs(timeInput.value);
+    if (ms === null) {
+        showNotification('Invalid time format', 'error');
+        return;
+    }
+
+    const scramble = useScr.checked ? getCurrentScramble() : scrambleInput.value.trim();
+    const timestamp = useDate.checked ? Date.now() : (new Date(dateInput.value)).getTime() || Date.now();
+
+    const entry = {
+        time: ms,
+        date: timestamp,
+        scramble: scramble,
+        isPlusTwo: false,
+        isDnf: false
+    };
+
+    // Save into current session (prepend)
+    times.unshift(entry);
+    saveTimes();
+    updateTimesList();
+    updateLastSolveDisplay();
+    updateStats();
+
+    // Show options bar like normal stop
+    toggleOptionsBar(true);
+
+    // Generate next scramble like a normal solve
+    setNewScramble();
+
+    closeInputTimeModal();
+    showNotification('Manual time saved', 'success');
+}
+
 
 // Timer functions
 function startTimer() {
@@ -1002,8 +1465,18 @@ function setTimerState(state) {
     else if (state === 'holding') el.classList.add('timer-holding');
     else el.classList.add('timer-default');
 }
+function isDarkMode() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+        return true;
+    } else {
+        return false;
+    }
+}
 // --- START ---
 window.onload = function () {
+    ensureSessions();
+    updateSessionSelect();
+
     let spinner = document.getElementById('cube-spinner-text');
     if (spinner) spinner.textContent = currentCube;
 
