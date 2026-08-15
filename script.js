@@ -757,35 +757,50 @@ function generateScramble() {
             ostatnia = nowa;     }     
         return scramble.join(' ');
     } else if (currentCube === '4x4') {
-        const osieZwykle = [ ['U', 'D'], ['R', 'L'], ['F', 'B'] ];     
-        const osiePelne = [ ['U', 'D', 'Uw', 'Dw'], ['R', 'L', 'Rw'], ['F', 'B', 'Fw'] ];     
-        const modyfikatory = ['', "'", '2'];     
-        let scramble = [];     
-        let historiaOsi = [];     
-        let ostatniRuchCzysty = '';     
-        while (scramble.length < 40) {         
-            let nrOsi = Math.floor(Math.random() * 3);         
-            if (historiaOsi.length >= 2 && historiaOsi[historiaOsi.length - 1] === nrOsi && historiaOsi[historiaOsi.length - 2] === nrOsi) {             continue;         }         
-            let litera = '';         
-            if (scramble.length < 20) {             
-                let opcje = osieZwykle[nrOsi];             
-                litera = opcje[Math.floor(Math.random() * opcje.length)];         } 
-            else {             
-                let opcje = osiePelne[nrOsi];             
-                litera = opcje[Math.floor(Math.random() * opcje.length)];         
-            }         
-            if (historiaOsi.length >= 1 && historiaOsi[historiaOsi.length - 1] === nrOsi) {             
-                if (litera === ostatniRuchCzysty) continue;             
-                if ((litera === 'U' && ostatniRuchCzysty === 'Uw') || (litera === 'Uw' && ostatniRuchCzysty === 'U')) continue;             
-                if ((litera === 'D' && ostatniRuchCzysty === 'Dw') || (litera === 'Dw' && ostatniRuchCzysty === 'D')) continue;             
-                if ((litera === 'R' && ostatniRuchCzysty === 'Rw') || (litera === 'Rw' && ostatniRuchCzysty === 'R')) continue;             
-                if ((litera === 'L' && ostatniRuchCzysty === 'Lw') || (litera === 'Lw' && ostatniRuchCzysty === 'L')) continue;             
-                if ((litera === 'F' && ostatniRuchCzysty === 'Fw') || (litera === 'Fw' && ostatniRuchCzysty === 'F')) continue;         }         
-                let mod = modyfikatory[Math.floor(Math.random() * modyfikatory.length)];         
-                scramble.push(litera + mod);         
-                historiaOsi.push(nrOsi);         
-                ostatniRuchCzysty = litera;     }     
-                return scramble.join(' ');
+const sciany3x3 = ['U', 'D', 'R', 'L', 'F', 'B'];
+    const scianySzerokie = ['Uw', 'Rw', 'Fw']; // Ściany z 2x2 zamienione na 'w'
+    const modyfikatory = ['', "'", '2'];
+    const przeciwne = { 'U':'D', 'D':'U', 'R':'L', 'L':'R', 'F':'B', 'B':'F' };
+
+    let scrambleBazy = [];
+    let scramble = [];
+
+    // Faza 1: 20 ruchów czystego 3x3
+    while (scramble.length < 20) {
+        let nowa = sciany3x3[Math.floor(Math.random() * sciany3x3.length)];
+        let ostatnia = scrambleBazy[scrambleBazy.length - 1] || null;
+        let przedostatnia = scrambleBazy[scrambleBazy.length - 2] || null;
+
+        if (nowa === ostatnia) continue;
+        if (ostatnia && nowa === przeciwne[ostatnia] && nowa === przedostatnia) continue;
+
+        let mod = modyfikatory[Math.floor(Math.random() * modyfikatory.length)];
+        scrambleBazy.push(nowa);
+        scramble.push(nowa + mod);
+    }
+
+    // Faza 2: 20 ruchów przeplatanych (3x3 + szerokie Uw, Rw, Fw)
+    while (scramble.length < 46) {
+        // Losowanie typu ruchu (zwykły vs szeroki)
+        let czySzeroki = Math.random() < 0.5;
+        let pula = czySzeroki ? scianySzerokie : sciany3x3;
+        let wylosowanyRuch = pula[Math.floor(Math.random() * pula.length)];
+
+        let baza = wylosowanyRuch[0]; // Pierwsza litera ściany (np. 'Uw' -> 'U')
+        let ostatnia = scrambleBazy[scrambleBazy.length - 1] || null;
+        let przedostatnia = scrambleBazy[scrambleBazy.length - 2] || null;
+
+        // Eliminacja powtórzeń na tej samej ścianie (np. R po Rw) oraz konfliktów osi
+        if (baza === ostatnia) continue;
+        if (ostatnia && baza === przeciwne[ostatnia] && baza === przedostatnia) continue;
+
+        let mod = modyfikatory[Math.floor(Math.random() * modyfikatory.length)];
+        scrambleBazy.push(baza);
+        scramble.push(wylosowanyRuch + mod);
+    }
+
+    return scramble.join(' ');
+
     } else if (currentCube === 'Pyraminx') {
         const duzeSciany = ['U', 'L', 'R', 'B'];     const maleCzubki = ['u', 'l', 'r', 'b'];     const modyfikatory = ['', "'"];          let scramble = [];     let ostatnia = null;          while (scramble.length < 11) {         let nowa = duzeSciany[Math.floor(Math.random() * duzeSciany.length)];         if (nowa === ostatnia) continue;                  let mod = modyfikatory[Math.floor(Math.random() * modyfikatory.length)];         scramble.push(nowa + mod);         ostatnia = nowa;     }          maleCzubki.forEach(czubek => {         let stan = Math.floor(Math.random() * 3);         if (stan === 1) scramble.push(czubek);         else if (stan === 2) scramble.push(czubek + "'");     });          return scramble.join(' ');
     } else if (currentCube === 'Skewb') {

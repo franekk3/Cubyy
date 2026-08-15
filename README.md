@@ -19,4 +19,4 @@
 
 ##### **Project is avible on:**
 
-###### &#x09;[**cubyy.vercel.app**](https://cubyy.vercel.app)
+###### &#x09;[**franekk3.github.io**](https://franekk3.github.io/Cubyy)

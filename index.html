@@ -18,13 +18,19 @@
     <meta name="apple-mobile-web-app-title" content="Cubyy">
     <link rel="apple-touch-icon" href="./media/icons/icon.png">
     <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            overflow: hidden;
+            height: 100vh;
+        }
+    </style>
 </head>
 
 <body>
     <div class="m3-card2">
         <p id="scramble"> scramble </p>
     </div>
-    <div class="m3-card" style=" height: 100%; min-height: 60%; width: 95%; ">
+    <div class="m3-card" style=" height: 100%; min-height: 60%; width: 95%; margin-bottom: 0px !important; ">
         <div class="floating-options">
             <button class="bluetooth-button"  onclick="inputTime()"><img id="inputIcon" 
                 src="./media/icons/input.png" alt="Input Time"></button>
@@ -117,7 +123,6 @@
             <button class="primary" onclick="saveInputTime()">Save</button>
         </div>
     </div>
-
     <p style="margin: 50px"> </p>
     <div id="notificationsBox" class="notification">
         <p> </p>
@@ -313,7 +318,6 @@
         function enableScroll() {
             document.body.classList.remove('no-scroll');
         }
-
     </script>
 </body>
 

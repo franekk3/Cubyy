@@ -83,3 +83,11 @@
 .hidden3 {
     display: flex;
 }
+.space-maker {
+    display: none;
+}
+main.content {
+    height: 100%;
+    width: calc(100% - 90px);
+    right: 0px;
+}
