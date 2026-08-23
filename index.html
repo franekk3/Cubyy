@@ -3,11 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title> Cubyy </title>
     <link rel="icon" type="image/png" href="./media/icons/icon.png">
     <link rel="stylesheet" href="./styles/m3-styles.css">
     <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="./styles/css/dark.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,50 +23,72 @@
         body {
             overflow: hidden;
             height: 100vh;
+            background-color: var(--md-sys-color-surface-container);
         }
     </style>
 </head>
 
 <body>
-    <div class="m3-card2">
-        <p id="scramble"> scramble </p>
-    </div>
-    <div class="m3-card" style=" height: 100%; min-height: 60%; width: 95%; margin-bottom: 0px !important; ">
-        <div class="floating-options">
-            <button class="bluetooth-button"  onclick="inputTime()"><img id="inputIcon" 
-                src="./media/icons/input.png" alt="Input Time"></button>
-            <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" 
-                src="./media/icons/bluetooth.png" alt="Connect Bluetooth timer"></button>
-
+    <div class="top-bar">
+        <div>
+                <div class="spinner-container" style="position: relative; width: 100%; margin-bottom: 0px; display: flex; justify-content: center; align-items: center;">
+                    <button id="sessionCubeButton" onclick="toggleSessionList()"
+                        style="width: auto; display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; font-weight: 600; gap: 8px; background-color: transparent; outline: none; border: none;">
+                        <span id="sessionCubeButtonText" style="font-size: 18px; margin-left: 4px; color: var(--md-sys-color-on-surface); width: 100%;">3x3 | 3x3</span>
+                        <img id="arrowDownIconSession" height="20px" width="20px" src="./media/dm/arrow_down.png" alt="Open session list">
+                    </button>
+                    <div id="sessionListPopup" class="hidden2">
+                        <div class="title">Select session</div>
+                        <div id="sessionListItems" class="elements"></div>
+                    </div>
+                </div>
         </div>
-        
-        <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)"
-            ontouchend="handleTouchEnd(event)"
-            style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
-            <span id="timerNumbers">0.000</span>
-            <p id="last-solve" class="last-time"></p>
-            <div id="options-bar" class="options-bar" ontouchstart="event.stopPropagation()">
-                <img id="add2tosolve" class="options-bar-icon" src="./media/icons/+2.png">
-                <img id="addDnfToSolve" class="options-bar-icon" src="./media/icons/block.png">
-                <img id="deleteSolve" class="options-bar-icon" src="./media/icons/delete.png">
+
+        <div style="display: flex; flex-direction: row; width: fill-avilbe;">
+        <div class="desktop-navbar">
+            <div onclick="window.location.href = './index.html'">
+                <img src="./media/dm/home_white.png">
+                <hr class="selected">
+            </div>
+            <div onclick="window.location.href = './times.html'">
+
+                <img src="./media/dm/list_white.png">
+                <hr >
+            </div>
+            <div onclick="window.location.href = './settings.html'">
+
+                <img src="./media/dm/settings_white.png">
+                <hr >
             </div>
         </div>
-
-        <div style="left: 50%; position: absolute; top: 0px; transform: translateX(-50%); display: flex; gap: 0px; align-items: center; width: min(90%, 280px); z-index: 900;">
-            <div class="spinner-container" style="position: relative; width: 100%; margin-bottom: 0px; display: flex; justify-content: center; align-items: center;">
-                <button id="sessionCubeButton" onclick="toggleSessionList()" class="m3-ButtonWithAnimatedShapeSample"
-                    style="width: auto; display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; font-weight: 600; gap: 8px;">
-                    <span id="sessionCubeButtonText" style="font-size: 14px; margin-left: 4px;">3x3 | 3x3</span>
-                    <img id="arrowDownIconSession" height="20px" width="20px" src="./media/icons/arrow_down.png" alt="Open session list">
-                </button>
-                <div id="sessionListPopup" class="hidden2"
-                    style="position: absolute; left: 50%; transform: translateX(-50%); right: 0; top: calc(100% + 8px); z-index: 999; background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: 20px; box-shadow: 0 18px 40px rgba(0,0,0,0.12); overflow: hidden;width: 320px;">
-                    <div style="padding: 10px 0px; font-weight: 700; color: var(--md-sys-color-on-surface); border-bottom: 1px solid rgba(0,0,0,0.08);">Select session</div>
-                    <div id="sessionListItems" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding: 12px 8px;"></div>
+            <button class="bluetooth-button"  onclick="inputTime()"><img id="inputIcon" src="./media/dm/input.png" alt="Input Time"></button>
+                <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" src="./media/dm/bluetooth.png" alt="Connect Bluetooth timer"></button>
+        </div>
+    </div>
+    <div class="site-content">
+        <div class="m3-card2" style="margin-bottom: -15px !important; display: flex; align-items: center;">
+            <p id="scramble"> scramble </p>
+        </div>
+        <div class="m3-card" style=" height: 100%; min-height: 60%; width: 95%; margin-bottom: 0px !important; margin-top: -15px !important;">
+            
+            <div class="timer-display" id="timerDisplay" ontouchstart="handleTouchStart(event)"
+                ontouchend="handleTouchEnd(event)"
+                style="font-weight: bold; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
+                <span id="timerNumbers">0.000</span>
+                <p id="last-solve" class="last-time"></p>
+                <div id="options-bar" class="options-bar" ontouchstart="event.stopPropagation()">
+                    <img id="add2tosolve" class="options-bar-icon" src="./media/dm/+2.png">
+                    <img id="addDnfToSolve" class="options-bar-icon" src="./media/dm/block.png">
+                    <img id="deleteSolve" class="options-bar-icon" src="./media/dm/delete.png">
                 </div>
             </div>
+            <button onclick="showTimesListPupUp()" class="stats-trigger m3-ButtonWithAnimatedShapeSample"> Stats </button>
+            <!-- Sessions List popup and trigger -->
+
+
         </div>
     </div>
+
 
 
 
@@ -75,9 +98,6 @@
         <strong>GanTimer Info:</strong><br>
         <div id="gantimerState">-</div>
     </div>
-
-
-    <button onclick="showTimesListPupUp()" class="stats-trigger m3-ButtonWithAnimatedShapeSample"> Stats </button>
 
     <div id="sessionModalOverlay" class="session-modal-overlay hidden2"
         style="position: fixed; inset: 0; z-index: 1100;"></div>
@@ -129,15 +149,15 @@
     </div>
     <div class="nav-bar">
         <div onclick="window.location.href='./index.html'" class="nav-bar-element">
-            <img id="home-button" class="nav-bar-image nav-bar-image-choosed" src="./media/icons/home_filled.png">
+            <img id="home-button" class="nav-bar-image nav-bar-image-choosed" src="./media/dm/home_filled.png">
             <p class="nav-bar-label"> Home </p>
         </div>
         <div onclick="window.location.href='./times.html'" class="nav-bar-element">
-            <img id="add-button" class="nav-bar-image" src="./media/icons/list.png">
+            <img id="add-button" class="nav-bar-image" src="./media/dm/list.png">
             <p class="nav-bar-label"> Times </p>
         </div>
         <div onclick="window.location.href='./settings.html'" class="nav-bar-element">
-            <img id="account-button" class="nav-bar-image" src="./media/icons/settings.png">
+            <img id="account-button" class="nav-bar-image" src="./media/dm/settings.png">
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
@@ -211,36 +231,6 @@
     <script src="./script.js"></script>
 
     <script>
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.getElementById('home-button').src = './media/dm/home_filled.png';
-            document.getElementById('add-button').src = './media/dm/list.png';
-            document.getElementById('account-button').src = './media/dm/settings.png';
-            document.getElementById('bluetoothIcon').src = './media/dm/bluetooth.png';
-            document.getElementById('arrowDownIconSession').src = './media/dm/arrow_down.png';
-            document.getElementById('addDnfToSolve').src = './media/dm/block.png';
-            document.getElementById('deleteSolve').src = './media/dm/delete.png';
-            document.getElementById('add2tosolve').src = './media/dm/+2.png';
-            document.getElementById('inputIcon').src = './media/dm/input.png';
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "./styles/css/dark.css"; 
-            document.head.appendChild(link);
-
-        } else {
-            document.getElementById('home-button').src = './media/icons/home_filled.png';
-            document.getElementById('add-button').src = './media/icons/list.png';
-            document.getElementById('account-button').src = './media/icons/settings.png';
-            document.getElementById('bluetoothIcon').src = './media/icons/bluetooth.png';
-            document.getElementById('arrowDownIconSession').src = './media/icons/arrow_down.png';
-            document.getElementById('addDnfToSolve').src = './media/icons/block.png';
-            document.getElementById('deleteSolve').src = './media/icons/delete.png';
-            document.getElementById('add2tosolve').src = './media/icons/+2.png';
-            document.getElementById('inputIcon').src = './media/icons/input.png';
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "./styles/css/light.css"; 
-            document.head.appendChild(link);
-        }
 
 
 

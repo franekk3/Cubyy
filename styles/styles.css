@@ -15,6 +15,7 @@
     -webkit-user-select: none;
     transition: color 0.2s ease-in-out;
     user-select: none;
+    margin-top: 0px;
 }
 
 .nav-bar-image {
@@ -71,7 +72,7 @@
     width: 40px;
     height: 40px;
     img {
-        height: 27px;
+        height: 25px;
     }
     -webkit-tap-highlight-color: transparent;
 
@@ -87,7 +88,7 @@
 .notification {
     display: none;
     position: fixed;
-    top: 8px;
+    top: 60px;
     left: 50%;
     transform: translateX(-50%);
     background-color: var(--md-sys-color-on-primary-container);
@@ -101,6 +102,8 @@
     font-family: 'Google Sans', sans-serif;
     font-size: 12px;
     z-index: 10000;
+    width: 100%;
+    max-width: 290px;
     p {
         margin: 2px;
     }
@@ -309,6 +312,7 @@ body.no-scroll {
     align-items: center;
     gap: 5px;
     width: 100%;
+    max-width: 1000px;
     margin-top: 10px;
 }
 
@@ -326,7 +330,7 @@ body.no-scroll {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1000;
+    z-index: 1003;
     animation: slideUp2 0.3s ease-out;
     height: 60%;
     max-height: 400px;
@@ -430,10 +434,15 @@ body.no-scroll {
 .stats-trigger {
     background-color: var(--md-sys-color-primary);
     margin-top: 0px;
-    position: absolute;
-    bottom: 16%;
     font-weight: 600;
     z-index: 99;
+    display: flex;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+.stats-trigger:active {
+    margin-left: 50% !important;
+    transform: translateX(-50%) !important;
 }
 
 .last-time {
@@ -564,4 +573,38 @@ main.content {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+}
+.site-content {
+    position: fixed;
+    z-index: 999 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: fill-available;
+    background-color: var(--md-sys-color-surface);
+    right: 1px;
+    left: 1px;
+    border-radius: 24px;
+    top: 60px;
+    bottom: 80px;
+    padding-bottom: 30px;
+    transition: all 0.2s ease-in-out;
+}
+.top-bar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    color: var(--md-sys-color-on-surface);
+    position: fixed;
+    top: 0px;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    z-index: 1002;
+    justify-content: space-between;
+}
+#scramble {
+    font-size: 16px;
+    max-width: 90%;
 }

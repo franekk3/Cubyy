@@ -403,7 +403,7 @@ function updateSessionSelect() {
 
     const currentSession = getCurrentSession();
     if (spinner && currentSession) spinner.textContent = currentSession.name;
-    if (buttonText && currentSession) buttonText.innerHTML = `<img src='./media/${isDarkMode() ? 'dm' : 'icons'}/3d_cube.png'>${currentCube}  <p></p>  <img src='./media/${isDarkMode() ? 'dm' : 'icons'}/sessions.png'>${currentSession.name}`;
+    if (buttonText && currentSession) buttonText.innerHTML = `${currentCube}  |  ${currentSession.name}`;
     if (selectEl) {
         const options = getSessionsForCube(currentCube).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
         selectEl.innerHTML = options;
@@ -422,7 +422,7 @@ function buildSessionList() {
 
     container.innerHTML = ordered.map(session => {
         const active = session.id === currentSessionId ? 'opacity: 0.65;' : '';
-        const iconSource = isDarkMode() ? 'dm' : 'icons';
+        const iconSource = isDarkMode() ? 'dm' : 'dm';
         return `
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid var(--md-sys-color-outline);">
             <button type="button" onclick="selectSession('${session.id}')"
@@ -1374,6 +1374,7 @@ function handleTouchEnd(event) {
         } else {
             // Puściłeś za wcześnie - zresetuj kolor i stan
             setTimerState('default');
+            toggleOptionsBar(false)
             isReady = false;
             if (holdTime < SPACE_HOLD_TIME) {
                 showNotification('👆 Hold for 0.5 seconds', 'info');
