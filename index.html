@@ -308,6 +308,55 @@
         function enableScroll() {
             document.body.classList.remove('no-scroll');
         }
+        // Zmienna śledząca stan wygaszacza (ustaw na true, gdy wygaszacz się włącza)
+        let isScreenSaverActive = false;
+
+        function turnOffScreenSaver() {
+        // Jeśli wygaszacz NIE jest włączony, ignorujemy wywołanie
+        if (!isScreenSaverActive) {
+            return;
+        }
+
+        // 1. Zmieniamy stan na false, aby kolejne szybkie kliknięcia zostały zignorowane
+        isScreenSaverActive = false;
+
+        // 2. Tutaj wpisz swój kod ukrywający/wyłączający wygaszacz
+        const screensaverElement = document.getElementById('screensaver');
+        if (screensaverElement) {
+            screensaverElement.style.display = 'none';
+        }
+
+        console.log('Wygaszacz został wyłączony.');
+        }
+// Bezpieczne przypisanie do obiektu window (nie wyrzuci błędu o redeklaracji)
+window.wakeLock = window.wakeLock || null;
+
+async function keepScreenAwake() {
+  if (window.wakeLock !== null) {
+    return;
+  }
+
+  if (!('wakeLock' in navigator)) {
+    console.warn('Screen Wake Lock API nie jest wspierane.');
+    return;
+  }
+
+  try {
+    window.wakeLock = await navigator.wakeLock.request('screen');
+    console.log('Ekran nie będzie się wygaszać!');
+
+    window.wakeLock.addEventListener('release', () => {
+      window.wakeLock = null;
+    });
+
+  } catch (err) {
+    console.error(`Błąd Wake Lock: ${err.name}, ${err.message}`);
+    window.wakeLock = null;
+  }
+}
+window.addEventListener('click', keepScreenAwake);
+window.addEventListener('touchstart', keepScreenAwake, { passive: true });
+window.addEventListener('keydown', keepScreenAwake);
     </script>
 </body>
 
