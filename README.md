@@ -13,15 +13,14 @@ Online FOSS Speed Cubing timer.
  - UI designed to suit mobile and desktop.
 
 ## Screenshots
-### Mobile
-<img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot1-mobile.png?raw=true" height="450px">
-<img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot3-mobile.png?raw=true" height="450px">
-<img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot2-mobile.png?raw=true" height="450px">
+#### Home Screen
+<table> <tr> <td align="center"><img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot1-mobile.png?raw=true" height="400px"></td><td align="center"> <img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot1-desktop.png?raw=true" width="500px"></td> </tr> </table>
 
-### Desktop
-<img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot1-desktop.png?raw=true" width="500px">
-<img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot3-desktop.png?raw=true" width="500px">
-<img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot2-desktop.png?raw=true" width="500px">
+#### Statistics Screen
+<table> <tr> <td align="center"><img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot3-mobile.png?raw=true" height="400px"></td><td align="center"> <img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot3-desktop.png?raw=true" width="500px"></td> </tr> </table>
+
+#### Solves List Screen
+<table> <tr> <td align="center"><img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot2-mobile.png?raw=true" height="400px"></td><td align="center"> <img src="https://github.com/franekk3/Cubyy/blob/main/media/screenshots/screenshot2-desktop.png?raw=true" width="500px"></td> </tr> </table>
 
 ## License
 **Cubyy** is licensed under the **GPLv3** License (General Public License version 3).  
