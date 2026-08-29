@@ -149,3 +149,48 @@ main.content {
         display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding: 12px 8px;
     }
 }
+.side-bar {
+    position: absolute;
+    z-index: 1006;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    top: calc(10px + 60px);
+    right: 2%;
+    width: 200px;
+    background-color: var(--md-sys-color-surface-container-high);
+    div {
+        transform: all 0.1s ease;
+        display: flex;
+        flex-direction: row;
+        gap: 7px;
+        margin-top: 2px;
+        padding: 5px 0px;
+        img {
+            margin-top: 9px;
+            margin-left: 10px;
+            height: 32px;
+            width: 32px;
+        }
+        div {
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            text-align: left;
+            gap: -2px !important;
+            p {
+                color: var(--md-sys-color-on-surface);
+                margin: 0px !important;
+            }
+            h6 {
+                color: var(--md-sys-color-outline);
+                margin: 0px !important;
+                font-weight: normal;
+            }
+        }
+    }
+    div:active {
+            background-color: var(--md-sys-color-surface-container-highest);
+
+    }
+}

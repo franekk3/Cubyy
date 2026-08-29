@@ -1018,7 +1018,6 @@ function stopTimer(externalTime = null) {
 
         saveTimes();
         updateTimesList();
-        updateLastSolveDisplay();
         updateStats();
         releaseWakeLock();
         //showNotification(`✓ Time saved: ${formatTime(elapsedTime)}`, 'success');
@@ -1185,6 +1184,7 @@ function updateGanTimerInfo(state, value) {
             break;
         case 'hands_off':
             stateText = '⚡ Hands Off - Waiting during grace period';
+            setTimerState('default');
             break;
         case 'get_set':
             stateText = '⏳ Get Set! - Timer ready, remove hands to start';
@@ -1249,6 +1249,7 @@ function handleGanTimerData(event) {
                 if (ganTimerLastState !== GAN_STATE.IDLE) {
                     updateGanTimerInfo('idle', 0);
                     console.log('GAN State: IDLE');
+                    updateLastSolveDisplay();
                 }
                 break;
 
@@ -1336,7 +1337,7 @@ function handleTouchStart(event) {
             elapsedTime = 0;
             document.getElementById('timerNumbers').textContent = '0.000';
         }
-
+        updateLastSolveDisplay()
         // STARTUJEMY PROCEDURĘ TRZYMANIA (HOLD)
         spacePressed = true;
         touchStartTime = Date.now();
@@ -1400,7 +1401,7 @@ document.addEventListener('keydown', (e) => {
             if (elapsedTime > 0) {
                 resetTimer();
             }
-
+            updateLastSolveDisplay();
             spacePressed = true;
             spacePressStartTime = Date.now();
 

@@ -439,6 +439,9 @@ body.no-scroll {
     display: flex;
     margin-left: 50%;
     transform: translateX(-50%);
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none;     /* IE 10 and Edge */
+  user-select: none;  
 }
 .stats-trigger:active {
     margin-left: 50% !important;
@@ -609,3 +612,6 @@ main.content {
     font-weight: bold;
     max-width: 90%;
 }
+.side-bar.hide {
+    display: none;
+} 

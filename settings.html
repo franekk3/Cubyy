@@ -32,18 +32,27 @@
             color: #312252;
         }
 
-            .settings-label {
-                color: #E6E1E5;
-                font-family: sans-serif, 'Google Sans';
-                font-weight: bold;
-                font-size: 30px;
+        .settings-label {
+            color: #E6E1E5;
+            font-family: sans-serif, 'Google Sans';
+            font-weight: bold;
+            font-size: 30px;
+        }
+        .page-title {
+            font-size: 20px; font-weight: bold;
+        }
+        @media screen and (max-width: 768px){ 
+            .page-title {
+                margin-left: 12px;            
             }
+        
+        }
     </style>
 </head>
 
 <body ontouchstart="">
     <div class="top-bar">
-        <p style="font-size: 20px; font-weight: bold; margin-left: 4px;"> Settings </p>
+        <p class="page-title"> Settings </p>
         <div style="display: flex; flex-direction: row; width: fill-avilbe;">
         <div class="desktop-navbar" style="padding: 6px 12px;">
             <div onclick="window.location.href = './index.html'">
@@ -66,7 +75,7 @@
             <p> For now there are no settings to change! 😔 </p>
             <div class='rows-box'>
                 <hr class="rows-hr">
-                <p> Cubyy version: 1.2.1  </p>
+                <p> Cubyy version: 1.2.2  </p>
                 <hr class="rows-hr">
                 <p onclick="window.location.href='https://github.com/franekk3'" style=" cursor: pointer;"> Cubyy by <b>
                         Franekk3 </b></a> </p>

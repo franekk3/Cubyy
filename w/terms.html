@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="../media/icons/icon.png">
     <link rel="stylesheet" href="../styles/m3-styles.css">
     <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/css/dark.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -34,7 +35,6 @@
             color: #49454f;
         }
 
-        @media (prefers-color-scheme: dark) {
             .terms-label {
                 color: #E6E1E5;
                 font-family: sans-serif, 'Google Sans';
@@ -45,7 +45,6 @@
             .text {
                 color: #bab5bf;
             }
-        }
     </style>
 </head>
 
@@ -85,58 +84,22 @@
     <P style="opacity: 0;"> . </P>
     <div class="nav-bar">
         <div onclick="window.location.href='../index.html'; navigator.vibrate(100)" class="nav-bar-element">
-            <img id="home-button" class="nav-bar-image " src="../media/icons/home.png">
+            <img id="home-button" class="nav-bar-image " src="../media/dm/home.png">
             <p class="nav-bar-label"> Home </p>
         </div>
         <div onclick="window.location.href='../times.html'; navigator.vibrate(100)" class="nav-bar-element">
-            <img id="add-button" class="nav-bar-image" src="../media/icons/list.png">
+            <img id="add-button" class="nav-bar-image" src="../media/dm/list.png">
             <p class="nav-bar-label"> Times </p>
         </div>
         <div onclick="window.location.href='../settings.html'; navigator.vibrate(100)" class="nav-bar-element">
             <img id="account-button" class="nav-bar-image nav-bar-image-choosed"
-                src="../media/icons/settings_filled.png">
+                src="../media/dm/settings_filled.png">
             <p class="nav-bar-label"> Settings </p>
         </div>
     </div>
 
 
     <script>
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.getElementById('home-button').src = '../media/dm/home.png';
-            document.getElementById('add-button').src = '../media/dm/list.png';
-            document.getElementById('account-button').src = '../media/dm/settings_filled.png';
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "../styles/css/dark.css";
-            document.head.appendChild(link);
-
-        } else {
-            document.getElementById('home-button').src = '../media/icons/home.png';
-            document.getElementById('add-button').src = '../media/icons/list.png';
-            document.getElementById('account-button').src = '../media/icons/settings_filled.png';
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "../styles/css/light.css";
-            document.head.appendChild(link);
-        }
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.getElementById('home-button').src = '../media/dm/home.png';
-            document.getElementById('add-button').src = '../media/dm/list.png';
-            document.getElementById('account-button').src = '../media/dm/settings_filled.png';
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "../styles/css/dark.css";
-            document.head.appendChild(link);
-
-        } else {
-            document.getElementById('home-button').src = '../media/icons/home.png';
-            document.getElementById('add-button').src = '../media/icons/list.png';
-            document.getElementById('account-button').src = '../media/icons/settings_filled.png';
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "../styles/css/light.css";
-            document.head.appendChild(link);
-        }
         const themeStylesheet = document.createElement("link");
         themeStylesheet.rel = "stylesheet";
         document.head.appendChild(themeStylesheet);
