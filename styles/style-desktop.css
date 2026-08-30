@@ -194,3 +194,7 @@ main.content {
 
     }
 }
+.confirm-window {
+    top: 40px;
+    scale: 1.1;
+}

@@ -136,3 +136,6 @@ main.content {
 
     }
 }
+.confirm-window {
+    bottom: 100px;
+}

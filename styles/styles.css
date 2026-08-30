@@ -467,7 +467,7 @@ body.no-scroll {
     width: 100%;
     max-width: 640px;
     margin: 0px auto;
-    height: 65%;
+    height: calc(auto + 10px);
     max-height: 550px;
     background-color: var(--md-sys-color-surface-container-high);
     border-radius: 28px 28px 0px 0px;
@@ -615,3 +615,31 @@ main.content {
 .side-bar.hide {
     display: none;
 } 
+.confirm-window {
+    position: fixed;
+    z-index: 1011;
+    height: 100px;
+    background-color: var(--md-sys-color-surface-container-highest);
+    padding: 10px 15px;
+    border-radius: 32px;
+    div {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+        width: 100%;
+        align-items: center;
+        justify-content: end;
+        margin-right: 20px;
+    }
+}
+#confirm-content {
+    color: var(--md-sys-color-on-surface);
+    font-size: 18px;
+}
+.visible-overlay {
+    position: fixed;
+    z-index: 1010;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+}

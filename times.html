@@ -42,7 +42,20 @@
 </head>
 
 <body ontouchstart="">
+    <div class="confirm-window hidden2" id="confirm-window">
+        <p id="confirm-content"> Are you sure you want to delete this solve? </p>
+        <div>
+            <button class="m3-ButtonSample outline" style="scale: 1" onclick="confirmWindow('hide')">
+                Cancel                
+            </button>
+            <button class="m3-ButtonSample" style="scale: 1" onclick="deleteSingleSolve()">
+                Confirm                
+            </button>
+        </div>
+    </div>
+    <div class="visible-overlay hidden2" id="confirm-window-overlay" onclick="confirmWindow('hide')">
 
+    </div>
     <div class="nav-bar" >
         <div onclick="window.location.href='./index.html'" class="nav-bar-element">
             <img id="home-button" class="nav-bar-image " src="./media/dm/home.png">
@@ -67,7 +80,7 @@
                 src="./media/icons/+2.png">
             <img id="detail-dnf" onclick="toggleDnfDetail()" style="background-color: var(--md-sys-color-surface-tint); border-radius: 12px;padding: 4px;"
                 height="25px" width="25px" src="./media/icons/block.png">
-            <img id="detail-delete" onclick="deleteSingleSolve()" style="background-color: var(--md-sys-color-surface-tint); border-radius: 12px;padding: 4px;" height="25px"
+            <img id="detail-delete" onclick="confirmWindow('show')" style="background-color: var(--md-sys-color-surface-tint); border-radius: 12px;padding: 4px;" height="25px"
                 width="25px" src="./media/icons/delete.png">
             <img id="hide-popup-arrow" onclick='hideTimeDetails()' style="background-color: var(--md-sys-color-surface-tint); border-radius: 12px;padding: 4px;" height="25px"
                 width="25px" src="./media/dm/arrow_down2.png">
@@ -184,6 +197,17 @@
     </div>
     <script>
 
+    function confirmWindow(action) {
+        var cwOverlay = document.getElementById('confirm-window-overlay');
+        var confirmWindow = document.getElementById('confirm-window')
+        if (action == 'show') {
+            confirmWindow.classList.remove('hidden2');
+            cwOverlay.classList.remove('hidden2');
+        } else if (action == 'hide') {
+            confirmWindow.classList.add('hidden2');
+            cwOverlay.classList.add('hidden2');
+        }
+    }
         function hideTimeDetails() {
             document.getElementById('time-details-box').classList.add('time-details-box-hide');
             setTimeout(() => {
@@ -269,13 +293,12 @@
         }
         function deleteSingleSolve() {
             if (currentDetailIndex === null) return;
-            if (confirm("Delete this solve?")) {
-                times.splice(currentDetailIndex, 1);
-                saveTimes();
-                updateTimesList();
-                hideTimeDetails();
+            times.splice(currentDetailIndex, 1);
+            saveTimes();
+            updateTimesList();
+            hideTimeDetails();
+            confirmWindow('hide')
             }
-        }
         // --- EKSPORT DANYCH (Format csTimer) ---
 function exportToCsTimer() {
     // pobierz kostkę z localStorage

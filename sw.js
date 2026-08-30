@@ -1,4 +1,4 @@
-const CACHE_NAME = "cubyy-v1.2.3";
+const CACHE_NAME = "cubyy-v1.2.4";
 
 self.addEventListener("fetch", event => {
     event.respondWith(

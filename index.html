@@ -32,6 +32,20 @@
 </head>
 
 <body>
+    <div class="confirm-window hidden2" id="confirm-window">
+        <p id="confirm-content"> Are you sure you want to delete last solve? </p>
+        <div>
+            <button class="m3-ButtonSample outline" style="scale: 1" onclick="confirmWindow('hide')">
+                Cancel                
+            </button>
+            <button class="m3-ButtonSample" style="scale: 1" onclick="deleteAction()">
+                Confirm                
+            </button>
+        </div>
+    </div>
+    <div class="visible-overlay hidden2" id="confirm-window-overlay" onclick="confirmWindow('hide')">
+
+    </div>
     <div class="top-bar">
         <div>
                 <div class="spinner-container" style="position: relative; width: 100%; margin-bottom: 0px; display: flex; justify-content: center; align-items: center;">
@@ -68,6 +82,7 @@
                 <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" src="./media/dm/bluetooth.png" alt="Connect Bluetooth timer"></button>
         </div>
     </div>
+
     <div class="site-content">
         <div class="m3-card2" style="margin-bottom: -15px !important; display: flex; align-items: center;">
             <p id="scramble"> scramble </p>
@@ -360,6 +375,18 @@ async function keepScreenAwake() {
 window.addEventListener('click', keepScreenAwake);
 window.addEventListener('touchstart', keepScreenAwake, { passive: true });
 window.addEventListener('keydown', keepScreenAwake);
+
+    function confirmWindow(action) {
+        var cwOverlay = document.getElementById('confirm-window-overlay');
+        var confirmWindow = document.getElementById('confirm-window')
+        if (action == 'show') {
+            confirmWindow.classList.remove('hidden2');
+            cwOverlay.classList.remove('hidden2');
+        } else if (action == 'hide') {
+            confirmWindow.classList.add('hidden2');
+            cwOverlay.classList.add('hidden2');
+        }
+    }
     </script>
 </body>
 

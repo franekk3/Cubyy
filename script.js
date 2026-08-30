@@ -2,36 +2,44 @@
 
 
 function calculateAoX(size) {
-    // Jeśli nie ma wystarczającej liczby ułożeń, zwróć kreski
     if (times.length < size) return "—";
 
     const recentTimes = times.slice(0, size);
 
-    // Zliczamy ile jest DNF w danej grupie
-    const dnfCount = recentTimes.filter(t => t.isDnf).length;
-
-    // Według zasad WCA: w Ao5 dopuszczalny jest 1 DNF (staje się najgorszym czasem), 
-    // ale 2 DNF to już DNF całej średniej. Dla uproszczenia tutaj: 
-    // jeśli więcej niż 1 DNF -> DNF
-    if (dnfCount > 1) return "DNF";
-
-    // Wyciągamy wartości milisekund
+    // 1. Map times to millisecond values (treat DNF as Infinity)
     let msValues = recentTimes.map(t => {
-        if (t.isDnf) return Infinity; // DNF traktujemy jako nieskończoność
+        if (t.isDnf) return Infinity;
         return t.time;
     });
 
-    // Sortujemy rosnąco
+    // 2. Determine trim count based on WCA and standard timer rules
+    let trimCount = 1;
+    if (size === 3) {
+        trimCount = 0; // Mo3 (Mean of 3) has zero trimming under WCA rules
+    } else if (size >= 50) {
+        trimCount = Math.floor(size * 0.05); // 5% trimming for large averages (Ao50, Ao100, etc.)
+    } else {
+        trimCount = 1; // Ao5 and Ao12 trim 1 from each side
+    }
+
+    // 3. Sort ascending (bests first, DNFs/Infinity at the end)
     msValues.sort((a, b) => a - b);
 
-    // Usuwamy najgorszy (ostatni) i najlepszy (pierwszy)
-    const trimmedTimes = msValues.slice(1, -1);
+    // 4. Handle edge case where trimCount might slice away everything
+    if (trimCount * 2 >= msValues.length) {
+        trimCount = 0; // Fallback to prevent empty arrays on strange input sizes
+    }
 
-    // Jeśli po ucięciu został jakiś Infinity, to znaczy że średnia to DNF
+    const trimmedTimes = msValues.slice(trimCount, msValues.length - trimCount);
+
+    // 5. If any Infinity (DNF) made it into our active trimmed array, the average is DNF
     if (trimmedTimes.includes(Infinity)) return "DNF";
 
+    // 6. Calculate average of the remaining times (WCA rounds to nearest hundredth)
     const sum = trimmedTimes.reduce((acc, val) => acc + val, 0);
-    return formatTime(sum / trimmedTimes.length);
+    const rawAverage = sum / trimmedTimes.length;
+
+    return formatTime(rawAverage);
 }
 
 function updateStats() {
@@ -216,21 +224,21 @@ btnDnf.ontouchend = (e) => handleIconAction(e, dnfAction);
 
 // Obsługa Usuwania
 const btnDelete = document.getElementById('deleteSolve');
-const deleteAction = () => {
+function deleteAction() {
     if (times.length === 0) return;
-    if (confirm("Are you sure you want to delete the last solve?")) {
-        times.shift();
-        saveTimes();
-        updateTimesList();
-        updateLastSolveDisplay();
-        elapsedTime = 0;
-        document.getElementById('timerNumbers').textContent = '0.000';
-        toggleOptionsBar(false);
-        showNotification("Solve deleted", "info");
-    }
+    times.shift();
+    saveTimes();
+    updateTimesList();
+    updateLastSolveDisplay();
+    elapsedTime = 0;
+    document.getElementById('timerNumbers').textContent = '0.000';
+    toggleOptionsBar(false);
+    updateStats();
+    showNotification("Solve deleted", "info");
+    confirmWindow('hide')
 };
-btnDelete.onclick = (e) => handleIconAction(e, deleteAction);
-btnDelete.ontouchend = (e) => handleIconAction(e, deleteAction);
+btnDelete.onclick = (e) => handleIconAction(e, confirmWindow('show'));
+btnDelete.ontouchend = (e) => handleIconAction(e, confirmWindow('show'));
 
 /* --- TĘ FUNKCJĘ TEŻ ZOSTAWIAMY --- */
 function finalizeUpdate() {
