@@ -618,9 +618,11 @@ main.content {
 .confirm-window {
     position: fixed;
     z-index: 1011;
-    height: 100px;
+    max-width: 90%;
+    text-align: left;
     background-color: var(--md-sys-color-surface-container-highest);
     padding: 10px 15px;
+    padding-bottom: 15px;
     border-radius: 32px;
     div {
         display: flex;
