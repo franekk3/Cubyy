@@ -1,31 +1,31 @@
 {
-  "name": "Cubyy - Cube Timer",
+  "name": "Cubyy",
   "short_name": "Cubyy",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#111318",
-  "theme_color": "#111318",
+  "background_color": "#1d2024",
+  "theme_color": "#1d2024",
   "icons": [
     {
-      "src": "./media/icons/icon.png",
+      "src": "./media/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "./media/icons/icon-196.png",
+      "src": "./media/icons/icon-192.png",
       "sizes": "196x196",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "./media/icons/icon-a.png",
+      "src": "./media/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./media/icons/icon-196-a.png",
+      "src": "./media/icons/icon-192.png",
       "sizes": "196x196",
       "type": "image/png",
       "purpose": "any"
@@ -38,5 +38,5 @@
     "productivity",
     "utilities"
   ],
-  "description": "Simple minimalist rubik's cube timer."
+  "description": "Simple minimalist FOSS rubik's cube timer."
 }

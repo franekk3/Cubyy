@@ -1331,26 +1331,21 @@ function handleTouchStart(event) {
     // Zapobiega domyślnym akcjom przeglądarki (zoom, scroll)
     if (event.cancelable) event.preventDefault();
 
-    // 1. Jeśli timer działa - ZATRZYMAJ GO i wyjdź
     if (isRunning) {
         stopTimer();
         return;
     }
 
-    // 2. Jeśli timer nie działa (jest zatrzymany)
     if (!spacePressed && !isReady) {
-        // RESETUJEMY WIZUALNIE: Jeśli na ekranie jest stary czas, 
-        // zerujemy go, ale NIE przerywamy funkcji, idziemy dalej do "hold"
+
         if (elapsedTime > 0) {
             elapsedTime = 0;
             document.getElementById('timerNumbers').textContent = '0.000';
         }
         updateLastSolveDisplay()
-        // STARTUJEMY PROCEDURĘ TRZYMANIA (HOLD)
         spacePressed = true;
         touchStartTime = Date.now();
 
-        // Zmieniamy kolor na czerwony (czekaj)
         setTimerState('holding');
 
         if (touchHoldInterval) clearInterval(touchHoldInterval);
@@ -1358,9 +1353,7 @@ function handleTouchStart(event) {
         touchHoldInterval = setInterval(() => {
             if (spacePressed && (Date.now() - touchStartTime) >= SPACE_HOLD_TIME) {
                 isReady = true;
-                // Zmieniamy kolor na zielony (gotowy!)
                 setTimerState('ready');
-                //showNotification('🚀 Ready! Release to start...', 'info');
                 clearInterval(touchHoldInterval);
             }
         }, 10);
@@ -1376,12 +1369,10 @@ function handleTouchEnd(event) {
         spacePressed = false;
 
         if (isReady) {
-            // Startujemy nowy pomiar
             setTimerState('default');
             startTimer();
             isReady = false;
         } else {
-            // Puściłeś za wcześnie - zresetuj kolor i stan
             setTimerState('default');
             toggleOptionsBar(false)
             isReady = false;
@@ -1392,20 +1383,16 @@ function handleTouchEnd(event) {
     }
 }
 
-// Keyboard shortcuts - Space hold for 0.5s to get ready, release to start, press to stop
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         e.preventDefault();
 
-        // 1. Jeśli timer działa, zatrzymaj go i wyjdź
         if (isRunning) {
             stopTimer();
             return;
         }
 
-        // 2. Logika "uzbrajania" (hold)
         if (!spacePressed && !isReady) {
-            // Resetujemy wynik wizualnie, jeśli jakiś był, ale NIE przerywamy funkcji
             if (elapsedTime > 0) {
                 resetTimer();
             }
@@ -1413,20 +1400,15 @@ document.addEventListener('keydown', (e) => {
             spacePressed = true;
             spacePressStartTime = Date.now();
 
-            // Ustawiamy kolor CZERWONY od razu po naciśnięciu
             setTimerState('holding');
-            //showNotification('⏸️ Holding space...', 'info');
 
-            // Czyścimy stary interwał na wszelki wypadek
             if (readyCheckInterval) clearInterval(readyCheckInterval);
 
             readyCheckInterval = setInterval(() => {
                 if (spacePressed && (Date.now() - spacePressStartTime) >= SPACE_HOLD_TIME) {
                     isReady = true;
-                    // Zmieniamy na ZIELONY po 0.5s
                     setTimerState('ready');
                     document.getElementById('timerDisplay').style.fontWeight = 'bold';
-                    //showNotification('🚀 Ready! Release to start...', 'info');
                     clearInterval(readyCheckInterval);
                 }
             }, 10);
@@ -1442,7 +1424,6 @@ document.addEventListener('keyup', (e) => {
             const holdTime = Date.now() - spacePressStartTime;
             spacePressed = false;
 
-            // Powrót do domyślnego koloru cyfr
             setTimerState('default');
 
             if (isReady) {
@@ -1468,7 +1449,6 @@ function updateLastSolveDisplay() {
     if (times && times.length > 0) {
         const lastTime = times[0];
 
-        // Ta sama logika co powyżej - sprawdzamy flagi obiektu lastTime
         const formatted = lastTime.isDnf ? "DNF" : (formatTime(lastTime.time) + (lastTime.isPlusTwo ? "+" : ""));
 
         lastSolveElement.textContent = `last solve: ${formatted}`;
@@ -1482,10 +1462,8 @@ function setTimerState(state) {
     const el = document.getElementById('timerNumbers');
     if (!el) return;
 
-    // Usuwamy stare klasy
     el.classList.remove('timer-default', 'timer-ready', 'timer-holding');
 
-    // Dodajemy właściwą klasę
     if (state === 'ready') el.classList.add('timer-ready');
     else if (state === 'holding') el.classList.add('timer-holding');
     else el.classList.add('timer-default');
@@ -1497,7 +1475,6 @@ function isDarkMode() {
         return false;
     }
 }
-// --- START ---
 window.onload = function () {
     ensureSessions();
     updateSessionSelect();
@@ -1513,11 +1490,7 @@ window.onload = function () {
     loadOrGenerateScramble();
     updateTimesList();
     updateStats();
-
-    // Inicjalizacja stanu koloru na start
     setTimerState('default');
-
-    console.log("Cubyy załadowany pomyślnie!");
 };
 
 data = Date.now()

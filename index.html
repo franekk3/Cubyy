@@ -48,9 +48,10 @@
     </div>
     <div class="top-bar">
         <div>
-                <div class="spinner-container" style="position: relative; width: 100%; margin-bottom: 0px; display: flex; justify-content: center; align-items: center;">
+                <div class="spinner-container" style="position: relative; width: 100%; margin-bottom: 0px; display: flex; justify-content: center; align-items: center; ">
                     <button id="sessionCubeButton" onclick="toggleSessionList()"
-                        style="width: auto; display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; font-weight: 600; gap: 8px; background-color: transparent; outline: none; border: none;">
+                        style="cursor: pointer; width: auto; display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; font-weight: 600; gap: 0px; background-color: transparent; outline: none; border: none;">
+                        <img style="height: 26px; width: 26px;" src="./media/icons/cubyy-1.3-logo.svg">
                         <span id="sessionCubeButtonText" style="font-size: 18px; margin-left: 4px; color: var(--md-sys-color-on-surface); width: 100%;">3x3 | 3x3</span>
                         <img id="arrowDownIconSession" height="20px" width="20px" src="./media/dm/arrow_down.png" alt="Open session list">
                     </button>
@@ -67,19 +68,23 @@
                 <img src="./media/dm/home_white.png">
                 <hr class="selected">
             </div>
-            <div onclick="window.location.href = './times.html'">
+            <div onclick="window.location.href = './solves.html'">
 
                 <img src="./media/dm/list_white.png">
                 <hr >
             </div>
+            <div onclick="window.location.href = './stats.html'">
+                <img src="./media/dm/bar_chart_white.png">
+                <hr >
+            </div>
             <div onclick="window.location.href = './settings.html'">
-
                 <img src="./media/dm/settings_white.png">
                 <hr >
             </div>
         </div>
             <button class="bluetooth-button"  onclick="inputTime()"><img id="inputIcon" src="./media/dm/input.png" alt="Input Time"></button>
-                <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" src="./media/dm/bluetooth.png" alt="Connect Bluetooth timer"></button>
+            <button class="bluetooth-button" onclick="connectBluetooth()"><img id="bluetoothIcon" src="./media/dm/bluetooth.png" alt="Connect Bluetooth timer"></button>
+            <button id="mobile-settings-button" class="bluetooth-button" onclick="window.location.href = './settings.html'"><img id="bluetoothIcon" src="./media/dm/settings_white.png" alt="Connect Bluetooth timer"></button>
         </div>
     </div>
 
@@ -170,13 +175,14 @@
             <img id="home-button" class="nav-bar-image nav-bar-image-choosed" src="./media/dm/home_filled.png">
             <p class="nav-bar-label"> Home </p>
         </div>
-        <div onclick="window.location.href='./times.html'" class="nav-bar-element">
+        <div onclick="window.location.href='./solves.html'" class="nav-bar-element">
             <img id="add-button" class="nav-bar-image" src="./media/dm/list.png">
-            <p class="nav-bar-label"> Times </p>
+            <p class="nav-bar-label"> Solves </p>
         </div>
-        <div onclick="window.location.href='./settings.html'" class="nav-bar-element">
-            <img id="account-button" class="nav-bar-image" src="./media/dm/settings.png">
-            <p class="nav-bar-label"> Settings </p>
+        <div onclick="window.location.href='./stats.html'" class="nav-bar-element">
+            <img id="account-button" class="nav-bar-image"
+                src="./media/dm/bar_chart.png">
+            <p class="nav-bar-label"> Statistics </p>
         </div>
     </div>
     <div onclick='hideTimesListPupUp()' class="hidden2"
@@ -191,7 +197,7 @@
         <div onclick='hideTimesListPupUp()' id="drag-handle"
             style="width: 100%; height: 40px; cursor: grab; display: flex; justify-content: center; align-items: center; z-index: 20;">
             <hr
-                style="width: 30px; height: 4px; border: none; border-radius: 2px; background-color: #515052; margin: 10px;">
+                style="width: 30px; height: 4px; border: none; border-radius: 2px; background-color: var(--md-sys-color-on-surface); margin: 10px;">
         </div>
         <div class="m3-card2"
             style=" margin: 10px; height: 100%; overflow-y: auto; width: 90%; max-width: 576px; justify-content: center; align-items: center; margin: 10px; margin-top: 0px;">

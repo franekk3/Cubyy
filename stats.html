@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cubyy - Stats</title>
+    <link rel="icon" type="image/png" href="./media/icons/icon.png">
+    <link rel="stylesheet" href="./styles/m3-styles.css">
+    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="./styles/css/dark.css">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+        rel="stylesheet">
+    <meta name="apple-mobile-web-app-title" content="Cubyy">
+    <link rel="apple-touch-icon" href="./media/icons/icon.png">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            justify-content: flex-start;
+            background-color: var(--md-sys-color-surface-container);
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .top-bar .spinner-container {
+            width: auto !important;
+            margin-right: auto;
+            flex-shrink: 0;
+        }
+
+        .site-content {
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 60px;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--md-sys-color-outline) transparent;
+        }
+        .site-content::-webkit-scrollbar { width: 8px; }
+        .site-content::-webkit-scrollbar-thumb {
+            background: var(--md-sys-color-outline);
+            border-radius: 4px;
+        }
+
+        .stats-container {
+            width: 95%;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px 0 60px 0;
+        }
+
+        /* === SIATKA KART === */
+        /* Mobile: 2 karty w rzędzie; Desktop: zależnie od klasy */
+        .stats-grid {
+            display: grid;
+            gap: 12px;
+            width: 100%;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .stat-card {
+            background-color: var(--md-sys-color-surface-container-highest);
+            border-radius: 16px;
+            padding: 14px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 84px;
+            min-width: 0;
+        }
+        .stat-card.penalty-dnf .stat-value { color: var(--md-sys-color-error); }
+        .stat-card.penalty-plus2 .stat-value { color: var(--md-sys-color-tertiary); }
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--md-sys-color-primary);
+            margin: 4px 0;
+            word-break: break-word;
+            line-height: 1.1;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: var(--md-sys-color-on-surface-variant);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Desktop: siatki o określonej liczbie kolumn */
+        @media (min-width: 769px) {
+            .stats-grid.cols-2 { grid-template-columns: repeat(2, 1fr); max-width: 460px; margin: 0 auto; }
+            .stats-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+            .stats-grid.cols-6 { grid-template-columns: repeat(3, 1fr); max-width: 720px; margin: 0 auto; }
+        }
+        /* Mobile: 2 kolumny (domyślnie z .stats-grid) */
+        @media (max-width: 480px) {
+            .stat-value { font-size: 20px; }
+            .stat-label { font-size: 10px; }
+            .stat-card { min-height: 76px; padding: 12px 8px; }
+        }
+
+        .stats-section {
+            background-color: var(--md-sys-color-surface-container-high);
+            border-radius: 20px;
+            padding: 18px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .stats-section h2,
+        .stats-section h3 {
+            margin: 0 0 14px 0;
+            color: var(--md-sys-color-primary);
+            font-weight: 700;
+        }
+        .stats-section h2 { font-size: 20px; }
+        .stats-section h3 { font-size: 16px; text-align: center; }
+        .stats-placeholder {
+            color: var(--md-sys-color-on-surface-variant);
+            text-align: center;
+            padding: 30px;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .chart-header h3 { margin: 0; text-align: left; }
+        .chart-controls {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            background: var(--md-sys-color-surface-container-highest);
+            border-radius: 12px;
+            padding: 3px;
+        }
+        .chart-controls button {
+            background: transparent;
+            border: none;
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Google Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .chart-controls button:hover { background: var(--md-sys-color-surface-container); }
+        .chart-controls button:active { transform: scale(0.9); }
+        .zoom-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--md-sys-color-on-surface-variant);
+            min-width: 42px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .line-chart-wrap {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-top: 4px;
+            padding-bottom: 6px;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x pan-y;
+            scrollbar-width: thin;
+            scrollbar-color: var(--md-sys-color-outline) transparent;
+        }
+        .line-chart-wrap::-webkit-scrollbar { height: 8px; }
+        .line-chart-wrap::-webkit-scrollbar-thumb {
+            background: var(--md-sys-color-outline);
+            border-radius: 4px;
+        }
+        .line-chart-wrap svg { display: block; }
+
+        .histogram {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            width: 100%;
+            min-height: 170px;
+            padding: 24px 0 40px 0;
+            overflow-x: auto;
+        }
+        .histogram-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 18px;
+        }
+        .histogram-bar {
+            background: linear-gradient(180deg,
+                var(--md-sys-color-primary),
+                var(--md-sys-color-primary-container));
+            border-radius: 4px 4px 0 0;
+            width: 100%;
+            min-height: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+        .histogram-bar:hover { opacity: 0.75; }
+        .histogram-bar-label {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--md-sys-color-on-surface-variant);
+            white-space: nowrap;
+            font-weight: 700;
+        }
+        .histogram-x-label {
+            font-size: 9px;
+            color: var(--md-sys-color-on-surface-variant);
+            margin-top: 6px;
+            white-space: nowrap;
+            transform: rotate(-45deg);
+            transform-origin: top center;
+            height: 30px;
+            font-weight: 600;
+        }
+
+        /* === DAY GRID === */
+        .day-grid-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .day-grid {
+            display: grid;
+            gap: 3px;
+        }
+        .day-cell {
+            aspect-ratio: 1 / 1;
+            border-radius: 3px;
+            background-color: var(--md-sys-color-surface-variant);
+            transition: transform 0.1s, outline 0.1s;
+            cursor: pointer;
+        }
+        .day-cell:hover {
+            transform: scale(1.2);
+            outline: 1px solid var(--md-sys-color-primary);
+            z-index: 2;
+        }
+
+        .day-nav-btn {
+            background: var(--md-sys-color-surface-container-highest);
+            border: none;
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Google Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .day-nav-btn:hover:not(:disabled) { background: var(--md-sys-color-primary-container); }
+        .day-nav-btn:active:not(:disabled) { transform: scale(0.95); }
+        .day-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+        .day-range-label {
+            font-size: 12px;
+            color: var(--md-sys-color-on-surface-variant);
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            min-height: 180px;
+            padding: 24px 4px 0 4px;
+            overflow-x: auto;
+            justify-content: center;
+        }
+        .bar-chart-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            min-width: 36px;
+        }
+        .bar-chart-bar {
+            background: linear-gradient(180deg,
+                var(--md-sys-color-tertiary),
+                var(--md-sys-color-tertiary-container));
+            border-radius: 6px 6px 0 0;
+            width: 100%;
+            min-height: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+        .bar-chart-bar:hover { opacity: 0.75; }
+        .bar-chart-value {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        .bar-chart-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--md-sys-color-on-surface-variant);
+            margin-top: 6px;
+            white-space: nowrap;
+        }
+
+        .chart-point { cursor: pointer; transition: r 0.15s; }
+        .chart-point:hover { r: 5; }
+
+        .pie-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 14px;
+        }
+        .pie-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--md-sys-color-on-surface);
+        }
+        .pie-legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .chart-tooltip {
+            position: fixed;
+            background: var(--md-sys-color-inverse-surface);
+            color: var(--md-sys-color-inverse-on-surface);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            pointer-events: none;
+            z-index: 9999;
+            white-space: nowrap;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+            transform: translate(-50%, -130%);
+            max-width: 260px;
+        }
+        .chart-tooltip.hidden2 { display: none !important; }
+    </style>
+</head>
+
+<body ontouchstart="">
+    <div class="top-bar">
+        <div class="spinner-container"
+            style="position: relative; margin-bottom: 0px; display: flex; justify-content: center; align-items: center;">
+            <button id="sessionCubeButton" onclick="toggleSessionList()"
+                style="cursor: pointer; width: auto; display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; font-weight: 600; gap: 0px; background-color: transparent; outline: none; border: none;">
+                <img style="height: 26px; width: 26px;" src="./media/icons/cubyy-1.3-logo.svg" alt="Cubyy">
+                <span id="sessionCubeButtonText"
+                    style="font-size: 18px; margin-left: 4px; color: var(--md-sys-color-on-surface);">All Cubes</span>
+                <img id="arrowDownIconSession" height="20px" width="20px" src="./media/dm/arrow_down.png"
+                    alt="Open session list">
+            </button>
+            <div id="sessionListPopup" class="hidden2">
+                <div class="title">Select session</div>
+                <div id="sessionListItems" class="elements"></div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: row;">
+            <div class="desktop-navbar" style="padding: 6px 12px;">
+                <div onclick="window.location.href = './index.html'">
+                    <img src="./media/dm/home_white.png" alt="Home">
+                    <hr>
+                </div>
+                <div onclick="window.location.href = './solves.html'">
+                    <img src="./media/dm/list_white.png" alt="Solves">
+                    <hr>
+                </div>
+                <div onclick="window.location.href = './stats.html'">
+                    <img src="./media/dm/bar_chart_white.png" alt="Stats">
+                    <hr class="selected">
+                </div>
+                <div onclick="window.location.href = './settings.html'">
+                    <img src="./media/dm/settings_white.png" alt="Settings">
+                    <hr>
+                </div>
+            </div>
+            <button id="mobile-settings-button" class="bluetooth-button"
+                onclick="window.location.href = './settings.html'">
+                <img src="./media/dm/settings_white.png" alt="Settings">
+            </button>
+        </div>
+    </div>
+
+    <div class="site-content">
+        <div id="statsContent" class="stats-container">
+            <p class="stats-placeholder">Loading statistics…</p>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div onclick="window.location.href='./index.html'" class="nav-bar-element">
+            <img id="home-button" class="nav-bar-image" src="./media/dm/home.png" alt="Home">
+            <p class="nav-bar-label">Home</p>
+        </div>
+        <div onclick="window.location.href='./solves.html'" class="nav-bar-element">
+            <img id="add-button" class="nav-bar-image" src="./media/dm/list.png" alt="Solves">
+            <p class="nav-bar-label">Solves</p>
+        </div>
+        <div onclick="window.location.href='./stats.html'" class="nav-bar-element">
+            <img id="account-button" class="nav-bar-image nav-bar-image-choosed"
+                src="./media/dm/bar_chart_fill.png" alt="Stats">
+            <p class="nav-bar-label">Statistics</p>
+        </div>
+    </div>
+
+    <div id="chartTooltip" class="chart-tooltip hidden2"></div>
+
+    <script src="./script.js"></script>
+
+    <script>
+        (function () {
+            'use strict';
+
+            const STATS_CUBES = ["3x3", "2x2", "4x4", "Pyraminx", "Skewb"];
+            const SESSIONS_KEY = 'cubeTimerSessions';
+            const TIMES_KEY_PREFIX = 'cubeTimerTimes_';
+            const DAY_GRID_WINDOW = 180;
+
+            let allSessions = [];
+            let currentSelection = { type: 'all', cube: null, sessionId: null };
+            let currentSolvesData = [];
+            let dayGridOffset = 0;
+            const allTimesCache = {};
+            const chartState = {
+                trend: { zoom: 1 },
+                rollingAo5: { zoom: 1 }
+            };
+
+
+            function statsLoadSessions() {
+                const raw = localStorage.getItem(SESSIONS_KEY);
+                if (raw) {
+                    try {
+                        allSessions = JSON.parse(raw);
+                        if (!Array.isArray(allSessions)) allSessions = [];
+                    } catch (e) { allSessions = []; }
+                } else {
+                    allSessions = [];
+                }
+                STATS_CUBES.forEach(cube => {
+                    if (!allSessions.some(s => s.cube === cube)) {
+                        allSessions.push({
+                            id: cube.toLowerCase().replace(/\s+/g, '') + '_default',
+                            name: cube, cube: cube, createdAt: Date.now()
+                        });
+                    }
+                });
+            }
+
+            function statsLoadTimesForSession(sessionId) {
+                if (!sessionId) return [];
+                if (allTimesCache[sessionId]) return allTimesCache[sessionId];
+                const raw = localStorage.getItem(TIMES_KEY_PREFIX + sessionId);
+                let times = [];
+                if (raw) {
+                    try {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed)) times = parsed;
+                    } catch (e) { times = []; }
+                }
+                allTimesCache[sessionId] = times;
+                return times;
+            }
+
+            function statsGetAllTimesForCube(cube) {
+                let t = [];
+                allSessions.filter(s => s.cube === cube).forEach(s => {
+                    t = t.concat(statsLoadTimesForSession(s.id));
+                });
+                return t;
+            }
+
+            function statsGetAllTimes() {
+                let t = [];
+                allSessions.forEach(s => { t = t.concat(statsLoadTimesForSession(s.id)); });
+                return t;
+            }
+
+
+            function statsFormatTime(ms) {
+                if (ms === null || ms === undefined || isNaN(ms)) return "0.000";
+                const m = Math.floor(ms / 60000);
+                const s = Math.floor((ms % 60000) / 1000);
+                const msPart = Math.floor(ms % 1000).toString().padStart(3, '0');
+                if (m > 0) return `${m}:${s.toString().padStart(2, '0')}.${msPart}`;
+                return `${s}.${msPart}`;
+            }
+
+            function statsEff(solve) {
+                if (!solve || solve.isDnf) return null;
+                return solve.isPlusTwo ? solve.time + 2000 : solve.time;
+            }
+
+            function formatDayLabel(d) {
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${y}-${m}-${day}`;
+            }
+
+
+            function statsAvg(times, count) {
+                if (times.length < count) return null;
+                const recent = times.slice(-count);
+                const sorted = [...recent].sort((a, b) => a - b);
+                let rm;
+                if (count === 5 || count === 12) rm = 1;
+                else if (count === 50) rm = 3;
+                else if (count === 100) rm = 5;
+                else if (count === 500) rm = 25;
+                else if (count === 1000) rm = 50;
+                else rm = Math.max(1, Math.floor(count * 0.05));
+                const trimmed = sorted.slice(rm, sorted.length - rm);
+                if (!trimmed.length) return null;
+                return trimmed.reduce((a, b) => a + b, 0) / trimmed.length;
+            }
+
+            function statsBestAvg(times, count) {
+                if (times.length < count) return null;
+                let best = null;
+                for (let i = 0; i <= times.length - count; i++) {
+                    const a = statsAvg(times.slice(i, i + count), count);
+                    if (a !== null && (best === null || a < best)) best = a;
+                }
+                return best;
+            }
+
+            function statsMedian(times) {
+                if (!times.length) return null;
+                const s = [...times].sort((a, b) => a - b);
+                const mid = Math.floor(s.length / 2);
+                return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+            }
+
+            function statsMean(times) {
+                if (!times.length) return null;
+                return times.reduce((a, b) => a + b, 0) / times.length;
+            }
+
+            function statsCalculateStats(times) {
+                const valid = times.map(statsEff).filter(t => t !== null);
+                return {
+                    total: times.length,
+                    valid: valid.length,
+                    dnf: times.filter(t => t.isDnf).length,
+                    plusTwo: times.filter(t => t.isPlusTwo && !t.isDnf).length,
+                    mean: valid.length ? statsMean(valid) : null,
+                    median: valid.length ? statsMedian(valid) : null,
+                    best: valid.length ? Math.min(...valid) : null,
+                    worst: valid.length ? Math.max(...valid) : null,
+                    ao5: statsAvg(valid, 5), ao12: statsAvg(valid, 12),
+                    ao50: statsAvg(valid, 50), ao100: statsAvg(valid, 100),
+                    ao500: statsAvg(valid, 500), ao1000: statsAvg(valid, 1000),
+                    bestAo5: statsBestAvg(valid, 5), bestAo12: statsBestAvg(valid, 12),
+                    bestAo50: statsBestAvg(valid, 50), bestAo100: statsBestAvg(valid, 100),
+                    bestAo500: statsBestAvg(valid, 500), bestAo1000: statsBestAvg(valid, 1000)
+                };
+            }
+
+            function statsHistogram(times) {
+                const valid = times.map(statsEff).filter(t => t !== null);
+                if (!valid.length) return [];
+                const min = Math.min(...valid), max = Math.max(...valid);
+                const range = max - min;
+                let size = 1000;
+                if (range < 3000) size = 250;
+                else if (range < 6000) size = 500;
+                else if (range < 30000) size = 1000;
+                else if (range < 120000) size = 5000;
+                else size = 10000;
+                const start = Math.floor(min / size) * size;
+                const end = Math.ceil(max / size) * size;
+                const buckets = {};
+                for (let t = start; t <= end; t += size) buckets[t] = 0;
+                valid.forEach(t => {
+                    const b = Math.floor(t / size) * size;
+                    buckets[b] = (buckets[b] || 0) + 1;
+                });
+                return Object.entries(buckets).map(([s, c]) => ({
+                    start: Number(s), end: Number(s) + size, count: c
+                })).sort((a, b) => a.start - b.start);
+            }
+
+            function statsDailyCounts(solves, days = DAY_GRID_WINDOW, endOffset = 0) {
+                const counts = {};
+                const end = new Date(); end.setHours(0, 0, 0, 0);
+                end.setDate(end.getDate() - endOffset);
+                const start = new Date(end);
+                start.setDate(start.getDate() - (days - 1));
+
+                for (let i = 0; i < days; i++) {
+                    const d = new Date(start);
+                    d.setDate(d.getDate() + i);
+                    counts[formatDayLabel(d)] = 0;
+                }
+                const startMs = start.getTime();
+                const endMs = end.getTime() + 86400000;
+                solves.forEach(s => {
+                    if (!s || !s.date) return;
+                    const d = new Date(s.date);
+                    if (isNaN(d.getTime())) return;
+                    d.setHours(0, 0, 0, 0);
+                    const ms = d.getTime();
+                    if (ms >= startMs && ms < endMs) {
+                        const key = formatDayLabel(d);
+                        if (counts[key] !== undefined) counts[key]++;
+                    }
+                });
+                return { counts, start, end };
+            }
+
+            function statsMonthlyCounts(solves) {
+                const counts = {};
+                solves.forEach(s => {
+                    if (!s || !s.date) return;
+                    const d = new Date(s.date);
+                    if (isNaN(d.getTime())) return;
+                    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                    counts[key] = (counts[key] || 0) + 1;
+                });
+                return counts;
+            }
+
+            function computeChartWidth(n) {
+                if (n <= 0) return 600;
+                if (n <= 50) return Math.max(600, n * 10);
+                if (n <= 200) return n * 6;
+                if (n <= 500) return n * 4;
+                if (n <= 1500) return n * 2.5;
+                return n * 1.8;
+            }
+
+            function layoutDayGrid() {
+                const grid = document.querySelector('.day-grid');
+                if (!grid) return;
+                const wrap = grid.parentElement;
+                if (!wrap) return;
+                const wrapW = wrap.clientWidth;
+                if (wrapW <= 0) return;
+
+                let cols;
+                if (wrapW >= 720) cols = 30;
+                else if (wrapW >= 500) cols = 20;
+                else if (wrapW >= 380) cols = 15;
+                else cols = 12;
+
+                const gap = 3;
+                const minSize = 7;
+                const maxSize = 24;
+                const availForCells = wrapW - (cols - 1) * gap;
+                let size = Math.floor(availForCells / cols);
+                size = Math.max(minSize, Math.min(maxSize, size));
+
+                grid.style.gridTemplateColumns = `repeat(${cols}, ${size}px)`;
+            }
+
+            function buildTrendSvg(solves, zoom) {
+                const valid = solves.filter(s => s && !s.isDnf && s.date);
+                if (valid.length < 2) return '<p class="stats-placeholder">Not enough data</p>';
+                const sorted = [...valid].sort((a, b) => new Date(a.date) - new Date(b.date));
+                const times = sorted.map(statsEff);
+                const baseW = computeChartWidth(times.length);
+                const W = Math.max(400, Math.round(baseW * zoom));
+                const H = 220;
+                const PL = 55, PR = 20, PT = 20, PB = 34;
+                const max = Math.max(...times), min = Math.min(...times);
+                const range = max - min || 1;
+                const pts = times.map((t, i) => ({
+                    x: PL + (i / (times.length - 1)) * (W - PL - PR),
+                    y: H - PB - ((t - min) / range) * (H - PT - PB),
+                    t
+                }));
+                const poly = pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+
+                let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;height:${H}px;">`;
+                [min, min + range / 2, max].forEach(v => {
+                    const y = H - PB - ((v - min) / range) * (H - PT - PB);
+                    svg += `<line x1="${PL}" y1="${y}" x2="${W - PR}" y2="${y}" stroke="var(--md-sys-color-outline-variant)" stroke-width="1" stroke-dasharray="2,4"/>`;
+                    svg += `<text x="${PL - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="var(--md-sys-color-on-surface-variant)">${statsFormatTime(v)}</text>`;
+                });
+                svg += `<polygon points="${PL},${H - PB} ${poly} ${W - PR},${H - PB}" fill="var(--md-sys-color-primary)" opacity="0.12"/>`;
+                svg += `<polyline points="${poly}" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linejoin="round"/>`;
+                const skip = Math.max(1, Math.ceil(times.length / 250));
+                pts.forEach((p, i) => {
+                    if (i % skip !== 0 && i !== pts.length - 1) return;
+                    svg += `<circle class="chart-point" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2.5" fill="var(--md-sys-color-primary)" data-tooltip="Solve #${i + 1} · ${statsFormatTime(p.t)}"/>`;
+                });
+                svg += `</svg>`;
+                return svg;
+            }
+
+            function buildRollingSvg(solves, zoom) {
+                const valid = solves.filter(s => s && !s.isDnf && s.date);
+                if (valid.length < 5) return '<p class="stats-placeholder">Not enough data (need 5+)</p>';
+                const sorted = [...valid].sort((a, b) => new Date(a.date) - new Date(b.date));
+                const times = sorted.map(statsEff);
+
+                const roll = [];
+                for (let i = 4; i < times.length; i++) {
+                    const win = times.slice(i - 4, i + 1);
+                    const s = [...win].sort((a, b) => a - b);
+                    const trimmed = s.slice(1, -1);
+                    roll.push({
+                        avg: trimmed.reduce((a, b) => a + b, 0) / trimmed.length,
+                        idx: i
+                    });
+                }
+                if (roll.length < 2) return '<p class="stats-placeholder">Not enough data</p>';
+
+                const baseW = computeChartWidth(roll.length);
+                const W = Math.max(400, Math.round(baseW * zoom));
+                const H = 220;
+                const PL = 55, PR = 20, PT = 20, PB = 34;
+                const avgs = roll.map(r => r.avg);
+                const max = Math.max(...avgs), min = Math.min(...avgs);
+                const range = max - min || 1;
+                const pts = roll.map((r, i) => ({
+                    x: PL + (i / (roll.length - 1)) * (W - PL - PR),
+                    y: H - PB - ((r.avg - min) / range) * (H - PT - PB),
+                    avg: r.avg, idx: r.idx
+                }));
+                const poly = pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+
+                let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:${W}px;height:${H}px;">`;
+                [min, min + range / 2, max].forEach(v => {
+                    const y = H - PB - ((v - min) / range) * (H - PT - PB);
+                    svg += `<line x1="${PL}" y1="${y}" x2="${W - PR}" y2="${y}" stroke="var(--md-sys-color-outline-variant)" stroke-width="1" stroke-dasharray="2,4"/>`;
+                    svg += `<text x="${PL - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="var(--md-sys-color-on-surface-variant)">${statsFormatTime(v)}</text>`;
+                });
+                svg += `<polygon points="${PL},${H - PB} ${poly} ${W - PR},${H - PB}" fill="var(--md-sys-color-tertiary)" opacity="0.12"/>`;
+                svg += `<polyline points="${poly}" fill="none" stroke="var(--md-sys-color-tertiary)" stroke-width="2" stroke-linejoin="round"/>`;
+                const skip = Math.max(1, Math.ceil(pts.length / 250));
+                pts.forEach((p, i) => {
+                    if (i % skip !== 0 && i !== pts.length - 1) return;
+                    svg += `<circle class="chart-point" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2.5" fill="var(--md-sys-color-tertiary)" data-tooltip="Ao5 after solve #${p.idx + 1} · ${statsFormatTime(p.avg)}"/>`;
+                });
+                svg += `</svg>`;
+                return svg;
+            }
+
+            function statsRender() {
+                const c = document.getElementById('statsContent');
+                if (!c) return;
+                if (currentSelection.type === 'all') statsRenderAll(c);
+                else statsRenderCube(c, currentSelection.cube, currentSelection.sessionId);
+                requestAnimationFrame(layoutDayGrid);
+            }
+
+            function statsRenderAll(c) {
+                const times = statsGetAllTimes();
+                currentSolvesData = times;
+                const st = statsCalculateStats(times);
+                const cubeCounts = {};
+                STATS_CUBES.forEach(cube => cubeCounts[cube] = statsGetAllTimesForCube(cube).length);
+                const monthly = statsMonthlyCounts(times);
+
+                c.innerHTML = `
+                    <div class="stats-section">
+                        <h2>All Cubes Overview</h2>
+                        <div class="stats-grid cols-4">
+                            ${card(st.total, 'Total Solves')}
+                            ${card(st.valid, 'Valid')}
+                            ${card(st.mean ? statsFormatTime(st.mean) : '–', 'Mean')}
+                            ${card(st.median ? statsFormatTime(st.median) : '–', 'Median')}
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <h2>Penalties</h2>
+                        <div class="stats-grid cols-2">
+                            ${card(st.dnf, 'DNF', 'penalty-dnf')}
+                            ${card(st.plusTwo, '+2', 'penalty-plus2')}
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>Solves by Cube</h3>
+                        <div style="display:flex;justify-content:center;">
+                            ${pieChart(cubeCounts)}
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>Solves per Month</h3>
+                        ${monthlyChart(monthly)}
+                    </div>
+
+                    <div class="stats-section" id="day-grid-section">
+                        ${renderDayGridSection(times)}
+                    </div>
+                `;
+            }
+
+            function statsRenderCube(c, cube, sessionId) {
+                const times = sessionId ? statsLoadTimesForSession(sessionId) : statsGetAllTimesForCube(cube);
+                currentSolvesData = times;
+                const st = statsCalculateStats(times);
+                const hist = statsHistogram(times);
+                const monthly = statsMonthlyCounts(times);
+                const session = allSessions.find(s => s.id === sessionId);
+                const subtitle = session ? `${cube} · ${session.name}` : `${cube} · All Sessions`;
+
+                c.innerHTML = `
+                    <div class="stats-section">
+                        <h2>${subtitle}</h2>
+                        <div class="stats-grid cols-6">
+                            ${card(st.total, 'Total')}
+                            ${card(st.valid, 'Valid')}
+                            ${card(st.mean ? statsFormatTime(st.mean) : '–', 'Mean')}
+                            ${card(st.median ? statsFormatTime(st.median) : '–', 'Median')}
+                            ${card(st.best ? statsFormatTime(st.best) : '–', 'Best')}
+                            ${card(st.worst ? statsFormatTime(st.worst) : '–', 'Worst')}
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <h2>Penalties</h2>
+                        <div class="stats-grid cols-2">
+                            ${card(st.dnf, 'DNF', 'penalty-dnf')}
+                            ${card(st.plusTwo, '+2', 'penalty-plus2')}
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <div class="chart-header">
+                            <h3>Trend (Solve Times)</h3>
+                            <div class="chart-controls">
+                                <button data-chart-id="trend" data-chart-action="out" title="Zoom out">−</button>
+                                <span class="zoom-label" id="zoom-trend">100%</span>
+                                <button data-chart-id="trend" data-chart-action="in" title="Zoom in">+</button>
+                                <button data-chart-id="trend" data-chart-action="reset" title="Reset">⟲</button>
+                            </div>
+                        </div>
+                        <div class="line-chart-wrap" id="scroll-trend">
+                            <div id="chart-trend">${buildTrendSvg(times, chartState.trend.zoom)}</div>
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <div class="chart-header">
+                            <h3>Rolling Ao5</h3>
+                            <div class="chart-controls">
+                                <button data-chart-id="rollingAo5" data-chart-action="out" title="Zoom out">−</button>
+                                <span class="zoom-label" id="zoom-rollingAo5">100%</span>
+                                <button data-chart-id="rollingAo5" data-chart-action="in" title="Zoom in">+</button>
+                                <button data-chart-id="rollingAo5" data-chart-action="reset" title="Reset">⟲</button>
+                            </div>
+                        </div>
+                        <div class="line-chart-wrap" id="scroll-rollingAo5">
+                            <div id="chart-rollingAo5">${buildRollingSvg(times, chartState.rollingAo5.zoom)}</div>
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>Averages</h3>
+                        <div class="stats-grid cols-6">
+                            ${card(st.ao5 ? statsFormatTime(st.ao5) : '–', 'Ao5')}
+                            ${card(st.ao12 ? statsFormatTime(st.ao12) : '–', 'Ao12')}
+                            ${card(st.ao50 ? statsFormatTime(st.ao50) : '–', 'Ao50')}
+                            ${card(st.ao100 ? statsFormatTime(st.ao100) : '–', 'Ao100')}
+                            ${card(st.ao500 ? statsFormatTime(st.ao500) : '–', 'Ao500')}
+                            ${card(st.ao1000 ? statsFormatTime(st.ao1000) : '–', 'Ao1000')}
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>Best Averages</h3>
+                        <div class="stats-grid cols-6">
+                            ${card(st.bestAo5 ? statsFormatTime(st.bestAo5) : '–', 'Best Ao5')}
+                            ${card(st.bestAo12 ? statsFormatTime(st.bestAo12) : '–', 'Best Ao12')}
+                            ${card(st.bestAo50 ? statsFormatTime(st.bestAo50) : '–', 'Best Ao50')}
+                            ${card(st.bestAo100 ? statsFormatTime(st.bestAo100) : '–', 'Best Ao100')}
+                            ${card(st.bestAo500 ? statsFormatTime(st.bestAo500) : '–', 'Best Ao500')}
+                            ${card(st.bestAo1000 ? statsFormatTime(st.bestAo1000) : '–', 'Best Ao1000')}
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>Time Distribution</h3>
+                        ${histogramChart(hist)}
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>Solves per Month</h3>
+                        ${monthlyChart(monthly)}
+                    </div>
+
+                    <div class="stats-section" id="day-grid-section">
+                        ${renderDayGridSection(times)}
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    const lt = document.getElementById('zoom-trend');
+                    const lr = document.getElementById('zoom-rollingAo5');
+                    if (lt) lt.textContent = Math.round(chartState.trend.zoom * 100) + '%';
+                    if (lr) lr.textContent = Math.round(chartState.rollingAo5.zoom * 100) + '%';
+                }, 0);
+            }
+
+            function card(v, l, extraClass = '') {
+                return `<div class="stat-card ${extraClass}"><div class="stat-value">${v}</div><div class="stat-label">${l}</div></div>`;
+            }
+
+            function renderDayGridSection(solves) {
+                const { counts, start, end } = statsDailyCounts(solves, DAY_GRID_WINDOW, dayGridOffset);
+                const fmt = d => d.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                return `
+                    <div class="chart-header">
+                        <h3>Activity</h3>
+                        <div style="display:flex;gap:6px;">
+                            <button class="day-nav-btn" data-day-nav="prev">← Older</button>
+                            <button class="day-nav-btn" data-day-nav="next" ${dayGridOffset === 0 ? 'disabled' : ''}>Newer →</button>
+                        </div>
+                    </div>
+                    <div class="day-range-label">${fmt(start)} – ${fmt(end)}</div>
+                    <div class="day-grid-wrap">
+                        ${dayGrid(counts)}
+                    </div>
+                `;
+            }
+
+            function pieChart(data) {
+                const entries = Object.entries(data).filter(([, c]) => c > 0);
+                const total = entries.reduce((a, [, c]) => a + c, 0);
+                if (!total) return '<p class="stats-placeholder">No data yet</p>';
+                const colors = ['#aac7ff', '#bec6dc', '#ddbce0', '#ffb4ab', '#284777', '#3e4759', '#573e5c'];
+                const cx = 100, cy = 100, r = 80;
+                let svg = `<svg viewBox="0 0 200 200" width="200" height="200">`;
+                let offset = 0;
+                entries.forEach(([cube, count], i) => {
+                    const angle = (count / total) * 360;
+                    const c = colors[i % colors.length];
+                    const sRad = (offset - 90) * Math.PI / 180;
+                    const eRad = (offset + angle - 90) * Math.PI / 180;
+                    const x1 = cx + r * Math.cos(sRad), y1 = cy + r * Math.sin(sRad);
+                    const x2 = cx + r * Math.cos(eRad), y2 = cy + r * Math.sin(eRad);
+                    const large = angle > 180 ? 1 : 0;
+                    svg += `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z" fill="${c}" stroke="var(--md-sys-color-surface)" stroke-width="2" data-tooltip="${cube}: ${count} solves (${((count / total) * 100).toFixed(1)}%)" style="cursor:pointer"/>`;
+                    offset += angle;
+                });
+                svg += `</svg>`;
+                const legend = entries.map(([cube, count], i) => `
+                    <div class="pie-legend-item">
+                        <span class="pie-legend-color" style="background-color:${colors[i % colors.length]}"></span>
+                        ${cube}: ${count}
+                    </div>`).join('');
+                return `<div style="display:flex;flex-direction:column;align-items:center;">${svg}<div class="pie-legend">${legend}</div></div>`;
+            }
+
+            function histogramChart(buckets) {
+                if (!buckets.length) return '<p class="stats-placeholder">No data yet</p>';
+                const max = Math.max(...buckets.map(b => b.count));
+                const H = 130;
+                let html = '<div class="histogram">';
+                buckets.forEach(b => {
+                    const h = max > 0 ? Math.max(2, (b.count / max) * H) : 2;
+                    const label = statsFormatTime(b.start);
+                    html += `
+                        <div class="histogram-wrapper">
+                            <div class="histogram-bar" style="height:${h}px"
+                                data-tooltip="${label} – ${statsFormatTime(b.end)} · ${b.count} solves">
+                                <span class="histogram-bar-label">${b.count}</span>
+                            </div>
+                            <span class="histogram-x-label">${label}</span>
+                        </div>`;
+                });
+                html += '</div>';
+                return html;
+            }
+
+            function dayGrid(counts) {
+                const entries = Object.entries(counts);
+                if (!entries.length) return '<p class="stats-placeholder">No data yet</p>';
+                const max = Math.max(...entries.map(([, c]) => c), 1);
+                const colors = [
+                    'var(--md-sys-color-surface-variant)',
+                    'var(--md-sys-color-primary-container)',
+                    'var(--md-sys-color-primary)',
+                    'var(--md-sys-color-primary-fixed-dim)',
+                    'var(--md-sys-color-primary-fixed)'
+                ];
+                let html = '<div class="day-grid">';
+                entries.forEach(([date, count]) => {
+                    let lvl = 0;
+                    if (count > 0) {
+                        const r = count / max;
+                        lvl = r > 0.75 ? 4 : r > 0.5 ? 3 : r > 0.25 ? 2 : 1;
+                    }
+                    html += `<div class="day-cell" style="background-color:${colors[lvl]};"
+                        data-tooltip="${date} · ${count} solves"></div>`;
+                });
+                html += '</div>';
+                return html;
+            }
+
+            function monthlyChart(monthly) {
+                const entries = Object.entries(monthly).sort();
+                if (!entries.length) return '<p class="stats-placeholder">No data yet</p>';
+                const max = Math.max(...entries.map(([, c]) => c));
+                let html = '<div class="bar-chart">';
+                entries.forEach(([key, count]) => {
+                    const [y, m] = key.split('-');
+                    const h = Math.max(2, (count / max) * 130);
+                    html += `
+                        <div class="bar-chart-col">
+                            <div class="bar-chart-bar" style="height:${h}px"
+                                data-tooltip="${key} · ${count} solves">
+                                <span class="bar-chart-value">${count}</span>
+                            </div>
+                            <span class="bar-chart-label">${m}/${y.slice(2)}</span>
+                        </div>`;
+                });
+                html += '</div>';
+                return html;
+            }
+
+            document.addEventListener('click', e => {
+                const zBtn = e.target.closest('[data-chart-action]');
+                if (zBtn) {
+                    const chartId = zBtn.getAttribute('data-chart-id');
+                    const action = zBtn.getAttribute('data-chart-action');
+                    const state = chartState[chartId];
+                    if (!state) return;
+
+                    const scrollWrap = document.getElementById('scroll-' + chartId);
+                    const oldScroll = scrollWrap ? scrollWrap.scrollLeft : 0;
+
+                    if (action === 'in') state.zoom = Math.min(4, state.zoom + 0.25);
+                    else if (action === 'out') state.zoom = Math.max(0.5, state.zoom - 0.25);
+                    else state.zoom = 1;
+
+                    const chartEl = document.getElementById('chart-' + chartId);
+                    if (chartEl) {
+                        if (chartId === 'trend') chartEl.innerHTML = buildTrendSvg(currentSolvesData, state.zoom);
+                        else if (chartId === 'rollingAo5') chartEl.innerHTML = buildRollingSvg(currentSolvesData, state.zoom);
+                    }
+                    const label = document.getElementById('zoom-' + chartId);
+                    if (label) label.textContent = Math.round(state.zoom * 100) + '%';
+                    if (scrollWrap) scrollWrap.scrollLeft = oldScroll;
+                    return;
+                }
+
+                const dBtn = e.target.closest('[data-day-nav]');
+                if (dBtn) {
+                    const dir = dBtn.getAttribute('data-day-nav');
+                    if (dir === 'prev') dayGridOffset += DAY_GRID_WINDOW;
+                    else if (dir === 'next') dayGridOffset = Math.max(0, dayGridOffset - DAY_GRID_WINDOW);
+
+                    const section = document.getElementById('day-grid-section');
+                    if (section) {
+                        section.innerHTML = renderDayGridSection(currentSolvesData);
+                        requestAnimationFrame(layoutDayGrid);
+                    }
+                    return;
+                }
+            });
+
+            let resizeTimer = null;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(layoutDayGrid, 120);
+            });
+
+            function buildSessionList() {
+                const container = document.getElementById('sessionListItems');
+                if (!container) return;
+                const iconSource = 'dm';
+
+                let html = '';
+
+                const allActive = currentSelection.type === 'all' ? 'opacity:0.65;' : '';
+                html += `
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-bottom:1px solid var(--md-sys-color-outline);">
+                        <button type="button" data-action="all"
+                            style="all:unset;width:100%;display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:var(--md-sys-color-on-surface);background:transparent;${allActive}">
+                            <span style="font-weight:700;">All Cubes</span>
+                            <span style="opacity:0.6;font-size:0.95em;">All sessions</span>
+                        </button>
+                    </div>`;
+
+                STATS_CUBES.forEach(cube => {
+                    const sessionsForCube = allSessions.filter(s => s.cube === cube);
+                    if (!sessionsForCube.length) return;
+
+                    sessionsForCube.forEach(session => {
+                        const isDefault = isDefaultSession(session);
+                        const active = (currentSelection.type === 'session' &&
+                            currentSelection.cube === cube &&
+                            currentSelection.sessionId === session.id) ? 'opacity:0.65;' : '';
+                        html += `
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-bottom:1px solid var(--md-sys-color-outline);">
+                                <button type="button" data-action="session" data-session-id="${session.id}" data-cube="${cube}"
+                                    style="all:unset;width:100%;display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:var(--md-sys-color-on-surface);background:transparent;${active}">
+                                    <span>${session.cube} | ${session.name}</span>
+                                    <span style="opacity:0.6;font-size:0.95em;">Select</span>
+                                </button>
+                                <img src="./media/${iconSource}/delete_session.png" alt="Delete"
+                                    class="session-delete-btn"
+                                    data-session-id="${session.id}"
+                                    data-is-default="${isDefault ? '1' : '0'}"
+                                    style="background: var(--md-sys-color-error-container); padding: 2px; border-radius: 5px; width: 20px; height: 20px; cursor: pointer; margin-left: 10px; flex-shrink: 0;">
+                            </div>`;
+                    });
+                });
+
+                container.innerHTML = html;
+
+                container.querySelectorAll('button[data-action]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const action = btn.getAttribute('data-action');
+                        if (action === 'all') {
+                            selectAllCubes();
+                        } else {
+                            const sid = btn.getAttribute('data-session-id');
+                            const cube = btn.getAttribute('data-cube');
+                            selectSession(cube, sid);
+                        }
+                    });
+                });
+
+                container.querySelectorAll('.session-delete-btn').forEach(img => {
+                    img.addEventListener('click', e => {
+                        e.stopPropagation();
+                        const sid = img.getAttribute('data-session-id');
+                        const isDefault = img.getAttribute('data-is-default') === '1';
+                        statsDeleteSession(sid, isDefault);
+                    });
+                });
+            }
+
+            function isDefaultSession(session) {
+                if (!session || !session.id) return false;
+                return /_default$/.test(session.id);
+            }
+
+            function statsDeleteSession(sessionId, isDefault) {
+                const session = allSessions.find(s => s.id === sessionId);
+                if (!session) return;
+
+                if (isDefault || isDefaultSession(session)) {
+                    alert(`Nie można usunąć domyślnej sesji "${session.name}".\nDomyślne sesje są tworzone automatycznie dla każdej kostki i nie mogą zostać usunięte. Jeśli chcesz usunąć własną sesję, utwórz ją najpierw na stronie "Solves" i dopiero wtedy ją usuń.`);
+                    return;
+                }
+
+                const sessionsForCube = allSessions.filter(s => s.cube === session.cube);
+                if (sessionsForCube.length <= 1) {
+                    alert(`Nie można usunąć ostatniej sesji dla kostki ${session.cube}.`);
+                    return;
+                }
+
+                if (!confirm(`Czy na pewno chcesz usunąć sesję "${session.name}"?\nWszystkie czasy zapisane w tej sesji zostaną trwale usunięte.`)) return;
+
+                try { localStorage.removeItem(TIMES_KEY_PREFIX + sessionId); } catch (e) {}
+                allSessions = allSessions.filter(s => s.id !== sessionId);
+                localStorage.setItem(SESSIONS_KEY, JSON.stringify(allSessions));
+                delete allTimesCache[sessionId];
+
+                const wasActive = currentSelection.type === 'session' && currentSelection.sessionId === sessionId;
+                if (wasActive) {
+                    currentSelection = { type: 'all', cube: null, sessionId: null };
+                    updateButton();
+                    statsRender();
+                } else {
+                    buildSessionList();
+                }
+
+                alert(`Sesja "${session.name}" została usunięta.`);
+            }
+
+            function toggleSessionList() {
+                const popup = document.getElementById('sessionListPopup');
+                if (!popup) return;
+                if (popup.classList.contains('hidden2')) {
+                    buildSessionList();
+                    popup.classList.remove('hidden2');
+                } else {
+                    popup.classList.add('hidden2');
+                }
+            }
+
+            function selectAllCubes() {
+                currentSelection = { type: 'all', cube: null, sessionId: null };
+                dayGridOffset = 0;
+                chartState.trend.zoom = 1;
+                chartState.rollingAo5.zoom = 1;
+                updateButton();
+                toggleSessionList();
+                statsRender();
+            }
+
+            function selectSession(cube, sessionId) {
+                currentSelection = { type: 'session', cube, sessionId };
+                dayGridOffset = 0;
+                chartState.trend.zoom = 1;
+                chartState.rollingAo5.zoom = 1;
+                updateButton();
+                toggleSessionList();
+                statsRender();
+            }
+
+            function updateButton() {
+                const el = document.getElementById('sessionCubeButtonText');
+                if (!el) return;
+                if (currentSelection.type === 'all') {
+                    el.textContent = 'All Cubes';
+                } else {
+                    const s = allSessions.find(x => x.id === currentSelection.sessionId);
+                    el.textContent = `${currentSelection.cube} | ${s ? s.name : 'Session'}`;
+                }
+            }
+
+            let tooltipTimer = null;
+            function showTooltip(x, y, text) {
+                const el = document.getElementById('chartTooltip');
+                if (!el) return;
+                el.textContent = text;
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
+                el.classList.remove('hidden2');
+            }
+            function hideTooltip() {
+                const el = document.getElementById('chartTooltip');
+                if (el) el.classList.add('hidden2');
+            }
+            function setupTooltips() {
+                document.addEventListener('pointerover', e => {
+                    if (e.pointerType !== 'mouse') return;
+                    const el = e.target.closest('[data-tooltip]');
+                    if (el) showTooltip(e.clientX, e.clientY, el.getAttribute('data-tooltip'));
+                });
+                document.addEventListener('pointerout', e => {
+                    if (e.pointerType !== 'mouse') return;
+                    const el = e.target.closest('[data-tooltip]');
+                    if (el) hideTooltip();
+                });
+                document.addEventListener('touchstart', e => {
+                    const el = e.target.closest('[data-tooltip]');
+                    if (el) {
+                        const t = e.touches[0];
+                        showTooltip(t.clientX, t.clientY, el.getAttribute('data-tooltip'));
+                        clearTimeout(tooltipTimer);
+                        tooltipTimer = setTimeout(hideTooltip, 2800);
+                    }
+                }, { passive: true });
+            }
+
+            function init() {
+                statsLoadSessions();
+                allSessions.forEach(s => statsLoadTimesForSession(s.id));
+                currentSelection = { type: 'all', cube: null, sessionId: null };
+                dayGridOffset = 0;
+                updateButton();
+                statsRender();
+                setupTooltips();
+
+                document.addEventListener('click', e => {
+                    const popup = document.getElementById('sessionListPopup');
+                    const btn = document.getElementById('sessionCubeButton');
+                    if (popup && !popup.classList.contains('hidden2')) {
+                        if (!popup.contains(e.target) && !btn.contains(e.target)) {
+                            popup.classList.add('hidden2');
+                        }
+                    }
+                });
+            }
+
+            window.toggleSessionList = toggleSessionList;
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Cubyy - Times </title>
+    <link rel="icon" type="image/png" href="./media/icons/icon.png">
+    <link rel="stylesheet" href="./styles/m3-styles.css">
+    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="./styles/css/dark.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+        rel="stylesheet">
+    <meta name="apple-mobile-web-app-title" content="Cubyy">
+    <link rel="apple-touch-icon" href="./media/icons/icon.png">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            display: flex !important;
+            justify-content: flex-start;
+            margin: 0px !important;
+            padding: 0px !important;
+            background-color: var(--md-sys-color-surface-container);
+        }
+        #overlay-sidebar {
+            background-color: transparent;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1005;
+            display: none;
+        }
+        #overlay-sidebar.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body ontouchstart="">
+    <div class="confirm-window hidden2" id="confirm-window">
+        <p id="confirm-content"> Are you sure you want to delete this solve? </p>
+        <div>
+            <button class="m3-ButtonSample outline" style="scale: 1" onclick="confirmWindow('hide')">
+                Cancel                
+            </button>
+            <button class="m3-ButtonSample" style="scale: 1" onclick="deleteSingleSolve()">
+                Confirm                
+            </button>
+        </div>
+    </div>
+    <div class="visible-overlay hidden2" id="confirm-window-overlay" onclick="confirmWindow('hide')">
+
+    </div>
+    <div class="nav-bar" >
+        <div onclick="window.location.href='./index.html'" class="nav-bar-element">
+            <img id="home-button" class="nav-bar-image " src="./media/dm/home.png">
+            <p class="nav-bar-label"> Home </p>
+        </div>
+        <div onclick="window.location.href='./solves.html'" class="nav-bar-element">
+            <img id="add-button" class="nav-bar-image nav-bar-image-choosed" src="./media/dm/list_filled.png">
+            <p class="nav-bar-label"> Solves </p>
+        </div>
+        <div onclick="window.location.href='./stats.html'" class="nav-bar-element">
+            <img id="account-button" class="nav-bar-image"
+                src="./media/dm/bar_chart.png">
+            <p class="nav-bar-label"> Statistics </p>
+        </div>
+    </div>
+    <div onclick='hideTimeDetails()' class="hidden2"
+        style="background-color: #000000cb; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 1002;"
+        id="overlay2"></div>
+    <div class="time-details-box hidden2" id="time-details-box">
+        <div style="width: 100%; text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
+            <img id="detail-plus2" onclick="togglePlusTwoDetail()"
+                style="background-color: var(--md-sys-color-surface-tint); border-radius: 12px; padding: 4px;" height="25px" width="25px"
+                src="./media/icons/+2.png">
+            <img id="detail-dnf" onclick="toggleDnfDetail()" style="background-color: var(--md-sys-color-surface-tint); border-radius: 12px;padding: 4px;"
+                height="25px" width="25px" src="./media/icons/block.png">
+            <img id="detail-delete" onclick="confirmWindow('show')" style="background-color: var(--md-sys-color-surface-tint); border-radius: 12px;padding: 4px;" height="25px"
+                width="25px" src="./media/icons/delete.png">
+            <img id="hide-popup-arrow" onclick='hideTimeDetails()' style="background-color: var(--md-sys-color-surface-tint); border-radius: 12px;padding: 4px;" height="25px"
+                width="25px" src="./media/dm/arrow_down2.png">
+        </div>
+        <div
+            style="display: flex; flex-direction: column; height: 100%; width: 100%; justify-content: center; align-items: center;">
+            <p id="details-time"> time </p>
+            <p id="details-scramble" style="font-weight: bold; font-size: 20px; max-width: 90%; margin-bottom: 0px;"> scramble </p>
+            <p id="dateLabel" style="font-family: 'Courier New', Courier, monospace; font-size: 14px; font-weight: bold;"> date </p>
+            <p style="margin: 20px;">  </p>
+        </div>
+
+    </div>
+    <div id="overlay-sidebar" onclick="sideBar('hide')"></div>
+        <div id="sidebar" class="side-bar hide">
+            <div onclick="exportToCsTimer(); sideBar('hide')">
+                <img src="./media/dm/download.png">
+                <div>
+                    <p> Export </p>
+                    <h6> Export this session </h6>
+                </div>
+            </div>
+            <label for="file-upload" style="cursor: pointer;">
+            <div onclick="sideBar('hide')">
+                <img src="./media/dm/upload.png">
+                <div>
+                    <p> Import </p>
+                    <h6> Import to this session </h6>
+                </div>
+            </div>
+            </label>
+            <input id="file-upload" type="file" style="display:none" onchange="importFromCsTimer(event)">
+            <div onclick="deleteAllTimes(); sideBar('hide')">
+                <img src="./media/dm/delete.png">
+                <div>
+                    <p> Delete </p>
+                    <h6> All solves on this session </h6>
+                </div>
+            </div>
+        </div>
+    <div class="top-bar">
+        <div style="position: relative;  margin-bottom: 0px; display: flex; justify-content: center; align-items: center;">
+        <button id="sessionCubeButton" onclick="toggleSessionList()"style="cursor: pointer; width: auto; display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; font-weight: 600; gap: 0px; background-color: transparent; outline: none; border: none;">
+            <img style="height: 26px; width: 26px;" src="./media/icons/cubyy-1.3-logo.svg">
+            <span id="sessionCubeButtonText" style="margin-left: 4px; font-size: 18px; color: var(--md-sys-color-on-surface)">3x3 | 3x3</span>
+            <img id="arrowDownIconSession" height="20px" width="20px" src="./media/dm/arrow_down.png" alt="Open session list">
+        </button>
+        </div>
+        <div style="display: flex; flex-direction: row; width: fill-avilbe;">
+        <div class="desktop-navbar">
+            <div onclick="window.location.href = './index.html'">
+                <img src="./media/dm/home_white.png">
+                <hr>
+            </div>
+            <div onclick="window.location.href = './solves.html'">
+
+                <img src="./media/dm/list_white.png">
+                <hr class="selected">
+            </div>
+            <div onclick="window.location.href = './stats.html'">
+                <img src="./media/dm/bar_chart_white.png">
+                <hr >
+            </div>
+            <div onclick="window.location.href = './settings.html'">
+                <img src="./media/dm/settings_white.png">
+                <hr >
+            </div>
+        </div>
+            <button onclick="openSessionModal()" class="bluetooth-button" style="align-self: center; font-weight: bold; padding: 3px 10px; border-radius: 10px; font-size: 20px; margin-left: 8px; color: var(--md-sys-color-on-surface)"> + </button>
+            <button class="bluetooth-button"  onclick="sideBar('show')"><img id="menuIcon" src="./media/dm/menu.png" alt="Menu"></button>
+            <button id="mobile-settings-button" class="bluetooth-button" onclick="window.location.href = './settings.html'"><img id="bluetoothIcon" src="./media/dm/settings_white.png" alt="Connect Bluetooth timer"></button>
+        </div>
+    </div>
+                <div id="sessionListPopup" class="hidden2">
+                    <div class="title">Select session</div>
+                    <div id="sessionListItems" class="elements"></div>
+                </div>
+    <div class="site-content">
+        <div class="m3-card2"
+            style=" margin: 10px; margin-top: 20px; overflow-y: auto; width: 95%; max-width: 900px; position: relative; max-height: 100%; min-height: 90%; background-color: var(--md-sys-color-surface);">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; width: auto; flex-direction: row !important;">
+            </div>
+
+            <div id="sessionModalOverlay" onclick="closeSessionModal()" class="session-modal-overlay hidden2"></div>
+            <div id="sessionModal" class="session-modal hidden2">
+                <label for="sessionCubeSelect" style="margin-top: 10px; display: block; font-weight: 600; margin-bottom: 10px;">Cube</label>
+                <select id="sessionCubeSelect" style="width: 98%; padding: 10px; margin-top: 5px; border-radius: 12px; outline: solid 0.1px #aaa; background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface);">
+                    <option value="3x3">3x3</option>
+                    <option value="2x2">2x2</option>
+                    <option value="4x4">4x4</option>
+                    <option value="Pyraminx">Pyraminx</option>
+                    <option value="Skewb">Skewb</option>
+                </select>
+                
+                <h2>New session</h2>
+                <input id="sessionNameInput" style="outline: solid 1px #aaa" placeholder="Session name" aria-label="Session name">
+
+                <div class="session-modal-buttons">
+                    <button class="tonal" onclick="closeSessionModal()">Cancel</button>
+                    <button id="sessionModalSubmit" class="primary" onclick="createSessionFromModal()">Create</button>
+                </div>
+            </div>
+            <div id="timesList2" class="newtimelist">
+
+
+            </div>
+
+        </div>
+        </div>
+
+
+        <div id="timesList2" class="m3-card2 hidden2"
+            style=" margin: 10px; max-height: 90%; overflow-y: auto; width: 90%; max-width: 576px; box-shadow: none !important;">
+            <button onclick="deleteAllTimes()" class="m3-FilledTonalButtonWithAnimatedShapeSample"
+                style="scale: 1; margin: 0 auto; margin-bottom: 10px;"> Delete All Times</button>
+
+            <div id="timesList"></div>
+        </div>
+    </div>
+    <script>
+
+    function confirmWindow(action) {
+        var cwOverlay = document.getElementById('confirm-window-overlay');
+        var confirmWindow = document.getElementById('confirm-window')
+        if (action == 'show') {
+            confirmWindow.classList.remove('hidden2');
+            cwOverlay.classList.remove('hidden2');
+        } else if (action == 'hide') {
+            confirmWindow.classList.add('hidden2');
+            cwOverlay.classList.add('hidden2');
+        }
+    }
+        function hideTimeDetails() {
+            document.getElementById('time-details-box').classList.add('time-details-box-hide');
+            setTimeout(() => {
+                document.getElementById('time-details-box').classList.add('hidden2');
+                document.getElementById('time-details-box').classList.remove('time-details-box-hide');
+            }, 180);
+
+            document.getElementById('overlay2').classList.add('hidden2');
+        }
+
+        let currentDetailIndex = null; // Zmienna trzymająca indeks aktualnie przeglądanego ułożenia
+
+        function showTimeDetails(index) {
+            currentDetailIndex = index; // Zapamiętujemy, co otworzyliśmy
+            const solve = times[index];
+            if (!solve) return;
+
+            const detailsBox = document.getElementById('time-details-box');
+            const overlay = document.getElementById('overlay2');
+            const timeDisplay = document.getElementById('details-time');
+            const scrambleDisplay = document.getElementById('details-scramble');
+            const dateLabel = document.getElementById('dateLabel');
+
+            // Aktualizujemy wygląd ikon (podświetlenie/skalowanie)
+            updateDetailIcons(solve);
+
+            const formatted = solve.isDnf ? "DNF" : (formatTime(solve.time) + (solve.isPlusTwo ? "+" : ""));
+            timeDisplay.textContent = formatted;
+            scrambleDisplay.textContent = solve.scramble || "No scramble";
+            dateLabel.textContent = formatDate(solve.date) || "No date";
+            detailsBox.classList.remove('hidden2');
+            overlay.classList.remove('hidden2');
+
+        }
+        function updateDetailIcons(solve) {
+            const plusTwoIcon = document.getElementById('detail-plus2');
+            const dnfIcon = document.getElementById('detail-dnf');
+
+            // Resetujemy skale i przezroczystość
+            plusTwoIcon.style.transform = solve.isPlusTwo ? "scale(1.2)" : "scale(1)";
+            plusTwoIcon.style.opacity = solve.isPlusTwo ? "1" : "0.5";
+
+            dnfIcon.style.transform = solve.isDnf ? "scale(1.2)" : "scale(1)";
+            dnfIcon.style.opacity = solve.isDnf ? "1" : "0.5";
+        }
+        function togglePlusTwoDetail() {
+            if (currentDetailIndex === null) return;
+            const solve = times[currentDetailIndex];
+
+            // Jeśli był DNF, najpierw go usuwamy (bo nie można mieć obu kar na raz)
+            if (solve.isDnf) {
+                solve.isDnf = false;
+            }
+
+            solve.isPlusTwo = !solve.isPlusTwo;
+
+            // Kluczowa zmiana: faktycznie dodajemy lub odejmujemy 2 sekundy
+            if (solve.isPlusTwo) {
+                solve.time += 2000;
+            } else {
+                solve.time -= 2000;
+            }
+
+            saveTimes();
+            updateTimesList();
+            showTimeDetails(currentDetailIndex); // Odśwież widok detali
+        }
+        function toggleDnfDetail() {
+            if (currentDetailIndex === null) return;
+            const solve = times[currentDetailIndex];
+
+            // Jeśli miał +2, odejmujemy je przed nałożeniem DNF
+            if (!solve.isDnf && solve.isPlusTwo) {
+                solve.isPlusTwo = false;
+                solve.time -= 2000;
+            }
+
+            solve.isDnf = !solve.isDnf;
+
+            saveTimes();
+            updateTimesList();
+            showTimeDetails(currentDetailIndex);
+        }
+        function deleteSingleSolve() {
+            if (currentDetailIndex === null) return;
+            times.splice(currentDetailIndex, 1);
+            saveTimes();
+            updateTimesList();
+            hideTimeDetails();
+            confirmWindow('hide')
+            }
+        // --- EKSPORT DANYCH (Format csTimer) ---
+function exportToCsTimer() {
+    // pobierz kostkę z localStorage
+    let cube = localStorage.getItem('cubeTimerCube');
+
+    // usuń cudzysłowy jeśli są
+    if (cube) {
+        cube = cube.replace(/^"(.*)"$/, '$1');
+    }
+
+    // mapa nazw -> scrType
+    const cubeMap = {
+        "3x3": "333",
+        "2x2": "222",
+        "4x4": "444",
+        "skewb": "skewb",
+        "pyraminx": "pyram"
+    };
+
+    const scrType = cubeMap[cube] || "333";
+
+    const csTimerFormat = {
+        "session1": times.map(t => {
+            let penalty = 0;
+
+            if (t.isDnf) {
+                penalty = -1;
+            } else if (t.isPlusTwo) {
+                penalty = 1;
+            }
+
+            return [
+                [penalty, t.time],
+                t.scramble,
+                "",
+                Math.floor(new Date(t.date).getTime() / 1000)
+            ];
+        }),
+        "properties": {
+            "sessionData": JSON.stringify({
+                "1": {
+                    name: 1,
+                    opt: { scrType: scrType },
+                    rank: 1
+                }
+            }),
+            "scrType": scrType
+        }
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(csTimerFormat));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "cubyy_export_" + new Date().toLocaleDateString() + ".json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+
+    showNotification("Export started!", "success");
+}
+
+        // --- IMPORT DANYCH (Z weryfikacją duplikatów) ---
+function importFromCsTimer(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+
+            let importedCount = 0;
+            let skipCount = 0;
+            let updatedCount = 0;
+
+            Object.keys(importedData).forEach(key => {
+                if (key.startsWith('session') && Array.isArray(importedData[key])) {
+
+                    importedData[key].forEach(item => {
+                        const importedTime = item[0][1];
+                        const penalty = item[0][0];
+                        const importedScramble = item[1];
+                        const importedDate = new Date(item[3] * 1000).toISOString();
+
+                        const isPlusTwo = penalty === 1;
+                        const isDnf = penalty === -1;
+
+                        // znajdź dokładny wpis (czas + scramble + data)
+                        const existingIndex = times.findIndex(existing =>
+                            existing.time === importedTime &&
+                            existing.scramble === importedScramble &&
+                            new Date(existing.date).toISOString() === importedDate
+                        );
+
+                        if (existingIndex !== -1) {
+                            // istnieje → sprawdź czy zmienił się stan (+2 / DNF)
+                            const existing = times[existingIndex];
+
+                            if (
+                                existing.isPlusTwo !== isPlusTwo ||
+                                existing.isDnf !== isDnf
+                            ) {
+                                // nadpisz tylko flagi
+                                times[existingIndex].isPlusTwo = isPlusTwo;
+                                times[existingIndex].isDnf = isDnf;
+                                updatedCount++;
+                            } else {
+                                skipCount++;
+                            }
+
+                        } else {
+                            // nowy wpis
+                            times.push({
+                                time: importedTime,
+                                scramble: importedScramble,
+                                date: importedDate,
+                                isPlusTwo: isPlusTwo,
+                                isDnf: isDnf
+                            });
+                            importedCount++;
+                        }
+                    });
+                }
+            });
+
+            if (importedCount > 0 || updatedCount > 0) {
+                times.sort((a, b) => new Date(b.date) - new Date(a.date));
+                saveTimes();
+                updateTimesList();
+                if (typeof updateStats === 'function') updateStats();
+
+                alert(`Imported ${importedCount}, updated ${updatedCount}, skipped ${skipCount}`);
+            } else {
+                alert(`No changes. Skipped ${skipCount}`);
+            }
+
+        } catch (err) {
+            console.error("Import Error:", err);
+            alert("Error: This file is not a valid csTimer export.");
+        }
+    };
+
+    reader.readAsText(file);
+    event.target.value = '';
+}
+        // --- FUNKCJE POMOCNICZE ---
+        function formatTime(ms) {
+            if (ms === null || ms === undefined) return "0.000";
+            const minutes = Math.floor(ms / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            const milliseconds = Math.floor(ms % 1000);
+            const msStr = milliseconds.toString().padStart(3, '0');
+
+            if (minutes > 0) {
+                const secStr = seconds.toString().padStart(2, '0');
+                return `${minutes}:${secStr}.${msStr}`;
+            }
+            return `${seconds}.${msStr}`;
+        }
+
+        function loadCSS(file) {
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = file;
+            document.head.appendChild(link);
+        }
+
+        function showNotification(message, type = 'info') {
+            alert(message);
+        }
+
+        // --- LOGIKA CZASÓW ---
+        const CUBES = ["3x3", "2x2", "4x4", "Pyraminx", "Skewb"];
+        let currentCube = localStorage.getItem('cubeTimerCube') || '3x3';
+        let currentSessionId = localStorage.getItem('cubeTimerSessionId') || null;
+        let sessions = [];
+        let times = [];
+        let editingSessionId = null; // for modal edit mode
+
+        function getSessionsKey() {
+            return 'cubeTimerSessions';
+        }
+
+        function getSessionTimesKey(sessionId) {
+            return 'cubeTimerTimes_' + sessionId;
+        }
+
+        function defaultSessionIdForCube(cube) {
+            return cube.toLowerCase().replace(/\s+/g, '') + '_default';
+        }
+
+        function loadSessions() {
+            const raw = localStorage.getItem(getSessionsKey());
+            if (raw) {
+                try {
+                    sessions = JSON.parse(raw);
+                    if (!Array.isArray(sessions)) sessions = [];
+                } catch (err) {
+                    sessions = [];
+                }
+            } else {
+                sessions = [];
+            }
+        }
+
+        function saveSessions() {
+            localStorage.setItem(getSessionsKey(), JSON.stringify(sessions));
+        }
+
+        function ensureDefaultSession(cube) {
+            const existingForCube = sessions.find(s => s.cube === cube);
+            if (!existingForCube) {
+                const defaultId = defaultSessionIdForCube(cube);
+                sessions.push({
+                    id: defaultId,
+                    name: cube,
+                    cube: cube,
+                    createdAt: Date.now()
+                });
+            }
+        }
+
+        function ensureSessions() {
+            loadSessions();
+            CUBES.forEach(cube => ensureDefaultSession(cube));
+            const currentSession = sessions.find(s => s.id === currentSessionId);
+            if (!currentSession) {
+                const existing = sessions.find(s => s.cube === currentCube);
+                currentSessionId = existing ? existing.id : defaultSessionIdForCube(currentCube);
+            }
+            const updatedSession = sessions.find(s => s.id === currentSessionId);
+            if (!updatedSession || updatedSession.cube !== currentCube) {
+                const existing = sessions.find(s => s.cube === currentCube);
+                currentSessionId = existing ? existing.id : defaultSessionIdForCube(currentCube);
+            }
+            localStorage.setItem('cubeTimerSessionId', currentSessionId);
+            saveSessions();
+        }
+
+        function getSessionsForCube(cube) {
+            return sessions.filter(s => s.cube === cube);
+        }
+
+        function getCurrentSession() {
+            return sessions.find(s => s.id === currentSessionId) || sessions.find(s => s.id === defaultSessionIdForCube(currentCube));
+        }
+
+        function updateSessionSelect() {
+            const spinner = document.getElementById('session-spinner-text');
+            const selectEl = document.getElementById('sessionSelectTimes');
+            const buttonText = document.getElementById('sessionCubeButtonText');
+            const currentSession = getCurrentSession();
+            if (spinner && currentSession) spinner.innerHTML = `<img style="width: 25px; height: 25px;" src='./media/${isDarkMode() ? "dm" : "icons"}/sessions.png'><p>${currentSession.name}</p>` ;
+            if (buttonText && currentSession) buttonText.innerHTML = `${currentCube} | ${currentSession.name}`;
+            if (selectEl) {
+                const options = getSessionsForCube(currentCube).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                selectEl.innerHTML = options;
+                selectEl.value = currentSession ? currentSession.id : defaultSessionIdForCube(currentCube);
+            }
+        }
+
+        function getStorageKey() {
+            return currentSessionId ? getSessionTimesKey(currentSessionId) : (currentCube === '3x3' ? 'cubeTimerTimes' : 'cubeTimerTimes_' + currentCube);
+        }
+
+        function onCubeChangeTimes(newCube) {
+            if (!CUBES.includes(newCube)) return;
+            currentCube = newCube;
+            localStorage.setItem('cubeTimerCube', currentCube);
+            ensureSessions();
+            updateSessionSelect();
+            const spinner = document.getElementById('cube-spinner-text');
+            if (spinner) spinner.innerHTML = `<img style="width: 25px; height: 25px;" src='./media/${isDarkMode() ? "dm" : "icons"}/3d_cube.png'><p>${currentCube}</p>`;
+            const selectEl = document.getElementById('cubeSelectTimes');
+            if (selectEl) selectEl.value = currentCube;
+            loadTimes();
+        }
+
+        function onSessionChangeTimes(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+            currentSessionId = sessionId;
+            localStorage.setItem('cubeTimerSessionId', currentSessionId);
+            updateSessionSelect();
+            loadTimes();
+        }
+
+        function openSessionModal() {
+            const overlay = document.getElementById('sessionModalOverlay');
+            const modal = document.getElementById('sessionModal');
+            const input = document.getElementById('sessionNameInput');
+            const cubeSelect = document.getElementById('sessionCubeSelect');
+            const title = modal ? modal.querySelector('h2') : null;
+            if (!overlay || !modal || !input || !cubeSelect) return;
+
+            editingSessionId = null;
+            input.value = '';
+            cubeSelect.value = currentCube;
+            if (title) title.textContent = 'New session';
+            overlay.classList.remove('hidden2');
+            modal.classList.remove('hidden2');
+            input.focus();
+        }
+
+        function closeSessionModal() {
+            const overlay = document.getElementById('sessionModalOverlay');
+            const modal = document.getElementById('sessionModal');
+            const input = document.getElementById('sessionNameInput');
+            const cubeSelect = document.getElementById('sessionCubeSelect');
+            const submitButton = document.getElementById('sessionModalSubmit');
+            if (overlay && modal) {
+                overlay.classList.add('hidden2');
+                modal.classList.add('hidden2');
+            }
+            if (input) input.value = '';
+            if (cubeSelect) cubeSelect.value = currentCube;
+            if (submitButton) submitButton.textContent = 'Create';
+            editingSessionId = null;
+        }
+
+        function createNewSession(name, cube) {
+            if (!name || !name.trim()) return null;
+            const safeName = name.trim();
+            const safeCube = CUBES.includes(cube) ? cube : currentCube;
+            const sessionId = `session_${safeCube.toLowerCase().replace(/\s+/g, '')}_${Date.now()}`;
+            const session = { id: sessionId, name: safeName, cube: safeCube, createdAt: Date.now() };
+            sessions.push(session);
+            saveSessions();
+            return session;
+        }
+
+        function createSessionFromModal() {
+            hideSessionList();
+            const input = document.getElementById('sessionNameInput');
+            const cubeSelect = document.getElementById('sessionCubeSelect');
+            const modal = document.getElementById('sessionModal');
+            const submitButton = document.getElementById('sessionModalSubmit');
+            if (!input || !cubeSelect || !submitButton) return;
+            const name = input.value.trim();
+            const cube = cubeSelect.value;
+            if (!name) {
+                showNotification('Enter a session name', 'error');
+                return;
+            }
+
+            if (editingSessionId) {
+                const s = sessions.find(x => x.id === editingSessionId);
+                if (!s) {
+                    showNotification('Session not found', 'error');
+                    closeSessionModal();
+                    return;
+                }
+                s.name = name;
+                s.cube = cube;
+                saveSessions();
+                updateSessionSelect();
+                buildSessionList();
+                closeSessionModal();
+                return;
+            }
+
+            const session = createNewSession(name, cube);
+            if (session) {
+                currentSessionId = session.id;
+                currentCube = session.cube;
+                localStorage.setItem('cubeTimerSessionId', currentSessionId);
+                localStorage.setItem('cubeTimerCube', currentCube);
+                updateSessionSelect();
+                closeSessionModal();
+                loadTimes();
+            }
+        }
+
+        // Build popup list of sessions (used by combined button)
+        function buildSessionList() {
+            const container = document.getElementById('sessionListItems');
+            if (!container) return;
+            const ordered = sessions.slice().sort((a, b) => {
+                const cubeIndex = CUBES.indexOf(a.cube) - CUBES.indexOf(b.cube);
+                if (cubeIndex !== 0) return cubeIndex;
+                return a.name.localeCompare(b.name, 'pl', { sensitivity: 'base' });
+            });
+
+            container.innerHTML = ordered.map(session => {
+                const active = session.id === currentSessionId ? 'opacity: 0.65;' : '';
+                const iconSource = isDarkMode() ? 'dm' : 'icons';
+                return `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid var(--md-sys-color-outline);">
+                        <button type="button" onclick="selectSession('${session.id}')"
+                            style="all: unset; width: 100%; display: flex; justify-content: space-between; align-items: center;  cursor: pointer; color: var(--md-sys-color-on-surface); background: transparent; ${active}">
+                            <span>${session.cube} | ${session.name}</span>
+                            <span style="opacity: 0.6; font-size: 0.95em;">Select</span>
+                        </button>
+                        <img src="./media/${iconSource}/edit_session.png" alt="Edit" style="background: var(--md-sys-color-surface-container-highest); padding: 2px; border-radius: 5px; width: 20px; height: 20px; cursor: pointer; margin-left: 10px;" onclick="editSession('${session.id}')">
+                        <img src="./media/${iconSource}/delete_session.png" alt="Delete" style="background: var(--md-sys-color-error-container); padding: 2px; border-radius: 5px; width: 20px; height: 20px; cursor: pointer; margin-left: 10px;" onclick="deleteSession('${session.id}')">
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleSessionList() {
+            const popup = document.getElementById('sessionListPopup');
+            if (!popup) return;
+            if (popup.classList.contains('hidden2')) {
+                buildSessionList();
+                popup.classList.remove('hidden2');
+            } else {
+                popup.classList.add('hidden2');
+            }
+        }
+
+        function hideSessionList() {
+            const popup = document.getElementById('sessionListPopup');
+            if (popup) popup.classList.add('hidden2');
+        }
+
+        function selectSession(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+            currentSessionId = sessionId;
+            currentCube = session.cube;
+            localStorage.setItem('cubeTimerSessionId', currentSessionId);
+            localStorage.setItem('cubeTimerCube', currentCube);
+            updateSessionSelect();
+            hideSessionList();
+            loadTimes();
+        }
+
+        function editSession(sessionId) {
+            editingSessionId = sessionId;
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+            const overlay = document.getElementById('sessionModalOverlay');
+            const modal = document.getElementById('sessionModal');
+            const input = document.getElementById('sessionNameInput');
+            const cubeSelect = document.getElementById('sessionCubeSelect');
+            const submitButton = document.getElementById('sessionModalSubmit');
+            const title = modal ? modal.querySelector('h2') : null;
+            if (!overlay || !modal || !input || !cubeSelect || !submitButton) return;
+            input.value = session.name;
+            cubeSelect.value = session.cube;
+            submitButton.textContent = 'Save';
+            if (title) title.textContent = 'Edit session';
+            overlay.classList.remove('hidden2');
+            modal.classList.remove('hidden2');
+            input.focus();
+            hideSessionList();
+        }
+
+        function deleteSession(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            hideSessionList();
+            if (!session) return;
+            const cube = session.cube;
+            const sessionsForCube = sessions.filter(s => s.cube === cube);
+            if (sessionsForCube.length <= 1) {
+                showNotification('Cannot delete the last session for this cube', 'error');
+                return;
+            }
+
+            // custom confirm using native confirm for now (simple)
+            if (!confirm(`Delete session "${session.name}"? This will permanently remove all times saved in this session.`)) return;
+
+            try { localStorage.removeItem(getSessionTimesKey(sessionId)); } catch (e) {}
+            sessions = sessions.filter(s => s.id !== sessionId);
+            saveSessions();
+            if (currentSessionId === sessionId) {
+                const remaining = sessions.find(s => s.cube === cube);
+                currentSessionId = remaining ? remaining.id : defaultSessionIdForCube(cube);
+                localStorage.setItem('cubeTimerSessionId', currentSessionId);
+                currentCube = cube;
+                localStorage.setItem('cubeTimerCube', currentCube);
+            }
+            updateSessionSelect();
+            buildSessionList();
+            loadTimes();
+        }
+
+        function loadTimes() {
+            ensureSessions();
+            updateSessionSelect();
+            const key = getStorageKey();
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                times = JSON.parse(saved);
+            } else {
+                times = [];
+            }
+            updateTimesList();
+        }
+
+        function saveTimes() {
+            localStorage.setItem(getStorageKey(), JSON.stringify(times));
+        }
+
+        function deleteAllTimes() {
+            if (confirm('Are you sure you want to delete all saved times?')) {
+                times = [];
+                saveTimes();
+                updateTimesList();
+            }
+        }
+
+        function updateTimesList() {
+            const newContainer = document.querySelector('.newtimelist');
+            const oldContainer = document.getElementById('timesList');
+
+            const contentExists = times.length > 0;
+
+            if (newContainer) {
+                newContainer.style.display = 'flex';
+                newContainer.style.flexWrap = 'wrap';
+                newContainer.style.gap = '8px';
+                newContainer.style.justifyContent = 'center';
+
+                newContainer.innerHTML = contentExists ? times.map((t, index) => {
+                    const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
+                    return `<p class="time-box" onclick="showTimeDetails(${index})" style="margin: 0; cursor: pointer; user-select: none;">${formatted}</p>`;
+                }).join('') : '<p style="text-align:center; opacity:0.5; width: 100%;">No times yet</p>';
+            }
+
+            if (oldContainer) {
+                oldContainer.innerHTML = contentExists ? times.map((t, index) => {
+                    const formatted = t.isDnf ? "DNF" : (formatTime(t.time) + (t.isPlusTwo ? "+" : ""));
+                    return `<div onclick="showTimeDetails(${index})" style="cursor:pointer; padding: 8px; border-bottom: 1px solid rgba(0,0,0,0.08);">#${times.length - index}: ${formatted}</div>`;
+                }).join('') : '(No times yet)';
+            }
+        }
+
+        // --- START ---
+        const themeStylesheet = document.createElement("link");
+        themeStylesheet.rel = "stylesheet";
+        document.head.appendChild(themeStylesheet);
+
+        function isMobileDevice() { 
+        return window.matchMedia("(max-width: 768px)").matches; 
+        }
+
+        function updateStyles() {
+        const targetCss = isMobileDevice() ? "./styles/style-mobile.css" : "./styles/style-desktop.css";
+        
+        if (themeStylesheet.getAttribute("href") !== targetCss) {
+            themeStylesheet.href = targetCss;
+        }
+        }
+
+        updateStyles();
+
+        window.addEventListener("resize", updateStyles);
+        
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
+            });
+        }
+
+        // Uruchomienie ładowania danych
+        let spinner = document.getElementById('cube-spinner-text');
+        if (spinner) spinner.innerHTML = `<img style="width: 25px; height: 25px;" src='./media/${isDarkMode() ? "dm" : "icons"}/3d_cube.png'><p>${currentCube}</p>`;;
+        let selectEl = document.getElementById('cubeSelectTimes');
+        if (selectEl) selectEl.value = currentCube;
+        loadTimes();
+        function formatDate(date) {
+            timestamp = date;
+            const formattedDate = new Date(timestamp).toLocaleString('pl-PL', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+            }).replace(',', ''); // Usuwa domyślny przecinek między czasem a datą
+        return formattedDate; // Wynik: "16:50:00 31.07.2026"
+        }
+        function isDarkMode() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function sideBar(action) {
+            var sbOverlay = document.getElementById('overlay-sidebar');
+            var sideBar = document.getElementById('sidebar');
+            if (action == 'show') {
+                sideBar.classList.remove('hide');
+                sbOverlay.classList.add('show');
+            } else if (action == 'hide') {
+                sideBar.classList.add('hide');
+                sbOverlay.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+
+</html>
