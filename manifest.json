@@ -5,6 +5,7 @@
   "display": "standalone",
   "background_color": "#1d2024",
   "theme_color": "#1d2024",
+  "version": "1.4.0",
   "icons": [
     {
       "src": "./media/icons/icon-512.png",
@@ -19,13 +20,13 @@
       "purpose": "maskable"
     },
     {
-      "src": "./media/icons/icon-512.png",
+      "src": "./media/icons/icon-512-a.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./media/icons/icon-192.png",
+      "src": "./media/icons/icon-192-a.png",
       "sizes": "196x196",
       "type": "image/png",
       "purpose": "any"

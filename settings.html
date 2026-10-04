@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="./styles/m3-styles.css">
     <link rel="stylesheet" href="./styles/styles.css">
     <link rel="stylesheet" href="./styles/css/dark.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -23,122 +22,374 @@
         body {
             justify-content: flex-start;
             background-color: var(--md-sys-color-surface-container);
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
         }
 
-        .setttings-label {
-            font-family: sans-serif, 'Google Sans';
-            font-weight: bold;
-            font-size: 30px;
-            color: #312252;
+        /* === SCROLLABLE CONTENT AREA === */
+        .site-content {
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 20px;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--md-sys-color-outline) transparent;
+        }
+        .site-content::-webkit-scrollbar { width: 8px; }
+        .site-content::-webkit-scrollbar-thumb {
+            background: var(--md-sys-color-outline);
+            border-radius: 4px;
         }
 
-        .settings-label {
-            color: #E6E1E5;
-            font-family: sans-serif, 'Google Sans';
-            font-weight: bold;
-            font-size: 30px;
+        /* Card inside – centered, with space at the bottom */
+        .site-content .m3-card2 {
+            width: 90%;
+            max-width: 500px;
+            margin: 0 auto 30px auto;
+            box-sizing: border-box;
         }
+
         .page-title {
-            font-size: 20px; font-weight: bold;
+            font-size: 20px;
+            font-weight: bold;
         }
-        @media screen and (max-width: 768px){ 
+        @media screen and (max-width: 768px) {
             .title-container {
                 margin-left: 12px;
             }
-        
         }
         #mobile-settings-button {
             background-color: var(--md-sys-color-primary-fixed-dim);
             margin-right: 5px;
         }
         .title-container {
-            display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 4px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* === BACKUP BUTTONS – responsive, centered === */
+        .backup-btn-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px auto;
+            width: 100%;
+            max-width: 480px;
+            padding: 0 8px;
+            box-sizing: border-box;
+        }
+        .backup-btn-row button {
+            flex: 1 1 160px;
+            min-width: 0;
+            max-width: 220px;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* On narrow screens – one button per line, full width */
+        @media (max-width: 420px) {
+            .backup-btn-row {
+                flex-direction: column;
+                max-width: 320px;
+                gap: 10px;
+            }
+            .backup-btn-row button {
+                width: 100%;
+                max-width: 100%;
+                flex: 1 1 auto;
+            }
+        }
+
+        .btn-danger {
+            background-color: var(--md-sys-color-error) !important;
+            color: var(--md-sys-color-on-error) !important;
+        }
+
+        /* === WARNING MODAL === */
+        #backup-confirm-window {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%);
+            max-width: 420px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+            z-index: 1011;
+        }
+        #backup-confirm-window > div {
+            justify-content: center !important;
+            margin-right: 0 !important;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 
 <body ontouchstart="">
+    <div class="confirm-window hidden2" id="backup-confirm-window">
+        <p id="backup-confirm-content" style="font-weight: 600; line-height: 1.45; margin-top: 8px;  color: var(--md-sys-color-on-surface-variant); margin-left: 10px;">
+            ⚠️ <b style=" color: var(--md-sys-color-on-surface) !important; font-size: 20px;">Warning!</b><br>
+            Importing a backup will <b>overwrite</b> your current Cubyy data.<br>
+            All current sessions and solves that exist in the backup will be permanently replaced.<br>
+            <span style="color: var(--md-sys-color-error); font-weight: 700;">This action cannot be undone.</span>
+        </p>
+        <div>
+            <button class="m3-ButtonSample outline" style="scale: 1" onclick="cancelImportBackup()">
+                Cancel
+            </button>
+            <button class="m3-ButtonSample btn-danger" style="scale: 1" onclick="confirmImportBackup()">
+                Import
+            </button>
+        </div>
+    </div>
+    <div class="visible-overlay hidden2" id="backup-confirm-overlay" onclick="cancelImportBackup()"></div>
+
+    <input id="backup-file-input" type="file" accept="application/json,.json" style="display: none;">
+
     <div class="top-bar">
         <div class="title-container">
-            <img style="height: 26px; width: 26px;" src="./media/icons/cubyy-1.3-logo.svg">
+            <img style="height: 26px; width: 26px;" src="./media/icons/cubyy-1.3-logo.svg" alt="Cubyy">
             <p class="page-title"> Settings </p>
         </div>
-        <div style="display: flex; flex-direction: row; width: fill-avilbe;">
-        <div class="desktop-navbar" style="padding: 6px 12px;">
-            <div onclick="window.location.href = './index.html'">
-                <img src="./media/dm/home_white.png">
-                <hr >
+        <div style="display: flex; flex-direction: row;">
+            <div class="desktop-navbar" style="padding: 6px 12px;">
+                <div onclick="window.location.href = './index.html'">
+                    <img src="./media/dm/home_white.png" alt="Home">
+                    <hr>
+                </div>
+                <div onclick="window.location.href = './solves.html'">
+                    <img src="./media/dm/list_white.png" alt="Solves">
+                    <hr>
+                </div>
+                <div onclick="window.location.href = './stats.html'">
+                    <img src="./media/dm/bar_chart_white.png" alt="Stats">
+                    <hr>
+                </div>
+                <div onclick="window.location.href = './settings.html'">
+                    <img src="./media/dm/settings_white.png" alt="Settings">
+                    <hr class="selected">
+                </div>
             </div>
-            <div onclick="window.location.href = './solves.html'">
-
-                <img src="./media/dm/list_white.png">
-                <hr >
-            </div>
-            <div onclick="window.location.href = './stats.html'">
-                <img src="./media/dm/bar_chart_white.png">
-                <hr >
-            </div>
-            <div onclick="window.location.href = './settings.html'">
-
-                <img src="./media/dm/settings_white.png">
-                <hr class="selected">
-            </div>
+            <button id="mobile-settings-button" class="bluetooth-button"
+                onclick="window.location.href = './settings.html'">
+                <img src="./media/dm/settings_filled.png" alt="Settings">
+            </button>
         </div>
-        <button id="mobile-settings-button" class="bluetooth-button" onclick="window.location.href = './settings.html'"><img id="bluetoothIcon" src="./media/dm/settings_filled.png" alt="Connect Bluetooth timer"></button>
-
     </div>
+
     <div class="site-content">
         <div class="m3-card2" style="background-color: transparent;">
             <p> For now there are no settings to change! 😔 </p>
+            <div class='rows-box' style="margin-top: 20px;">
+                <hr class="rows-hr">
+                <p style="font-weight: 700; font-size: 16px; margin-bottom: 4px;">💾 Backup</p>
+                <p style="font-size: 13px; opacity: 0.75; margin-top: 0;">
+                    Export all your Cubyy data to a file so you can restore it later on this or another device.
+                </p>
+                <hr class="rows-hr">
+            </div>
+
+            <div class="backup-btn-row">
+                <button onclick="exportBackup()" class="m3-ButtonWithIconWithAnimatedShapeSample">
+                    <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/dm/export.png" alt="">
+                    Export Backup
+                </button>
+                <button onclick="requestImportBackup()" class="m3-ButtonWithIconWithAnimatedShapeSample">
+                    <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/dm/import.png" alt="">
+                    Import Backup
+                </button>
+            </div>
             <div class='rows-box'>
                 <hr class="rows-hr">
-                <p> Cubyy version: 1.3.0  </p>
+                <p> Cubyy version: 1.4.0 </p>
                 <hr class="rows-hr">
-                <p onclick="window.location.href='https://github.com/franekk3'" style=" cursor: pointer;"> Cubyy by <b>
-                        Franekk3 </b></a> </p>
+                <p onclick="window.location.href='https://github.com/franekk3'" style=" cursor: pointer;">
+                    Cubyy by <b> Franekk3 </b>
+                </p>
                 <hr class="rows-hr">
             </div>
-            <div style="display: flex; justify-content: center; margin: 10px; flex-direction: row; gap: 25px;">
+
+            <div class="backup-btn-row">
                 <button onclick="window.location.href='./w/credits.html'" class="m3-ButtonWithIconWithAnimatedShapeSample">
-                    Credits <img id="credits-button" class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/dm/heart.png">
+                    <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/dm/heart.png" alt="">
+                    Credits
                 </button>
                 <button onclick="window.location.href='./w/terms.html'" class="m3-ButtonWithIconWithAnimatedShapeSample">
-                    Terms & Policy <img id="terms-button" class="m3-ButtonWithIconWithAnimatedShapeSample-icon"
-                        src="./media/dm/policy.png"> </button>
+                    <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/dm/policy.png" alt="">
+                    Terms & Policy
+                </button>
             </div>
-            <div style="display: flex; justify-content: center; margin: 10px; flex-direction: row; gap: 25px;">
+
+            <div class="backup-btn-row">
                 <button onclick="window.location.href='https://github.com/franekk3/Cubyy'"
-                    class="m3-ButtonWithIconWithAnimatedShapeSample"><img id="github-button"
-                        class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/dm/github.png"> GitHub
+                    class="m3-ButtonWithIconWithAnimatedShapeSample">
+                    <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/dm/github.png" alt="">
+                    GitHub
                 </button>
                 <button onclick="window.location.href='https://discord.gg/KXVR5aT6nf'"
-                    class="m3-ButtonWithIconWithAnimatedShapeSample"><img id="discord-button"
-                        class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/dm/discord.png"> Discord
+                    class="m3-ButtonWithIconWithAnimatedShapeSample">
+                    <img class="m3-ButtonWithIconWithAnimatedShapeSample-icon" src="./media/dm/discord.png" alt="">
+                    Discord
                 </button>
             </div>
         </div>
     </div>
 
-
-
     <div class="nav-bar">
         <div onclick="window.location.href='./index.html'" class="nav-bar-element">
-            <img id="home-button" class="nav-bar-image " src="./media/dm/home.png">
+            <img id="home-button" class="nav-bar-image" src="./media/dm/home.png" alt="Home">
             <p class="nav-bar-label"> Home </p>
         </div>
         <div onclick="window.location.href='./solves.html'" class="nav-bar-element">
-            <img id="add-button" class="nav-bar-image" src="./media/dm/list.png">
+            <img id="add-button" class="nav-bar-image" src="./media/dm/list.png" alt="Solves">
             <p class="nav-bar-label"> Solves </p>
         </div>
         <div onclick="window.location.href='./stats.html'" class="nav-bar-element">
-            <img id="account-button" class="nav-bar-image"
-                src="./media/dm/bar_chart.png">
+            <img id="account-button" class="nav-bar-image" src="./media/dm/bar_chart.png" alt="Stats">
             <p class="nav-bar-label"> Statistics </p>
         </div>
     </div>
 
-
     <script src="./script.js"></script>
+
+    <script>
+        // ============================================================
+        //  BACKUP / RESTORE – settings.html
+        //  Exports the entire localStorage to a JSON file.
+        //  Import overwrites only the keys present in the file.
+        // ============================================================
+        (function () {
+            'use strict';
+
+            const BACKUP_APP = 'Cubyy';
+            const BACKUP_VERSION = '1.3.0';
+
+            // ---------- EXPORT ----------
+            window.exportBackup = function () {
+                try {
+                    const data = {};
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key === null) continue;
+                        data[key] = localStorage.getItem(key);
+                    }
+
+                    const backup = {
+                        app: BACKUP_APP,
+                        version: BACKUP_VERSION,
+                        exportedAt: new Date().toISOString(),
+                        keyCount: Object.keys(data).length,
+                        data: data
+                    };
+
+                    const json = JSON.stringify(backup, null, 2);
+                    const blob = new Blob([json], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+
+                    const date = new Date();
+                    const yyyy = date.getFullYear();
+                    const mm = String(date.getMonth() + 1).padStart(2, '0');
+                    const dd = String(date.getDate()).padStart(2, '0');
+                    const filename = `cubyy-backup-${yyyy}-${mm}-${dd}.json`;
+
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+                    console.log(`[Cubyy] Backup exported (${backup.keyCount} keys).`);
+                } catch (err) {
+                    console.error('Export error:', err);
+                    alert('Failed to export backup:\n' + err.message);
+                }
+            };
+
+            // ---------- IMPORT ----------
+            window.requestImportBackup = function () {
+                document.getElementById('backup-confirm-window').classList.remove('hidden2');
+                document.getElementById('backup-confirm-overlay').classList.remove('hidden2');
+            };
+
+            window.cancelImportBackup = function () {
+                document.getElementById('backup-confirm-window').classList.add('hidden2');
+                document.getElementById('backup-confirm-overlay').classList.add('hidden2');
+            };
+
+            window.confirmImportBackup = function () {
+                cancelImportBackup();
+                document.getElementById('backup-file-input').click();
+            };
+
+            document.getElementById('backup-file-input').addEventListener('change', function (event) {
+                const file = event.target.files && event.target.files[0];
+                event.target.value = '';
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        const parsed = JSON.parse(e.target.result);
+
+                        if (!parsed || typeof parsed !== 'object') {
+                            throw new Error('File does not contain valid JSON.');
+                        }
+                        if (!parsed.data || typeof parsed.data !== 'object') {
+                            throw new Error('File does not look like a Cubyy backup (missing "data" field).');
+                        }
+                        if (parsed.app && parsed.app !== BACKUP_APP) {
+                            throw new Error(`This is not a Cubyy backup (app = "${parsed.app}").`);
+                        }
+
+                        const keys = Object.keys(parsed.data);
+                        if (keys.length === 0) {
+                            throw new Error('Backup is empty.');
+                        }
+
+                        let importedCount = 0;
+                        keys.forEach(key => {
+                            const value = parsed.data[key];
+                            if (typeof value === 'string') {
+                                localStorage.setItem(key, value);
+                                importedCount++;
+                            }
+                        });
+
+                        alert(
+                            `✅ Backup imported successfully!\n\n` +
+                            `Keys overwritten: ${importedCount}\n` +
+                            (parsed.exportedAt
+                                ? `Backup date: ${new Date(parsed.exportedAt).toLocaleString('en-US')}\n`
+                                : '') +
+                            `\nThe page will now reload to refresh the data.`
+                        );
+
+                        window.location.reload();
+                    } catch (err) {
+                        console.error('Import error:', err);
+                        alert('❌ Failed to import backup:\n\n' + err.message);
+                    }
+                };
+                reader.onerror = function () {
+                    alert('Failed to read the file.');
+                };
+                reader.readAsText(file);
+            });
+        })();
+    </script>
 </body>
 
 </html>

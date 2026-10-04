@@ -541,7 +541,8 @@
 
             function statsAvg(times, count) {
                 if (times.length < count) return null;
-                const recent = times.slice(-count);
+                // `times` jest posortowane od najnowszego → bierzemy `count` najnowszych
+                const recent = times.slice(0, count);
                 const sorted = [...recent].sort((a, b) => a - b);
                 let rm;
                 if (count === 5 || count === 12) rm = 1;
@@ -578,7 +579,14 @@
             }
 
             function statsCalculateStats(times) {
-                const valid = times.map(statsEff).filter(t => t !== null);
+                // Sortujemy od najnowszego do najstarszego (niezależnie od tego, jak leży w localStorage)
+                const sortedTimes = [...times].sort((a, b) => {
+                    const da = a.date ? new Date(a.date).getTime() : 0;
+                    const db = b.date ? new Date(b.date).getTime() : 0;
+                    return db - da;
+                });
+                const valid = sortedTimes.map(statsEff).filter(t => t !== null);
+
                 return {
                     total: times.length,
                     valid: valid.length,
