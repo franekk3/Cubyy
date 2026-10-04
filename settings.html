@@ -42,26 +42,40 @@
             font-size: 20px; font-weight: bold;
         }
         @media screen and (max-width: 768px){ 
-            .page-title {
-                margin-left: 12px;            
+            .title-container {
+                margin-left: 12px;
             }
         
+        }
+        #mobile-settings-button {
+            background-color: var(--md-sys-color-primary-fixed-dim);
+            margin-right: 5px;
+        }
+        .title-container {
+            display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 4px;
         }
     </style>
 </head>
 
 <body ontouchstart="">
     <div class="top-bar">
-        <p class="page-title"> Settings </p>
+        <div class="title-container">
+            <img style="height: 26px; width: 26px;" src="./media/icons/cubyy-1.3-logo.svg">
+            <p class="page-title"> Settings </p>
+        </div>
         <div style="display: flex; flex-direction: row; width: fill-avilbe;">
         <div class="desktop-navbar" style="padding: 6px 12px;">
             <div onclick="window.location.href = './index.html'">
                 <img src="./media/dm/home_white.png">
                 <hr >
             </div>
-            <div onclick="window.location.href = './times.html'">
+            <div onclick="window.location.href = './solves.html'">
 
                 <img src="./media/dm/list_white.png">
+                <hr >
+            </div>
+            <div onclick="window.location.href = './stats.html'">
+                <img src="./media/dm/bar_chart_white.png">
                 <hr >
             </div>
             <div onclick="window.location.href = './settings.html'">
@@ -69,13 +83,16 @@
                 <img src="./media/dm/settings_white.png">
                 <hr class="selected">
             </div>
+        </div>
+        <button id="mobile-settings-button" class="bluetooth-button" onclick="window.location.href = './settings.html'"><img id="bluetoothIcon" src="./media/dm/settings_filled.png" alt="Connect Bluetooth timer"></button>
+
     </div>
     <div class="site-content">
         <div class="m3-card2" style="background-color: transparent;">
             <p> For now there are no settings to change! 😔 </p>
             <div class='rows-box'>
                 <hr class="rows-hr">
-                <p> Cubyy version: 1.2.4.1  </p>
+                <p> Cubyy version: 1.3.0  </p>
                 <hr class="rows-hr">
                 <p onclick="window.location.href='https://github.com/franekk3'" style=" cursor: pointer;"> Cubyy by <b>
                         Franekk3 </b></a> </p>
@@ -109,14 +126,14 @@
             <img id="home-button" class="nav-bar-image " src="./media/dm/home.png">
             <p class="nav-bar-label"> Home </p>
         </div>
-        <div onclick="window.location.href='./times.html'" class="nav-bar-element">
+        <div onclick="window.location.href='./solves.html'" class="nav-bar-element">
             <img id="add-button" class="nav-bar-image" src="./media/dm/list.png">
-            <p class="nav-bar-label"> Times </p>
+            <p class="nav-bar-label"> Solves </p>
         </div>
-        <div onclick="window.location.href='./settings.html'" class="nav-bar-element">
-            <img id="account-button" class="nav-bar-image nav-bar-image-choosed"
-                src="./media/dm/settings_filled.png">
-            <p class="nav-bar-label"> Settings </p>
+        <div onclick="window.location.href='./stats.html'" class="nav-bar-element">
+            <img id="account-button" class="nav-bar-image"
+                src="./media/dm/bar_chart.png">
+            <p class="nav-bar-label"> Statistics </p>
         </div>
     </div>
 

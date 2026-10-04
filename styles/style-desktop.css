@@ -198,3 +198,6 @@ main.content {
     top: 40px;
     scale: 1.1;
 }
+#mobile-settings-button {
+    display: none;
+}

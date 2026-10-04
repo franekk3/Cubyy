@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="512" height="512">
+	<style>
+		.s0 { fill: #282a2f } 
+		.s1 { fill: #aac7ff } 
+	</style>
+	<path id="Background" fill-rule="evenodd" class="s0" d="m224 90h632c74.01 0 134 59.99 134 134v632c0 74.01-59.99 134-134 134h-632c-74.01 0-134-59.99-134-134v-632c0-74.01 59.99-134 134-134z"/>
+	<path id="Shape 1" fill-rule="evenodd" class="s1" d="m248 150h215c27.61 0 50 22.39 50 50v215c0 55.23-44.77 100-100 100h-215c-27.61 0-50-22.39-50-50v-215c0-55.23 44.77-100 100-100z"/>
+	<path id="Shape 1 copy" fill-rule="evenodd" class="s1" d="m150 830v-215c0-27.61 22.39-50 50-50h215c55.23 0 100 44.77 100 100v215c0 27.61-22.39 50-50 50h-215c-55.23 0-100-44.77-100-100z"/>
+	<path id="Shape 1 copy 2" fill-rule="evenodd" class="s1" d="m830 930h-215c-27.61 0-50-22.39-50-50v-215c0-55.23 44.77-100 100-100h215c27.61 0 50 22.39 50 50v215c0 55.23-44.77 100-100 100z"/>
+	<path id="Shape 1 copy 3" fill-rule="evenodd" class="s1" d="m930 250v215c0 27.61-22.39 50-50 50h-215c-55.23 0-100-44.77-100-100v-215c0-27.61 22.39-50 50-50h215c55.23 0 100 44.77 100 100z"/>
+</svg>
